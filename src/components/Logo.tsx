@@ -1,9 +1,19 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
 
-export default function Logo() {
+interface LogoProps {
+  isCollapsed: boolean
+}[]
+
+export default function Logo( {isCollapsed}: LogoProps) {
+
   return (
-    <div>
-      <h1 className="scroll-m-20 text-3xl font-agbalumo font-extrabold tracking-tight lg:text-4xl px-3 py-2">Beefit</h1>
+    <div  className="py-2 pr-2"
+          style={{ writingMode: isCollapsed? 'sideways-lr' : 'horizontal-tb'}}>
+      <h1 className='text-3xl font-agbalumo font-extrabold xl:text-4xl'
+        >
+        Beefit
+      </h1>
     </div>
   )
 }

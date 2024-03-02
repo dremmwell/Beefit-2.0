@@ -11,16 +11,13 @@ import {
     CalendarDays,
     Home
   } from "lucide-react"
-import { Props } from 'next/script'
 import { Separator } from "@/components/ui/separator"
 
-export default function NavBar({} : Props) {
+interface NavBarProps {
+  isCollapsed: boolean
+}[]
 
-    const [isCollapsed, setIsCollapsed] = useState(false);
-
-    function toggleNavBar() {
-      setIsCollapsed(!isCollapsed);
-    }
+export default function NavBar({isCollapsed} : NavBarProps) {
 
     return (
       <div>
