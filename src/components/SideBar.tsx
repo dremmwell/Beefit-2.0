@@ -30,14 +30,14 @@ function SideBar() {
 
   return (
     <nav className="rounded-l-lg border-r bg-background text-foreground flex flex-col items-center pb-1">
-    <Logo isCollapsed={isCollapsed}/>
-    <Separator className="m-1"/>
-    <NavBar isCollapsed={isCollapsed}/>
-    <Separator className="m-1"/>
-    <div className="mt-auto">
-      <ModeToggle />
-    </div>
-  </nav> 
+      <Logo isCollapsed={isCollapsed}/>
+      <Separator className="m-1"/>
+      <NavBar isCollapsed={isCollapsed}/>
+      <Separator className="m-1"/>
+      <div className="mt-auto">
+        <ModeToggle />
+      </div>
+    </nav> 
   )
 }
 
