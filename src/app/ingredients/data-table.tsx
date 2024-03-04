@@ -33,7 +33,7 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <ScrollArea className="h-150 rounded-md border">
+    <ScrollArea className="overflow-auto w-full">
         <div className="rounded-md border">
         <Table>
             <TableHeader>
