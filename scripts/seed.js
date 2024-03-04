@@ -14,11 +14,11 @@ async function seedIngredients(client) {
           id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
           name VARCHAR(255) NOT NULL,
           per TEXT NOT NULL,
-          gPerItem NUMERIC(10,2) NOT NULL,
-          calories NUMERIC(10,2),
-          proteins NUMERIC(10,2),
-          carbs NUMERIC(10,2),
-          fats NUMERIC(10,2)
+          gPerItem NUMERIC(10,1) NOT NULL,
+          calories NUMERIC(10,1),
+          proteins NUMERIC(10,1),
+          carbs NUMERIC(10,1),
+          fats NUMERIC(10,1)
         );
       `;
   

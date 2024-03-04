@@ -6,7 +6,7 @@ import {
 import { unstable_noStore as noStore } from 'next/cache';
 
 
-export async function fetchIngredient () {
+export async function fetchIngredient(): Promise<Ingredient[]> {
     noStore();
     try {
         console.log('Fetching ingredients data');
