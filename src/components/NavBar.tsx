@@ -29,7 +29,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
                 label: "",
                 ref: "/",
                 icon: Home,
-                variant: "default",
+                variant: "ghost",
               },
               {
                 title: "Today",
