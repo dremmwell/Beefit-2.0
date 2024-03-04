@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { LucideIcon } from "lucide-react"
-
+import { usePathname } from 'next/navigation';
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
 import {
@@ -24,21 +24,23 @@ interface NavProps {
 }
 
 export default function Nav({ links, isCollapsed }: NavProps) {
+  const pathname = usePathname();
+
   return (
     <div
       data-collapsed={isCollapsed}
       className="group flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
     >
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
-        {links.map((link, index) =>
-          isCollapsed ? (
+        {links.map((link, index) => {
+          return isCollapsed ? (
             <TooltipProvider key={index}>
               <Tooltip  delayDuration={0}>
                 <TooltipTrigger asChild>
                   <Link
                     href={link.ref}
                     className={cn(
-                      buttonVariants({ variant: link.variant, size: "icon" }),
+                      buttonVariants({ variant: link.ref === pathname ? 'default' : 'ghost', size: "icon" }),
                       "h-9 w-9",
                       link.variant === "default" &&
                         "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
@@ -63,7 +65,7 @@ export default function Nav({ links, isCollapsed }: NavProps) {
               key={index}
               href={link.ref}
               className={cn(
-                buttonVariants({ variant: link.variant, size: "sm" }),
+                buttonVariants({ variant: link.ref === pathname ? 'default' : 'ghost', size: "sm" }),
                 link.variant === "default" &&
                   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                 "justify-start"
@@ -84,7 +86,7 @@ export default function Nav({ links, isCollapsed }: NavProps) {
               )}
             </Link>
           )
-        )}
+        })}
       </nav>
     </div>
   )
