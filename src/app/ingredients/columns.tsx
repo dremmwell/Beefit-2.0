@@ -20,7 +20,7 @@ export const columns: ColumnDef<Ingredient>[] = [
     header: ({ column }) => {
       return (
         <div
-          className="md:pl-8"
+          className="text-center md:text-left md:pl-8"
         >
           Name
         </div>
@@ -36,7 +36,7 @@ export const columns: ColumnDef<Ingredient>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Calories
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <ArrowUpDown className="text-center md:text-left md:ml-2 h-4 w-4" />
         </Button>
       )
     },
