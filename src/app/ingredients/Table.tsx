@@ -24,7 +24,7 @@ export default function Table<TData, TValue>({
   const [isShorted, setIsShorted] = useState(false);
   const { height, width } = useWindowDimensions();
 
-  const shortWidth = 940;
+  const shortWidth = 920;
 
   useEffect(() => {
     if (typeof width !== 'undefined') {

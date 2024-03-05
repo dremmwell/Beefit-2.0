@@ -20,7 +20,7 @@ export const columns: ColumnDef<Ingredient>[] = [
     header: ({ column }) => {
       return (
         <div
-          className="pl-8"
+          className="md:pl-8"
         >
           Name
         </div>
@@ -88,7 +88,6 @@ export const columns: ColumnDef<Ingredient>[] = [
     header: ({ column }) => {
       return (
         <div
-          className="pl-8"
         >
           Unit
         </div>
