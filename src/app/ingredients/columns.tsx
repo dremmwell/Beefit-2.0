@@ -1,6 +1,6 @@
 "use client"
  
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Visibility } from "@tanstack/react-table";
 import { Ingredient } from "@/lib/definitions";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,16 +12,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
- 
- 
+
+
 export const columns: ColumnDef<Ingredient>[] = [
   {
     accessorKey: "name",
-    header: "Name",
-  },
-  {
-    accessorKey: "per",
-    header: "Unit",
+    header: ({ column }) => {
+      return (
+        <div
+          className="pl-8"
+        >
+          Name
+        </div>
+      )
+    },
   },
   {
     accessorKey: "calories",
@@ -76,6 +80,18 @@ export const columns: ColumnDef<Ingredient>[] = [
           Fats
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      )
+    },
+  },
+  {
+    accessorKey: "per",
+    header: ({ column }) => {
+      return (
+        <div
+          className="pl-8"
+        >
+          Unit
+        </div>
       )
     },
   },

@@ -9,6 +9,7 @@ import {
   SortingState,
   ColumnFiltersState,
   getFilteredRowModel,
+  VisibilityState,
 } from "@tanstack/react-table"
 
 import {
@@ -19,40 +20,66 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
+import { useState, useEffect } from "react"
 
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  shorted: boolean
+  isShorted: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  shorted,
+  isShorted,
 }: DataTableProps<TData, TValue>) {
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
   const table = useReactTable({
     data,
     columns,
+    initialState: {
+      columnVisibility: {
+        carbs: !isShorted,
+        proteins: !isShorted,
+        fats: !isShorted,
+      },
+    },
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       sorting,
       columnFilters,
+      columnVisibility,
     },
   })
+
+  useEffect(() => {
+    table.setColumnVisibility({
+      per: !isShorted,
+      carbs: !isShorted,
+      proteins: !isShorted,
+      fats: !isShorted,
+    });
+ }, [isShorted, table]);
 
   return (
     <div className="w-full">
@@ -66,8 +93,8 @@ export function DataTable<TData, TValue>({
             className="max-w-sm"
           />
         </div>
-        <ScrollArea className="overflow-auto w-full">
-            <div className="rounded-md border">
+        <ScrollArea className="rounded-md border h-5/6">
+            <div>
             <Table>
                 <TableHeader>
                 {table.getHeaderGroups().map((headerGroup) => (

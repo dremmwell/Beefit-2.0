@@ -24,11 +24,11 @@ export default function Table<TData, TValue>({
   const [isShorted, setIsShorted] = useState(false);
   const { height, width } = useWindowDimensions();
 
-  const smWidth = 640;
+  const shortWidth = 940;
 
   useEffect(() => {
     if (typeof width !== 'undefined') {
-      if (width <= smWidth) {
+      if (width <= shortWidth) {
         setIsShorted(true);
       }
       else {
@@ -39,8 +39,8 @@ export default function Table<TData, TValue>({
 
 
   return (
-    <div className="overflow-auto container mx-auto py-10 flex flex-1">
-      <DataTable columns={columns} data={data} shorted={isShorted}/>
+    <div className="overflow-hidden container mx-auto py-10 flex flex-1 px-0 lg:px-7">
+      <DataTable columns={columns} data={data} isShorted={isShorted}/>
     </div>
   )
 }

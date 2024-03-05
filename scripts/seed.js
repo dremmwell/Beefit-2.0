@@ -15,7 +15,7 @@ async function seedIngredients(client) {
           name VARCHAR(255) NOT NULL,
           per TEXT NOT NULL,
           gPerItem NUMERIC(10,1) NOT NULL,
-          calories NUMERIC(10,1),
+          calories NUMERIC(10,0),
           proteins NUMERIC(10,1),
           carbs NUMERIC(10,1),
           fats NUMERIC(10,1)
