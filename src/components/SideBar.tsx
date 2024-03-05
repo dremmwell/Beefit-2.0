@@ -7,7 +7,6 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { useEffect, useState } from "react";
 import React from 'react'
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
-import { get } from "https";
 
 function SideBar() { 
 
@@ -26,7 +25,6 @@ function SideBar() {
       }
     }
   }, [width]);
-
 
   return (
     <nav className="rounded-l-lg border-r bg-background text-foreground flex flex-col items-center pb-1">

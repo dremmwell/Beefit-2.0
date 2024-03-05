@@ -2,7 +2,6 @@
  
 import { ColumnDef } from "@tanstack/react-table";
 import { Ingredient } from "@/lib/definitions";
-import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
  
  
 export const columns: ColumnDef<Ingredient>[] = [
@@ -25,19 +25,59 @@ export const columns: ColumnDef<Ingredient>[] = [
   },
   {
     accessorKey: "calories",
-    header: "Calories",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Calories
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "proteins",
-    header: "Proteins",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Proteins
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "carbs",
-    header: "Carbs",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Carbs
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "fats",
-    header: "Fats",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Fats
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
 
   {
@@ -56,10 +96,10 @@ export const columns: ColumnDef<Ingredient>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem>Details
             </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem              
-                onClick={() => navigator.clipboard.writeText(ingredient.id)}>Update Ingredient</DropdownMenuItem>
-            <DropdownMenuItem>Delete Ingredient</DropdownMenuItem>
+                onClick={() => navigator.clipboard.writeText(ingredient.id)}>Edit</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="focus:bg-destructive">Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
