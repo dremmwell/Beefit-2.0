@@ -64,19 +64,20 @@ export function IngredientForm() {
               <TabsTrigger value="custom">Custom Measure</TabsTrigger>
             </TabsList>
             <TabsContent value="per100g">
+            <div className="flex gap-4">
               <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Calories (g)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="calories per 100g..." {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Calories (g)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="calories per 100g..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             <FormField
               control={form.control}
               name="name"
@@ -90,6 +91,8 @@ export function IngredientForm() {
                 </FormItem>
               )}
             />
+            </div>
+            <div className="flex gap-4">
             <FormField
               control={form.control}
               name="name"
@@ -116,6 +119,7 @@ export function IngredientForm() {
                 </FormItem>
               )}
             />
+            </div>
             </TabsContent>
             <TabsContent value="custom">
               <div className="flex gap-4">
@@ -151,6 +155,7 @@ export function IngredientForm() {
                 )}
               />
             </div>
+            <div className="flex gap-4">
             <FormField
               control={form.control}
               name="name"
@@ -177,6 +182,8 @@ export function IngredientForm() {
                 </FormItem>
               )}
             />
+            </div>
+            <div className="flex gap-4">
             <FormField
               control={form.control}
               name="name"
@@ -203,6 +210,7 @@ export function IngredientForm() {
                 </FormItem>
               )}
             />
+            </div>
             </TabsContent>
           </Tabs>
           <Button type="submit">Add</Button>
