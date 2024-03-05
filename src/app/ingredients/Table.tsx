@@ -39,7 +39,7 @@ export default function Table<TData, TValue>({
 
 
   return (
-    <div className="overflow-hidden container mx-auto py-10 flex flex-1 px-0 lg:px-7">
+    <div className="overflow-hidden container flex px-0.5">
       <DataTable columns={columns} data={data} isShorted={isShorted}/>
     </div>
   )
