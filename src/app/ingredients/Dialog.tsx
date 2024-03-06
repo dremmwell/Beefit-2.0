@@ -19,9 +19,9 @@ export function DialogIngredients() {
     return (
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="self-end mt-4">Add Ingredient</Button>
+          <Button className="self-end">Add Ingredient</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px] overflow-auto">
+        <DialogContent className="overflow-x-auto">
               <h3 className="text-lg font-medium">Add Ingredient</h3>
               <p className="text-sm text-muted-foreground">Add a new ingredient to your list !</p>
               <Separator /> 

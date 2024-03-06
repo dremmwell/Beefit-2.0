@@ -24,6 +24,12 @@ const ingredientFormSchema = z.object({
   name: z.string().min(2, {
     message: "Ingredient name must be at least 2 characters.",
   }),
+  measure: z.string().min(1).optional(),
+  measureWeight: z.number().positive().optional(),
+  calories: z.number().positive(),
+  proteins: z.number().positive(),
+  carbs: z.number().positive(),
+  fats: z.number().positive(),
 })
 
 export function IngredientForm() {
@@ -32,14 +38,20 @@ export function IngredientForm() {
       resolver: zodResolver(ingredientFormSchema),
       defaultValues: {
         name: "",
-      },
-    })
+        measure: "",
+        measureWeight: 0,
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0,
+      }
+    });
    
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
       // Do something with the form values.
       // ✅ This will be type-safe and validated.
-      console.log(values)
+      console.log({values})
     }
 
     return (
@@ -58,6 +70,7 @@ export function IngredientForm() {
               </FormItem>
             )}
           />
+
           <Tabs defaultValue="per100g">
             <TabsList className="mb-2">
               <TabsTrigger value="per100g">Per 100g</TabsTrigger>
@@ -67,12 +80,12 @@ export function IngredientForm() {
             <div className="flex gap-4">
               <FormField
                 control={form.control}
-                name="name"
+                name="calories"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Calories (g)</FormLabel>
                     <FormControl>
-                      <Input placeholder="calories per 100g..." {...field} />
+                      <Input placeholder="calories per 100g..." required {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -80,12 +93,12 @@ export function IngredientForm() {
               />
             <FormField
               control={form.control}
-              name="name"
+              name="proteins"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Proteins (g)</FormLabel>
                   <FormControl>
-                    <Input placeholder="proteins per 100g..."{...field} />
+                    <Input placeholder="proteins per 100g..." required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -95,12 +108,12 @@ export function IngredientForm() {
             <div className="flex gap-4">
             <FormField
               control={form.control}
-              name="name"
+              name="carbs"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Carbs (g)</FormLabel>
                   <FormControl>
-                    <Input placeholder="carbs per 100g..."{...field} />
+                    <Input placeholder="carbs per 100g..." required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -108,12 +121,12 @@ export function IngredientForm() {
             />
               <FormField
               control={form.control}
-              name="name"
+              name="fats"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Fats (g)</FormLabel>
                   <FormControl>
-                    <Input placeholder="fats per 100g..."{...field} />
+                    <Input placeholder="fats per 100g..." required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -126,10 +139,10 @@ export function IngredientForm() {
                 <div className="w-5/6">
                 <FormField
                 control={form.control}
-                name="name"
+                name="measure"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Measurement Type</FormLabel>
+                    <FormLabel>Measure Type</FormLabel>
                     <FormControl>
                       <Input placeholder="item, pint, cup, tsp..."{...field} />
                     </FormControl>
@@ -140,12 +153,12 @@ export function IngredientForm() {
               </div>
                 <FormField
                 control={form.control}
-                name="name"
+                name="measureWeight"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Measure Weight (g)</FormLabel>
                     <FormControl>
-                      <Input placeholder="grams for one measure..."{...field} />
+                      <Input placeholder="grams for one measure..." {...field} />
                     </FormControl>
                     <FormDescription>
                     Please indicate how many grams your custom measure weights.
@@ -158,12 +171,12 @@ export function IngredientForm() {
             <div className="flex gap-4">
             <FormField
               control={form.control}
-              name="name"
+              name="calories"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Calories (g)</FormLabel>
                   <FormControl>
-                    <Input placeholder="calories per item..." {...field} />
+                    <Input placeholder="calories per item..." required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -171,12 +184,12 @@ export function IngredientForm() {
             />
             <FormField
               control={form.control}
-              name="name"
+              name="proteins"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Proteins (g)</FormLabel>
                   <FormControl>
-                    <Input placeholder="proteins per item..."{...field} />
+                    <Input placeholder="proteins per item..." required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -186,12 +199,12 @@ export function IngredientForm() {
             <div className="flex gap-4">
             <FormField
               control={form.control}
-              name="name"
+              name="carbs"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Carbs (g)</FormLabel>
                   <FormControl>
-                    <Input placeholder="carbs per item..."{...field} />
+                    <Input placeholder="carbs per item..." required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -199,12 +212,12 @@ export function IngredientForm() {
             />
               <FormField
               control={form.control}
-              name="name"
+              name="fats"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Fats (g)</FormLabel>
                   <FormControl>
-                    <Input placeholder="fats per item..."{...field} />
+                    <Input placeholder="fats per item..." required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -213,7 +226,7 @@ export function IngredientForm() {
             </div>
             </TabsContent>
           </Tabs>
-          <Button type="submit">Add</Button>
+          <Button className="self-end" type="submit">Add</Button>
         </form>
       </Form>
     )
