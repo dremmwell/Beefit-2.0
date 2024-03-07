@@ -4,6 +4,7 @@ import {
     Recipe,
 } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
+import { v4 as uuidv4 } from 'uuid';
 
 
 export async function fetchIngredient(): Promise<Ingredient[]> {
@@ -18,4 +19,29 @@ export async function fetchIngredient(): Promise<Ingredient[]> {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch ingredient data.');
     }
+}
+
+
+
+export function getIngredientData(data: any) {
+    
+    const uuid = uuidv4();
+    const ingredient: Ingredient = {
+        id: uuid,
+        name: data.name,
+        per: data.measureType,
+        gPerItem: data.measureWeight,
+        calories: data.calories,
+        proteins: data.proteins,
+        carbs: data.carbs,
+        fats: data.fats
+    }
+    if(data.measureType === "100g"){
+        ingredient.gPerItem = 100;
+    }
+    else{
+        ingredient.per = data.customMeasureName;
+    }
+    console.log({ingredient})
+    return ingredient
 }
