@@ -21,8 +21,6 @@ export async function fetchIngredient(): Promise<Ingredient[]> {
     }
 }
 
-
-
 export function getIngredientData(data: any) {
     
     const uuid = uuidv4();

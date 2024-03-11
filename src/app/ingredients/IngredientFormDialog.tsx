@@ -37,7 +37,7 @@ const ingredientFormSchema = z.object({
   }),
   measureType: z.string(),
   customMeasureName: z.string().optional(),
-  measureWeight: z.number().positive().optional(),
+  measureWeight: z.coerce.number().positive().optional(),
   calories: z.coerce.number(),
   proteins: z.coerce.number(),
   carbs: z.coerce.number(),
@@ -50,7 +50,7 @@ const ingredientFormSchema = z.object({
   return true;
 },
 {
-  message: "Custom measure requires a name !",
+  message: "Custom measure requires a name",
   path: ["customMeasureName"],
 }
 )
@@ -84,7 +84,7 @@ export function IngredientFormDialog() {
    
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
-      getIngredientData(values);
+      const newIngredient = getIngredientData(values);
       setOpen(false);
     }
 
@@ -116,10 +116,10 @@ export function IngredientFormDialog() {
                     control={form.control}
                     name="measureType"
                     render={({field}) => (
-                      <Tabs onValueChange={field.onChange} 
-                            defaultValue= "100g">
+                      <Tabs defaultValue= {measureType} 
+                            onValueChange={field.onChange} >
                         <TabsList className="mb-2">
-                          <TabsTrigger value="per100g">Per 100g</TabsTrigger>
+                          <TabsTrigger value="100g">Per 100g</TabsTrigger>
                           <TabsTrigger value="custom">Custom Measure</TabsTrigger>
                         </TabsList>
                       </Tabs>
@@ -216,7 +216,7 @@ export function IngredientFormDialog() {
                         )}
                       />
                       </div>
-                    <Button className="self-end" type="submit">Add</Button>
+                    <Button type="submit">Add</Button>
                   </form>
                 </Form>
             </DialogContent>
