@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { cn } from "@/lib/utils"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -28,8 +28,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {getIngredientData} from '../../lib/data'
-
+import {createNewIngredient, saveIngredient} from '../../lib/data'
+import { Ingredient } from "@/lib/definitions"
  
 const ingredientFormSchema = z.object({
   name: z.string().min(2, {
@@ -66,8 +66,8 @@ const ingredientFormSchema = z.object({
 }
 );
 
+export function IngredientFormDialog () {
 
-export function IngredientFormDialog() {
     // 1. Define your form.
     const form = useForm<z.infer<typeof ingredientFormSchema>>({
       resolver: zodResolver(ingredientFormSchema),
@@ -84,7 +84,9 @@ export function IngredientFormDialog() {
    
     // 2. Define a submit handler.
     function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
-      const newIngredient = getIngredientData(values);
+      const newIngredient = createNewIngredient(values);
+      saveIngredient(newIngredient)
+      console.log(newIngredient);
       setOpen(false);
     }
 
@@ -149,7 +151,7 @@ export function IngredientFormDialog() {
                             <FormItem>
                               <FormLabel>Measure Weight (g)</FormLabel>
                               <FormControl>
-                                <Input placeholder="grams for one customMeasureName..." {...field} />
+                                <Input placeholder='grams for one measure...' {...field} />
                               </FormControl>
                               <FormDescription>
                               Please indicate how many grams your custom customMeasureName weights.

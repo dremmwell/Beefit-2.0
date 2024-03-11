@@ -21,7 +21,17 @@ export async function fetchIngredient(): Promise<Ingredient[]> {
     }
 }
 
-export function getIngredientData(data: any) {
+export async function saveIngredient(ingredient: Ingredient) {
+    try {
+        console.log('Saving ingredient data');
+    }
+    catch (error){
+        console.error('Database Error', error)
+        throw new Error('Failed to save ingredient data.');
+    }
+}
+
+export function createNewIngredient(data: any) {
     
     const uuid = uuidv4();
     const ingredient: Ingredient = {
@@ -40,6 +50,5 @@ export function getIngredientData(data: any) {
     else{
         ingredient.per = data.customMeasureName;
     }
-    console.log({ingredient})
     return ingredient
 }
