@@ -37,11 +37,11 @@ const ingredientFormSchema = z.object({
   }),
   measureType: z.string(),
   customMeasureName: z.string().optional(),
-  measureWeight: z.coerce.number().positive().optional(),
-  calories: z.coerce.number(),
-  proteins: z.coerce.number(),
-  carbs: z.coerce.number(),
-  fats: z.coerce.number(),
+  measureWeight: z.coerce.number().optional(),
+  calories: z.coerce.number().positive(),
+  proteins: z.coerce.number().positive(),
+  carbs: z.coerce.number().positive(),
+  fats: z.coerce.number().positive(),
 })
 .refine((data) => {
   if(data.measureType === "custom") {
@@ -68,25 +68,32 @@ const ingredientFormSchema = z.object({
 
 export function IngredientFormDialog () {
 
-    // 1. Define your form.
+    //  Define the form.
     const form = useForm<z.infer<typeof ingredientFormSchema>>({
       resolver: zodResolver(ingredientFormSchema),
       defaultValues: {
         name: "",
         measureType: "100g",
         customMeasureName: "",
+        measureWeight: 0,
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0,
       }
     });
+
 
     const measureType = form.watch("measureType");
 
     const [open, setOpen] = useState(false);
    
-    // 2. Define a submit handler.
+    // Handles submit and data save
     function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
       const newIngredient = createNewIngredient(values);
-      saveIngredient(newIngredient)
-      console.log(newIngredient);
+      console.log(newIngredient)
+      form.reset();
+      saveIngredient(newIngredient);
       setOpen(false);
     }
 
@@ -100,7 +107,7 @@ export function IngredientFormDialog () {
               <p className="text-sm text-muted-foreground">Add a new ingredient to your list !</p>
               <Separator /> 
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>
                     <FormField
                       control={form.control}
                       name="name"
@@ -137,8 +144,11 @@ export function IngredientFormDialog () {
                             <FormItem>
                               <FormLabel>Measure Type</FormLabel>
                               <FormControl>
-                                <Input placeholder="item, pint, cup, tsp..." {...field} />
+                                <Input {...field} />
                               </FormControl>
+                              <FormDescription>
+                              Per item, pint, tsp...
+                              </FormDescription>
                               <FormMessage />
                             </FormItem>
                           )}
@@ -151,10 +161,10 @@ export function IngredientFormDialog () {
                             <FormItem>
                               <FormLabel>Measure Weight (g)</FormLabel>
                               <FormControl>
-                                <Input placeholder='grams for one measure...' {...field} />
+                                <Input {...field} />
                               </FormControl>
                               <FormDescription>
-                              Please indicate how many grams your custom customMeasureName weights.
+                              Please indicate how many grams your custom measure weights.
                               </FormDescription>
                               <FormMessage />
                             </FormItem>
@@ -170,8 +180,18 @@ export function IngredientFormDialog () {
                             <FormItem>
                               <FormLabel>Calories (g)</FormLabel>
                               <FormControl>
-                                <Input placeholder="calories per 100g..." required {...field} />
+                                <Input required {...field} />
                               </FormControl>
+                              {measureType === "100g" &&
+                                <FormDescription>
+                                  calories per 100g
+                                </FormDescription>
+                              }
+                              {measureType === "custom" &&
+                                <FormDescription>
+                                  calories per measure
+                                </FormDescription>
+                              }
                               <FormMessage />
                             </FormItem>
                           )}
@@ -183,8 +203,18 @@ export function IngredientFormDialog () {
                           <FormItem>
                             <FormLabel>Proteins (g)</FormLabel>
                             <FormControl>
-                              <Input placeholder="proteins per 100g..." required {...field} />
+                              <Input required {...field} />
                             </FormControl>
+                            {measureType === "100g" &&
+                                <FormDescription>
+                                  proteins per 100g
+                                </FormDescription>
+                              }
+                              {measureType === "custom" &&
+                                <FormDescription>
+                                  proteins per measure
+                                </FormDescription>
+                              }
                             <FormMessage />
                           </FormItem>
                         )}
@@ -198,8 +228,18 @@ export function IngredientFormDialog () {
                           <FormItem>
                             <FormLabel>Carbs (g)</FormLabel>
                             <FormControl>
-                              <Input placeholder="carbs per 100g..." required {...field} />
+                              <Input required {...field} />
                             </FormControl>
+                            {measureType === "100g" &&
+                                <FormDescription>
+                                  carbs per 100g
+                                </FormDescription>
+                              }
+                              {measureType === "custom" &&
+                                <FormDescription>
+                                  carbs per measure
+                                </FormDescription>
+                              }
                             <FormMessage />
                           </FormItem>
                         )}
@@ -211,8 +251,18 @@ export function IngredientFormDialog () {
                           <FormItem>
                             <FormLabel>Fats (g)</FormLabel>
                             <FormControl>
-                              <Input placeholder="fats per 100g..." required {...field} />
+                              <Input required {...field} />
                             </FormControl>
+                            {measureType === "100g" &&
+                                <FormDescription>
+                                  fats per 100g
+                                </FormDescription>
+                              }
+                              {measureType === "custom" &&
+                                <FormDescription>
+                                  fats per measure
+                                </FormDescription>
+                              }
                             <FormMessage />
                           </FormItem>
                         )}

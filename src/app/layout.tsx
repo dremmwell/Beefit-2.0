@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <div className="p-2 items-center justify-center size-full flex">
           <div className="rounded-[0.5rem] border bg-background shadow-md flex size-full lg:size-11/12 xl:size-10/12">

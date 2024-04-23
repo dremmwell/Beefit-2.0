@@ -8,11 +8,6 @@ export default async function Page() {
   
   const ingredientsData = await fetchIngredient();
 
-/*   function handleIngredient(newIngredient: Ingredient){
-    "use sever";
-    console.log(newIngredient)
-  } */
-
   return (
     <>
       <div className="container my-10 flex flex-col gap-2">

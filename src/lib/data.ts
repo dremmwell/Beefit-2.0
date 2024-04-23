@@ -21,9 +21,21 @@ export async function fetchIngredient(): Promise<Ingredient[]> {
     }
 }
 
+/* export async function testIngredient() {
+    try {
+        await sql`INSERT INTO pets (name, owner) VALUES ('Mia', 'Bob')`;
+    }
+    catch (error){
+        console.error('Database Error', error)
+        throw new Error('Failed to save ingredient data.');
+    }
+}
+
+testIngredient(); */
+
 export async function saveIngredient(ingredient: Ingredient) {
     try {
-        console.log('Saving ingredient data');
+        await sql`INSERT INTO ingredients (id, name, per, gPerItem, calories, proteins, carbs, fats) VALUES ('${ingredient.id}', '${ingredient.name}', '${ingredient.per}', '${ingredient.gPerItem}'; '${ingredient.calories}', '${ingredient.proteins}', '${ingredient.carbs}', '${ingredient.fats}')`;
     }
     catch (error){
         console.error('Database Error', error)
