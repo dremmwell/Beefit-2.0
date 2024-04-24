@@ -10,19 +10,29 @@ import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { useEffect, useState } from "react";
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
+import { fetchIngredient, getIngredients } from "@/lib/data";
+import { Ingredient } from "@/lib/definitions";
 
 interface TableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
-    data: TData[]
 }
 
 export default function Table<TData, TValue>({
     columns,
-    data,
 }: TableProps<TData, TValue>) {
 
   const [isShorted, setIsShorted] = useState(false);
   const { height, width } = useWindowDimensions();
+  const [ingredients, setIngredients ] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getIngredients();
+      setIngredients(data);
+    }
+
+    fetchData();
+ }, []);
 
   const shortWidth = 920;
 
@@ -40,7 +50,7 @@ export default function Table<TData, TValue>({
 
   return (
     <div className="overflow-hidden container flex px-0.5">
-      <DataTable columns={columns} data={data} isShorted={isShorted}/>
+      <DataTable columns={columns} data={ingredients} isShorted={isShorted}/>
     </div>
   )
 }

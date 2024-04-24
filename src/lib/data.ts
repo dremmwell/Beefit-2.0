@@ -21,6 +21,22 @@ export async function fetchIngredient(): Promise<Ingredient[]> {
     }
 }
 
+export async function getIngredients() {
+    const data = {
+        method: "GET",
+        headers: {
+            "Content-type": "application/json",
+        },
+    };
+    const res = await fetch(
+        `api/ingredients`,
+        data
+    );
+    const response = await res.json();
+    return(response.ingredients.rows);
+}
+
+
 /* export async function testIngredient() {
     try {
         await sql`INSERT INTO pets (name, owner) VALUES ('Mia', 'Bob')`;
