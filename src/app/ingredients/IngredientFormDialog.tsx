@@ -91,7 +91,6 @@ export function IngredientFormDialog () {
     // Handles submit and data save
     function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
       const newIngredient = createNewIngredient(values);
-      console.log(newIngredient)
       form.reset();
       saveIngredient(newIngredient);
       setOpen(false);

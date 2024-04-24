@@ -11,3 +11,22 @@ export async function GET(request: Request) {
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+
+
+export async function POST(request: Request) {
+  try {
+
+    const ingredient = await request.json();
+    console.log(ingredient);
+
+     // Insert the new ingredient into the database
+     await sql`INSERT INTO ingredients (id, name, per, gPerItem, calories, proteins, carbs, fats) VALUES (${ingredient.id}, ${ingredient.name}, ${ingredient.per}, ${ingredient.gPerItem}, ${ingredient.calories}, ${ingredient.proteins}, ${ingredient.carbs}, ${ingredient.fats});`;
+ 
+     // Return a success response
+     return NextResponse.json({ message: 'Ingredient added successfully' }, { status: 201 });
+  } catch (error) {
+     console.error('Database Error', error);
+     // Return an error response
+     return NextResponse.json({ error: 'Failed to add ingredient' }, { status: 500 });
+  }
+ }

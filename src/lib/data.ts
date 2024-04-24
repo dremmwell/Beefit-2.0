@@ -7,19 +7,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 import { v4 as uuidv4 } from 'uuid';
 
 
-export async function fetchIngredient(): Promise<Ingredient[]> {
-    noStore();
-    try {
-        console.log('Fetching ingredients data');
-        const data = await sql<Ingredient>`SELECT * FROM ingredients`;
-        console.log('Data fetch completed.');
-        return data.rows;
-    }
-    catch (error) {
-        console.error('Database Error:', error);
-        throw new Error('Failed to fetch ingredient data.');
-    }
-}
+// Reads ingredient list with a GET request to the api/ingredient endpoint
 
 export async function getIngredients() {
     const data = {
@@ -36,28 +24,49 @@ export async function getIngredients() {
     return(response.ingredients.rows);
 }
 
-
-/* export async function testIngredient() {
-    try {
-        await sql`INSERT INTO pets (name, owner) VALUES ('Mia', 'Bob')`;
-    }
-    catch (error){
-        console.error('Database Error', error)
-        throw new Error('Failed to save ingredient data.');
-    }
-}
-
-testIngredient(); */
+// Saves new ingredient to DB
 
 export async function saveIngredient(ingredient: Ingredient) {
-    try {
-        await sql`INSERT INTO ingredients (id, name, per, gPerItem, calories, proteins, carbs, fats) VALUES ('${ingredient.id}', '${ingredient.name}', '${ingredient.per}', '${ingredient.gPerItem}'; '${ingredient.calories}', '${ingredient.proteins}', '${ingredient.carbs}', '${ingredient.fats}')`;
-    }
-    catch (error){
-        console.error('Database Error', error)
-        throw new Error('Failed to save ingredient data.');
-    }
+ try {
+    const postData = {
+        method: "POST",
+        headers: {
+            "Content-type": "application/json",
+        },
+        body: JSON.stringify(ingredient),
+    };
+
+    console.log(postData);
+
+    const res = await fetch(
+        `api/ingredients`,
+        postData
+    );
+    if(res.ok){
+        console.log("POST successful")
+    }else{
+        console.log("Something is wrong on POST")
+      }
+ }
+ catch (error){
+    console.log(error)
+ }
+
 }
+
+// Delete selected ingredients from DB
+
+export async function deleteIngredient(id: string){
+    console.log("delete", id);
+}
+
+// Update selected ingredient on DB
+
+export async function updateIngredient(id: string){
+    console.log("update", id);
+}
+
+
 
 export function createNewIngredient(data: any) {
     
