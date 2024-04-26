@@ -13,7 +13,7 @@ import {
 import { DeleteButton } from "./deleteButton";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { EditFormDialog } from "./EditFormDialog";
-import { DetailsButton } from "./detailButton";
+import { DetailsButton } from "./details";
 
 
 export const columns: ColumnDef<Ingredient>[] = [

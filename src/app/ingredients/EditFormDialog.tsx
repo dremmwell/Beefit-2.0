@@ -109,7 +109,7 @@ export function EditFormDialog ({ingredient}: EditFormDialogProps) {
           </DialogTrigger>
             <DialogContent className="overflow-x-auto">
               <h3 className="text-lg font-medium">Edit {ingredient.name}</h3>
-              <p className="text-sm text-muted-foreground">Edit the properties of your {ingredient.name} ingredient !</p>
+              <p className="text-sm text-muted-foreground">Edit the properties of your ingredient !</p>
               <Separator /> 
                 <Form {...form}>
                   <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>

@@ -161,3 +161,21 @@ export function editIngredient(data: any, ingredient: Ingredient) {
     }
     return newIngredient
 }
+
+
+export function convertTo100g(ingredient: Ingredient){
+    
+    const ratio = 100/ingredient.gPerItem;
+
+    const convertedIngredient: Ingredient = {
+        id: ingredient.id,
+        name: ingredient.name,
+        per: ingredient.per,
+        gPerItem: ingredient.gPerItem,
+        calories: ingredient.calories*ratio,
+        proteins: ingredient.proteins*ratio,
+        carbs: ingredient.carbs*ratio,
+        fats: ingredient.fats*ratio
+    }
+    return convertedIngredient
+}

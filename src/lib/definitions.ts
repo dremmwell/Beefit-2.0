@@ -1,7 +1,7 @@
 export type Ingredient = {
     id: string;
     name: string;
-    per: '100g' | 'item' | string;
+    per: string;
     gPerItem: number;
     calories: number;
     proteins: number;
