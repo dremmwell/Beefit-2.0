@@ -4,6 +4,7 @@ import "./globals.css";
 import * as React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import SideBar from "@/components/SideBar";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
             >
             <SideBar />
             {children}
+            <Toaster />
             </ThemeProvider>
           </div>
         </div>

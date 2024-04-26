@@ -6,15 +6,13 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
 import { DeleteButton } from "./deleteButton";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { deleteIngredient, updateIngredient } from "@/lib/data";
-import { EditButton } from "./editButton";
+import { EditFormDialog } from "./EditFormDialog";
 import { DetailsButton } from "./detailButton";
 
 
@@ -105,6 +103,8 @@ export const columns: ColumnDef<Ingredient>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const ingredient = row.original 
+
+
  
       return (
         <DropdownMenu>
@@ -116,10 +116,10 @@ export const columns: ColumnDef<Ingredient>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <div className="flex flex-col">
-              <DetailsButton ingredient={ingredient}/> 
-              <EditButton ingredient={ingredient} />
+                <DetailsButton ingredient={ingredient}/> 
+                <EditFormDialog ingredient={ingredient} />
               <DropdownMenuSeparator />
-              <DeleteButton ingredient={ingredient} />
+                <DeleteButton ingredient={ingredient} />
             </div>
           </DropdownMenuContent>
         </DropdownMenu>

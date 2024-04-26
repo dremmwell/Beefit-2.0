@@ -3,8 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { cn } from "@/lib/utils"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,16 +18,12 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {createNewIngredient, saveIngredient} from '../../lib/data'
+import {editIngredient, updateIngredient} from '../../lib/ingredients_utils'
 import { Ingredient } from "@/lib/definitions"
  
 const ingredientFormSchema = z.object({
@@ -66,23 +61,34 @@ const ingredientFormSchema = z.object({
 }
 );
 
-export function IngredientFormDialog () {
+interface EditFormDialogProps {
+  ingredient: Ingredient,
+}
+
+export function EditFormDialog ({ingredient}: EditFormDialogProps) {
+
+  let initialMeasureType;
+  if(ingredient.gPerItem == 100){
+    initialMeasureType = "100g";
+  }
+  else{
+    initialMeasureType = "custom";
+  }
 
     //  Define the form.
     const form = useForm<z.infer<typeof ingredientFormSchema>>({
       resolver: zodResolver(ingredientFormSchema),
       defaultValues: {
-        name: "",
-        measureType: "100g",
-        customMeasureName: "",
-        measureWeight: 0,
-        calories: 0,
-        proteins: 0,
-        carbs: 0,
-        fats: 0,
+        name: ingredient.name,
+        measureType: initialMeasureType,
+        customMeasureName: ingredient.per,
+        measureWeight: ingredient.gPerItem,
+        calories: ingredient.calories,
+        proteins: ingredient.proteins,
+        carbs: ingredient.carbs,
+        fats: ingredient.fats,
       }
     });
-
 
     const measureType = form.watch("measureType");
 
@@ -90,20 +96,20 @@ export function IngredientFormDialog () {
    
     // Handles submit and data save
     function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
-      const newIngredient = createNewIngredient(values);
+      const newIngredient = editIngredient(values,ingredient);
       form.reset();
-      saveIngredient(newIngredient);
+      updateIngredient(newIngredient);
       setOpen(false);
     }
 
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="self-end">Add Ingredient</Button>
+          <Button className="self-start" variant="ghost">Edit</Button>
           </DialogTrigger>
             <DialogContent className="overflow-x-auto">
-              <h3 className="text-lg font-medium">Add Ingredient</h3>
-              <p className="text-sm text-muted-foreground">Add a new ingredient to your list !</p>
+              <h3 className="text-lg font-medium">Edit {ingredient.name}</h3>
+              <p className="text-sm text-muted-foreground">Edit the properties of your {ingredient.name} ingredient !</p>
               <Separator /> 
                 <Form {...form}>
                   <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>
@@ -141,7 +147,7 @@ export function IngredientFormDialog () {
                           name="customMeasureName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Measure Type</FormLabel>
+                              <FormLabel>Measure Name</FormLabel>
                               <FormControl>
                                 <Input {...field} />
                               </FormControl>
@@ -267,7 +273,7 @@ export function IngredientFormDialog () {
                         )}
                       />
                       </div>
-                    <Button type="submit">Add</Button>
+                    <Button type="submit">Edit</Button>
                   </form>
                 </Form>
             </DialogContent>

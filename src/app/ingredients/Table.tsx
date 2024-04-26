@@ -2,15 +2,11 @@
 
 import {
     ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
   } from "@tanstack/react-table"
-import { columns } from "./columns"
 import { DataTable } from "./data-table"
 import { useEffect, useState } from "react";
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
-import { getIngredients } from "@/lib/data";
+import { getIngredients } from "@/lib/ingredients_utils";
 
 interface TableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -25,12 +21,12 @@ export default function Table<TData, TValue>({
   const [ingredients, setIngredients ] = useState([]);
 
   // Get ingredients data from api/ingredients
+  
   useEffect(() => {
     async function fetchData() {
       const data = await getIngredients();
       setIngredients(data);
     }
-
     fetchData();
  }, []);
 

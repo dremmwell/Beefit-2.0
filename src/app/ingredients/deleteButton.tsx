@@ -10,7 +10,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { Ingredient } from "@/lib/definitions"
-  import { deleteIngredient } from "@/lib/data"
+  import { deleteIngredient } from "@/lib/ingredients_utils"
 
 import { Button } from "@/components/ui/button"
 
@@ -34,7 +34,7 @@ interface DeleteButtonProps {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={() => deleteIngredient(ingredient.id)}>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={() => deleteIngredient(ingredient)}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
