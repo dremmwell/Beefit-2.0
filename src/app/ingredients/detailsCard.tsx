@@ -56,13 +56,14 @@ interface DetailsButtonProps {
                     <h2 className="text-lg font-semibold">{ingredient.fats} g</h2>
                   </div>
                 </div>
-                <h2 className="text-sm text-muted-foreground">Nutritional information per 100g</h2>
+                <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per 100g</span></h2>
+                
               </div>
             </>
             :
             <>
             <h2 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-1">{ingredient.name}</h2>
-            <h2 className="text-muted-foreground border-b pb-2">One {ingredient.per} of {ingredient.name} weights {ingredient.gPerItem} grams</h2>
+            <h2 className="text-muted-foreground border-b pb-2">One {ingredient.per} of {ingredient.name} weights {ingredient.gperitem} grams</h2>
             {converted ?
               <>
               <div className="space-y-4">
@@ -87,7 +88,7 @@ interface DetailsButtonProps {
                     <h2 className="text-lg font-semibold">{convertedIngredient.fats} g</h2>
                   </div>
                 </div>
-                <h2 className="text-sm text-muted-foreground">Nutritional information per 100g</h2>
+                <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per 100g</span></h2>
               </div>
             </>
             :
@@ -114,7 +115,7 @@ interface DetailsButtonProps {
                     <h2 className="text-lg font-semibold">{ingredient.fats} g</h2>
                   </div>
                 </div>
-                <h2 className="text-sm text-muted-foreground">Nutritional information per {ingredient.per}</h2>
+                <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per {ingredient.per}</span></h2>
               </div>
             </>
             }

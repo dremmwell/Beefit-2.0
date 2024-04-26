@@ -19,13 +19,16 @@ export default function Table<TData, TValue>({
   const [isShorted, setIsShorted] = useState(false);
   const { height, width } = useWindowDimensions();
   const [ingredients, setIngredients ] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Get ingredients data from api/ingredients
   
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       const data = await getIngredients();
       setIngredients(data);
+      setIsLoading(false);
     }
     fetchData();
  }, []);
@@ -47,7 +50,7 @@ export default function Table<TData, TValue>({
 
   return (
     <div className="overflow-hidden container flex px-0.5">
-      <DataTable columns={columns} data={ingredients} isShorted={isShorted}/>
+      <DataTable columns={columns} data={ingredients} isShorted={isShorted} isLoading={isLoading}/>
     </div>
   )
 }

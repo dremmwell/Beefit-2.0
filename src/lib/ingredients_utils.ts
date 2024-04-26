@@ -124,14 +124,14 @@ export function createNewIngredient(data: any) {
         id: uuid,
         name: data.name,
         per: data.measureType,
-        gPerItem: data.measureWeight,
+        gperitem: data.measureWeight,
         calories: data.calories,
         proteins: data.proteins,
         carbs: data.carbs,
         fats: data.fats
     }
     if(data.measureType === "100g"){
-        ingredient.gPerItem = 100;
+        ingredient.gperitem = 100;
     }
     else{
         ingredient.per = data.customMeasureName;
@@ -147,14 +147,14 @@ export function editIngredient(data: any, ingredient: Ingredient) {
         id: ingredient.id,
         name: data.name,
         per: data.measureType,
-        gPerItem: data.measureWeight,
+        gperitem: data.measureWeight,
         calories: data.calories,
         proteins: data.proteins,
         carbs: data.carbs,
         fats: data.fats
     }
     if(data.measureType === "100g"){
-        newIngredient.gPerItem = 100;
+        newIngredient.gperitem = 100;
     }
     else{
         newIngredient.per = data.customMeasureName;
@@ -165,17 +165,17 @@ export function editIngredient(data: any, ingredient: Ingredient) {
 
 export function convertTo100g(ingredient: Ingredient){
     
-    const ratio = 100/ingredient.gPerItem;
+    const ratio = 100/ingredient.gperitem;
 
     const convertedIngredient: Ingredient = {
         id: ingredient.id,
         name: ingredient.name,
         per: ingredient.per,
-        gPerItem: ingredient.gPerItem,
-        calories: ingredient.calories*ratio,
-        proteins: ingredient.proteins*ratio,
-        carbs: ingredient.carbs*ratio,
-        fats: ingredient.fats*ratio
+        gperitem: ingredient.gperitem,
+        calories: parseFloat((ingredient.calories * ratio).toFixed(1)),
+        proteins: parseFloat((ingredient.proteins * ratio).toFixed(1)),
+        carbs: parseFloat((ingredient.carbs * ratio).toFixed(1)),
+        fats: parseFloat((ingredient.fats * ratio).toFixed(1))
     }
     return convertedIngredient
 }

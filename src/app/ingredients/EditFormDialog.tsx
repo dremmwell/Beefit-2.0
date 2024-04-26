@@ -68,7 +68,7 @@ interface EditFormDialogProps {
 export function EditFormDialog ({ingredient}: EditFormDialogProps) {
 
   let initialMeasureType;
-  if(ingredient.gPerItem == 100){
+  if(ingredient.gperitem == 100){
     initialMeasureType = "100g";
   }
   else{
@@ -82,7 +82,7 @@ export function EditFormDialog ({ingredient}: EditFormDialogProps) {
         name: ingredient.name,
         measureType: initialMeasureType,
         customMeasureName: ingredient.per,
-        measureWeight: ingredient.gPerItem,
+        measureWeight: ingredient.gperitem,
         calories: ingredient.calories,
         proteins: ingredient.proteins,
         carbs: ingredient.carbs,

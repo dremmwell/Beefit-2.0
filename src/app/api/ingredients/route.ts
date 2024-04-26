@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   try {
     const ingredient = await request.json();
 
-     await sql`INSERT INTO ingredients (id, name, per, gPerItem, calories, proteins, carbs, fats) VALUES (${ingredient.id}, ${ingredient.name}, ${ingredient.per}, ${ingredient.gPerItem}, ${ingredient.calories}, ${ingredient.proteins}, ${ingredient.carbs}, ${ingredient.fats});`;
+     await sql`INSERT INTO ingredients (id, name, per, gperitem, calories, proteins, carbs, fats) VALUES (${ingredient.id}, ${ingredient.name}, ${ingredient.per}, ${ingredient.gPerItem}, ${ingredient.calories}, ${ingredient.proteins}, ${ingredient.carbs}, ${ingredient.fats});`;
  
      return NextResponse.json({ message: 'Ingredient added successfully' }, { status: 201 });
 
@@ -48,7 +48,7 @@ export async function PUT(request: Request){
   try{
     const ingredient = await request.json();
 
-    await sql`UPDATE ingredients SET name = ${ingredient.name}, per = ${ingredient.per}, gPerItem = ${ingredient.gPerItem}, calories = ${ingredient.calories}, proteins = ${ingredient.proteins}, carbs = ${ingredient.carbs}, fats = ${ingredient.fats} WHERE id = ${ingredient.id}`;
+    await sql`UPDATE ingredients SET name = ${ingredient.name}, per = ${ingredient.per}, gperitem = ${ingredient.gPerItem}, calories = ${ingredient.calories}, proteins = ${ingredient.proteins}, carbs = ${ingredient.carbs}, fats = ${ingredient.fats} WHERE id = ${ingredient.id}`;
 
     return NextResponse.json({ message: 'Ingredient updated successfully'}, {status: 200});
   } catch (error)
