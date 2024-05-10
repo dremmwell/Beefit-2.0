@@ -40,8 +40,8 @@ export async function saveIngredient(ingredient: Ingredient) {
     if(res.ok){
         console.log("POST successful")
         toast({
-            title: "Ingredient saved",
-            description: `${ingredient.name} have been added to the database`,
+            title: "Ingredient saved - Refresh to see changes",
+            description: `${ingredient.name} have been added to the database.`,
         });
     }else{
         console.log("Something went wrong on POST")
@@ -72,8 +72,8 @@ export async function deleteIngredient(ingredient: Ingredient){
         if(res.ok){
             console.log("DELETE successful")
             toast({
-                title: "Ingredient deleted",
-                description: `${ingredient.name} have been removed from the database`,
+                title: "Ingredient deleted  - Refresh to see changes",
+                description: `${ingredient.name} have been removed from the database.`,
             });
         }else{
             console.log("Something went wrong on DELETE")
@@ -103,7 +103,7 @@ export async function updateIngredient(ingredient: Ingredient){
         if(res.ok){
             console.log("UPDATE successful")
             toast({
-                title: "Ingredient updated",
+                title: "Ingredient updated  - Refresh to see changes",
                 description: `${ingredient.name} have been updated`,
             });
         }else{

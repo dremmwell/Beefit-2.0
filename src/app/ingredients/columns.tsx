@@ -13,7 +13,7 @@ import {
 import { DeleteButton } from "./deleteButton";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { EditFormDialog } from "./EditFormDialog";
-import { DetailsButton } from "./detailsCard";
+import { DetailsButton } from "./detailsButton";
 
 
 export const columns: ColumnDef<Ingredient>[] = [
@@ -104,8 +104,6 @@ export const columns: ColumnDef<Ingredient>[] = [
     cell: ({ row }) => {
       const ingredient = row.original 
 
-
- 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
