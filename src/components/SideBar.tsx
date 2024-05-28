@@ -27,15 +27,21 @@ function SideBar() {
   }, [width]);
 
   return (
-    <nav className="rounded-l-lg sm:border-r border-b bg-background text-foreground flex sm:flex-col items-center pb-1">
-      <Logo isCollapsed={false}/>
-      <Separator className="m-1" orientation={isCollapsed ? "vertical" : "horizontal"}/>
-      <NavBar isCollapsed={isCollapsed}/>
-      <Separator className="m-1" orientation={isCollapsed ? "vertical" : "horizontal"}/>
-      <div className="sm:mt-auto m-2">
-        <ModeToggle />
-      </div>
-    </nav> 
+    <>
+      <nav className="rounded-l-lg sm:border-r border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col">
+        <div className="col-start-2 col-span-6 flex">
+          <Logo/>     
+        </div>
+        <div className="row-start-2 col-span-full">
+            <Separator className="m-1 hidden sm:block"/>
+            <NavBar isCollapsed={isCollapsed}/>
+            <Separator className="m-1 hidden sm:block"/>
+        </div>
+        <div className="sm:mt-auto sm:mr-auto ml-auto m-2 col-span-1 col-start-8">
+          <ModeToggle />
+        </div>
+      </nav>
+    </>
   )
 }
 

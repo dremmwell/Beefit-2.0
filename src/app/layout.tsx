@@ -59,6 +59,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-
-// className="mt-5 mx-2 rounded-[0.5rem] border bg-background shadow-md flex-1 flex-col sm:flex-row flex lg:size-11/12 xl:size-10/12
