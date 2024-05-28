@@ -24,25 +24,27 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
 import { useState, useEffect } from "react"
+import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  isShorted: boolean,
   isLoading: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  isShorted,
   isLoading
 }: DataTableProps<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  const [isShorted, setIsShorted] = useState(false);
+  const { height, width } = useWindowDimensions();
 
   const table = useReactTable({
     data,
@@ -75,6 +77,22 @@ export function DataTable<TData, TValue>({
       fats: !isShorted,
     });
  }, [isShorted, table]);
+
+
+ // Get windows dimensions and set isShorted true/false
+ const shortWidth = 1054;
+
+ useEffect(() => {
+   if (typeof width !== 'undefined') {
+     if (width <= shortWidth) {
+       setIsShorted(true);
+     }
+     else {
+       setIsShorted(false);
+     }
+   }
+ }, [width]);
+
 
   return (
     <div className="w-full">

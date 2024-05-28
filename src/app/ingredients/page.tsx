@@ -6,8 +6,8 @@ export default async function Page() {
 
   return (
     <>
-      <div className="container my-10 flex flex-col gap-2">
-        <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0">Ingredients</h1>
+      <div className="container sm:my-10 my-5 flex flex-col gap-2 max-h-fit min-h-0">
+        <h1 className="border-b text-3xl font-semibold tracking-tight first:mt-0">Ingredients</h1>
         <Table columns={columns}  />
         <AddFormDialog /> {/*handles the form and the add button*/}
       </div>

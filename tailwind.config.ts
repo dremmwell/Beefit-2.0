@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss"
+const { fontFamily } = require("tailwindcss/defaultTheme")
 
 const config = {
   darkMode: ["class"],
@@ -74,6 +75,7 @@ const config = {
       },
       fontFamily : {
         agbalumo: ["Agbalumo", "sans-serif"],
+        sans: ["var(--font-sans)", ...fontFamily.sans],
       },
     },
   },

@@ -20,7 +20,7 @@ interface NavBarProps {
 export default function NavBar({isCollapsed} : NavBarProps) {
 
     return (
-      <div>
+      <div className='flex sm:flex-col flex-1 justify-evenly sm:flex-none'>
         <Nav 
             isCollapsed={isCollapsed}
             links={[
@@ -39,7 +39,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
                 variant: "ghost",
               },
             ]} />
-            <Separator />
+            <Separator className='hidden sm:block'/>
             <Nav 
             isCollapsed={isCollapsed}
             links={[
@@ -58,7 +58,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
                 variant: "ghost",
               },
             ]} />
-            <Separator />
+            <Separator className='hidden sm:block'/>
             <Nav 
             isCollapsed={isCollapsed}
             links={[

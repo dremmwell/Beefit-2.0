@@ -5,7 +5,7 @@ import {
   } from "@tanstack/react-table"
 import { DataTable } from "./data-table"
 import { useEffect, useState } from "react";
-import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
+
 import { getIngredients } from "@/lib/ingredients_utils";
 
 interface TableProps<TData, TValue> {
@@ -16,8 +16,7 @@ export default function Table<TData, TValue>({
     columns,
 }: TableProps<TData, TValue>) {
 
-  const [isShorted, setIsShorted] = useState(false);
-  const { height, width } = useWindowDimensions();
+
   const [ingredients, setIngredients ] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -33,24 +32,9 @@ export default function Table<TData, TValue>({
     fetchData();
  }, []);
 
-
-// Get windows dimensions and set isShorted true/false
-  const shortWidth = 920;
-
-  useEffect(() => {
-    if (typeof width !== 'undefined') {
-      if (width <= shortWidth) {
-        setIsShorted(true);
-      }
-      else {
-        setIsShorted(false);
-      }
-    }
-  }, [width]);
-
   return (
-    <div className="overflow-hidden container flex px-0.5">
-      <DataTable columns={columns} data={ingredients} isShorted={isShorted} isLoading={isLoading}/>
+    <div className="overflow-hidden flex px-0.5">
+      <DataTable columns={columns} data={ingredients} isLoading={isLoading}/>
     </div>
   )
 }

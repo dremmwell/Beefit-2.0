@@ -17,7 +17,7 @@ function SideBar() {
 
   useEffect(() => {
     if (typeof width !== 'undefined') {
-      if (width <= smWidth) {
+      if (width < smWidth) {
         setIsCollapsed(true);
       }
       else {
@@ -27,12 +27,12 @@ function SideBar() {
   }, [width]);
 
   return (
-    <nav className="rounded-l-lg border-r bg-background text-foreground flex flex-col items-center pb-1">
-      <Logo isCollapsed={isCollapsed}/>
-      <Separator className="m-1"/>
+    <nav className="rounded-l-lg sm:border-r border-b bg-background text-foreground flex sm:flex-col items-center pb-1">
+      <Logo isCollapsed={false}/>
+      <Separator className="m-1" orientation={isCollapsed ? "vertical" : "horizontal"}/>
       <NavBar isCollapsed={isCollapsed}/>
-      <Separator className="m-1"/>
-      <div className="mt-auto">
+      <Separator className="m-1" orientation={isCollapsed ? "vertical" : "horizontal"}/>
+      <div className="sm:mt-auto m-2">
         <ModeToggle />
       </div>
     </nav> 
