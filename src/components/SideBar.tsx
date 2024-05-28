@@ -28,14 +28,14 @@ function SideBar() {
 
   return (
     <>
-      <nav className="rounded-l-lg sm:border-r border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col">
+      <nav className="sm:rounded-l-lg sm:border-r border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col">
         <div className="col-start-2 col-span-6 flex">
           <Logo/>     
         </div>
         <div className="row-start-2 col-span-full">
-            <Separator className="m-1 hidden sm:block"/>
+            <Separator className="hidden sm:block"/>
             <NavBar isCollapsed={isCollapsed}/>
-            <Separator className="m-1 hidden sm:block"/>
+            <Separator className="hidden sm:block"/>
         </div>
         <div className="sm:mt-auto sm:mr-auto ml-auto m-2 col-span-1 col-start-8">
           <ModeToggle />
