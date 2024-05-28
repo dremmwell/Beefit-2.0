@@ -25,11 +25,11 @@ interface DetailsButtonProps {
     const convertedIngredient: Ingredient = convertTo100g(ingredient);
 
     return (
-      <Dialog>
+      <Dialog >
         <DialogTrigger asChild>
           <Button className="self-start" variant="ghost">Details</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] m-2 rounded-[0.5rem]">
           <div>
           {ingredient.per === "100g" ?   
             <>
