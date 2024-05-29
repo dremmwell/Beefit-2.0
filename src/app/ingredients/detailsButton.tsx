@@ -30,12 +30,12 @@ interface DetailsButtonProps {
           <Button className="self-start" variant="ghost">Details</Button>
         </DialogTrigger>
         <DialogContent className="rounded-[0.5rem]">
-          <div>
+          <div className="flex flex-col">
           {ingredient.per === "100g" ?   
             <>
               <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-3">{ingredient.name}</h2>
               <div className="space-y-4">
-                <div className="flex h-5 items-center space-x-4 text-sm mt-8 mb-8">
+                <div className="flex flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
                   <div>
                     <h1 className="text-lg text-muted-foreground">Calories</h1>
                     <h2 className="text-lg font-semibold">{ingredient.calories} cal</h2>
@@ -57,7 +57,6 @@ interface DetailsButtonProps {
                   </div>
                 </div>
                 <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per 100g</span></h2>
-                
               </div>
             </>
             :
@@ -67,7 +66,7 @@ interface DetailsButtonProps {
             {converted ?
               <>
               <div className="space-y-4">
-                <div className="flex h-5 items-center space-x-4 text-sm mt-8 mb-8">
+                <div className="flex flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
                   <div>
                     <h1 className="text-lg text-muted-foreground">Calories</h1>
                     <h2 className="text-lg font-semibold">{convertedIngredient.calories} cal</h2>
@@ -94,7 +93,7 @@ interface DetailsButtonProps {
             :
             <>
               <div className="space-y-4">
-                <div className="flex h-5 items-center space-x-4 text-sm mt-8 mb-8">
+                <div className="flex flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
                   <div>
                     <h1 className="text-lg text-muted-foreground">Calories</h1>
                     <h2 className="text-lg font-semibold">{ingredient.calories} cal</h2>
