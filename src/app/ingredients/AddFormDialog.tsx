@@ -75,11 +75,11 @@ export function AddFormDialog () {
         name: "",
         measureType: "100g",
         customMeasureName: "",
-        measureWeight: 0,
-        calories: 0,
-        proteins: 0,
-        carbs: 0,
-        fats: 0,
+        measureWeight: undefined,
+        calories: undefined,
+        proteins: undefined,
+        carbs: undefined,
+        fats: undefined,
       }
     });
 

@@ -90,7 +90,8 @@ export function EditFormDialog ({ingredient}: EditFormDialogProps) {
       }
     });
 
-    const measureType = form.watch("measureType");
+    let measureType = initialMeasureType;
+    measureType = form.watch("measureType");
 
     const [open, setOpen] = useState(false);
    
