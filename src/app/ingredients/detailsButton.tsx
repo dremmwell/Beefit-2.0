@@ -31,7 +31,7 @@ interface DetailsButtonProps {
         </DialogTrigger>
         <DialogContent className="rounded-[0.5rem]">
           <div className="flex flex-col">
-          {ingredient.per === "100g" ?   
+          {ingredient.unit === "100g" ?   
             <>
               <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-3">{ingredient.name}</h2>
               <div className="space-y-4">
@@ -62,7 +62,7 @@ interface DetailsButtonProps {
             :
             <>
             <h2 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-1">{ingredient.name}</h2>
-            <h2 className="text-muted-foreground border-b pb-2">One {ingredient.per} of {ingredient.name} weights {ingredient.gperitem} grams</h2>
+            <h2 className="text-muted-foreground border-b pb-2">One {ingredient.unit} of {ingredient.name} weights {ingredient.gramsPerUnit} grams</h2>
             {converted ?
               <>
               <div className="space-y-4">
@@ -114,7 +114,7 @@ interface DetailsButtonProps {
                     <h2 className="text-lg font-semibold">{ingredient.fats} g</h2>
                   </div>
                 </div>
-                <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per {ingredient.per}</span></h2>
+                <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per {ingredient.unit}</span></h2>
               </div>
             </>
             }

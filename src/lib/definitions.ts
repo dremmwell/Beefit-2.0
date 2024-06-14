@@ -1,8 +1,8 @@
 export type Ingredient = {
     id: string;
     name: string;
-    per: string;
-    gperitem: number;
+    unit: string;
+    gramsPerUnit: number;
     calories: number;
     proteins: number;
     carbs: number;

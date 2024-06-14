@@ -16,6 +16,7 @@ import { EditFormDialog } from "./EditFormDialog";
 import { DetailsButton } from "./detailsButton";
 
 
+
 export const columns: ColumnDef<Ingredient>[] = [
   {
     accessorKey: "name",
@@ -86,7 +87,7 @@ export const columns: ColumnDef<Ingredient>[] = [
     },
   },
   {
-    accessorKey: "per",
+    accessorKey: "unit",
     header: ({ column }) => {
       return (
         <div

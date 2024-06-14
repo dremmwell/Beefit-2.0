@@ -28,7 +28,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {createNewIngredient, saveIngredient} from '../../lib/ingredients_utils'
+
+import {createNewIngredient} from '../../lib/ingredients_utils'
+import { createIngredient } from "../actions/actions"
 import { Ingredient } from "@/lib/definitions"
  
 const ingredientFormSchema = z.object({
@@ -79,7 +81,7 @@ export function AddFormDialog () {
         calories: undefined,
         proteins: undefined,
         carbs: undefined,
-        fats: undefined,
+        fats: undefined
       }
     });
 
@@ -92,7 +94,7 @@ export function AddFormDialog () {
     function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
       const newIngredient = createNewIngredient(values);
       form.reset();
-      saveIngredient(newIngredient);
+      createIngredient(newIngredient);
       setOpen(false);
     }
 

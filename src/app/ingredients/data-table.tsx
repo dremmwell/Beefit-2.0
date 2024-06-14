@@ -26,7 +26,6 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
@@ -71,7 +70,6 @@ export function DataTable<TData, TValue>({
 
   useEffect(() => {
     table.setColumnVisibility({
-      per: !isShorted,
       carbs: !isShorted,
       proteins: !isShorted,
       fats: !isShorted,

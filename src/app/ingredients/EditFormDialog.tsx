@@ -23,7 +23,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {editIngredient, updateIngredient} from '../../lib/ingredients_utils'
+import {editIngredient} from '../../lib/ingredients_utils'
+import { updateIngredient } from "../actions/actions"
 import { Ingredient } from "@/lib/definitions"
  
 const ingredientFormSchema = z.object({
@@ -68,7 +69,7 @@ interface EditFormDialogProps {
 export function EditFormDialog ({ingredient}: EditFormDialogProps) {
 
   let initialMeasureType;
-  if(ingredient.gperitem == 100){
+  if(ingredient.gramsPerUnit == 100){
     initialMeasureType = "100g";
   }
   else{
@@ -81,8 +82,8 @@ export function EditFormDialog ({ingredient}: EditFormDialogProps) {
       defaultValues: {
         name: ingredient.name,
         measureType: initialMeasureType,
-        customMeasureName: ingredient.per,
-        measureWeight: ingredient.gperitem,
+        customMeasureName: ingredient.unit,
+        measureWeight: ingredient.gramsPerUnit,
         calories: ingredient.calories,
         proteins: ingredient.proteins,
         carbs: ingredient.carbs,
