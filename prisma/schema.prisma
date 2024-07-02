@@ -7,11 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       String    @id
+  sessions Session[]
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+
+  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
+}
+
 model Ingredient {
   id           String @id @unique @default(uuid())
   name         String
   unit         String
-  gramsPerUnit Int
+  gramsPerUnit Float
   calories     Int
   proteins     Float
   carbs        Float
