@@ -43,7 +43,7 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased flex",
           fontSans.variable
         )}>
-          <div className=" flex 1 flex-col sm:flex-row lg:size-11/12 xl:size-10/12 lg:rounded-[0.5rem] lg:border bg-background lg:shadow-md lg:m-auto m-0 max-h-dvh size-full">
+          <div className=" flex flex-col sm:flex-row lg:size-11/12 xl:size-10/12 lg:rounded-[0.5rem] lg:border bg-background lg:shadow-md lg:m-auto m-0 max-h-dvh size-full">
             <ThemeProvider
               attribute="class"
               defaultTheme="system"
