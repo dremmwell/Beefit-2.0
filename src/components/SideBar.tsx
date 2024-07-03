@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import React from 'react'
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 import { Button } from "./ui/button";
-import { SignIn } from "../components/auth/SignIn"
+import { LogOut } from "../components/auth/LogOut"
 
 function SideBar() { 
 
@@ -40,7 +40,7 @@ function SideBar() {
             <Separator className="hidden sm:block"/>
         </div>
         <div className="col-start-1 row-start-1 mr-auto ml-2 sm:mt-auto sm:ml-auto">
-          <SignIn  />
+          <LogOut  />
         </div>
         <div className="sm:mt-5 sm:mr-auto ml-auto sm:mb-2 mr-2 col-span-1 col-start-8">
           <ModeToggle />
