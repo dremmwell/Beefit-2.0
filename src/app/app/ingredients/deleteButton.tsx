@@ -10,7 +10,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
   import { Ingredient } from "@/lib/definitions"
-  import { deleteIngredient } from "../actions/actions" 
+  import { deleteIngredient } from "../../actions/actions" 
 
 import { Button } from "@/components/ui/button"
 

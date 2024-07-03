@@ -23,8 +23,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {editIngredient} from '../../lib/ingredients_utils'
-import { updateIngredient } from "../actions/actions"
+import {editIngredient} from '../../../lib/ingredients_utils'
+import { updateIngredient } from "../../actions/actions"
 import { Ingredient } from "@/lib/definitions"
  
 const ingredientFormSchema = z.object({
