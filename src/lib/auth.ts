@@ -10,7 +10,6 @@ const client = new PrismaClient();
 
 const adapter = new PrismaAdapter(client.session, client.user);
 
-
 export const lucia = new Lucia(adapter, {
 	sessionCookie: {
 		// this sets cookies with super long expiration
@@ -31,10 +30,12 @@ export const lucia = new Lucia(adapter, {
 
 export const validateRequest = cache(async () => {
 	const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+
 	if (!sessionId) return {
 		user: null,
 		session: null,
 	};
+	
 	const { user, session } = await lucia.validateSession(sessionId);
 	try {
 		if (session && session.fresh) {

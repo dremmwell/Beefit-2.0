@@ -14,3 +14,13 @@ object({
       message: "Passwords do not match",
       path: ["confirmPassword"]
   })
+
+
+export const LogInSchema = z.
+object({
+    username: z
+        .string().min(2).max(50),
+    password: z
+        .string()
+        .min(8, {message: "Password must be at least 8 characters long"}),
+})        

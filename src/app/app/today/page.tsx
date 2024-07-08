@@ -1,6 +1,14 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { validateRequest } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function Page() { 
+
+  const { user } = await validateRequest()
+
+  if(!user) {
+    return redirect("/")
+  }
   
   return (
     <div className="container my-10 flex flex-col gap-2">

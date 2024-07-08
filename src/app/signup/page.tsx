@@ -2,8 +2,17 @@ import { SignupForm } from "@/components/auth/SignupForm";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
+import { validateRequest } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function Signup() {
+export default async  function Signup() {
+
+  const {user} = await validateRequest()
+
+  if(user) {
+    return redirect("/app")
+  }
+
     return (
       <main className="container px-2 sm:px-8 my-10 flex flex-col gap-2">
         <div className="flex justify-between">

@@ -2,10 +2,19 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
 import { LoginForm } from "@/components/auth/LoginForm"
+import { validateRequest } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function Login() {
+export default async function Login() {
+
+    const {user} = await validateRequest()
+
+    if(user) {
+      return redirect("/app")
+    }
+
     return (
-<main className="container px-2 sm:px-8 my-10 flex flex-col gap-2">
+      <main className="container px-2 sm:px-8 my-10 flex flex-col gap-2">
         <div className="flex justify-between">
         <Link href="/" className="text-3xl xl:text-4xl font-agbalumo font-extrabold flex-1 scroll-m-20 border-b first:mt-0">Beefit</Link>
           <div>

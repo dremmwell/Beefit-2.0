@@ -14,15 +14,19 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  password: z.string().min(8),
-})
+
+import { LogInSchema } from "@/app/types/auth.schema"
+import { toast } from "../ui/use-toast"
+import { useRouter } from "next/navigation"
+import { logIn } from "@/app/actions/auth.actions"
 
 export function LoginForm() {
+
+  const router = useRouter() 
+
       // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof LogInSchema>>({
+    resolver: zodResolver(LogInSchema),
     defaultValues: {
       username: "",
       password: "",
@@ -30,10 +34,20 @@ export function LoginForm() {
   })
  
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof LogInSchema>) {
+    const res = await logIn(values);
+    if(res.error){
+      toast({
+        variant: 'destructive',
+        description: res.error
+      })
+    } else if(res.success) {
+      toast({
+        variant: 'default',
+        description: "Logged in"
+      })
+      router.push("/app")
+    }
   }
 
   return (

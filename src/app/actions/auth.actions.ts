@@ -1,18 +1,17 @@
 "use server"
+
 import { z } from "zod"
-import { SignUpSchema } from "../types"
+import { LogInSchema, SignUpSchema } from "../types/auth.schema"
 import * as argon2 from "argon2";
-import { generateIdFromEntropySize } from "lucia";
+import { generateId } from "lucia";
 import db from "@/db/db";
-import { lucia } from "@/lib/auth";
+import { lucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
-    console.log(values)
   
     const hashedPassword = await argon2.hash(values.password)
-    const userId = generateIdFromEntropySize(16)
+    const userId = generateId(15)
   
     try {
         await db.user.create({
@@ -39,7 +38,82 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
       }
     } catch (error: any) {
       return {
-        error: error?.message,
+        error: error.message,
       }
     }
+}
+
+export const logIn = async (value: z.infer<typeof LogInSchema>) => {
+
+  const existingUser = await db.user.findUnique({
+    where: {
+      username: value.username,
+    },
+  });
+
+  if (!existingUser) {
+    return {
+      error: "User not found",
+    };
   }
+
+  if(!existingUser.password_hash){
+    return {
+      error: "User not found",
+    };
+  }
+
+  const validPassword = await argon2.verify(
+    existingUser.password_hash,
+    value.password
+  )
+
+  if(!validPassword) {
+    return {
+      error: "Incorrect username or password"
+    }
+  }
+
+  const session = await lucia.createSession(existingUser.id, {})
+  const sessionCookie = lucia.createSessionCookie(session.id)
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes
+  )
+
+  return {
+    success: "Logged in sucessfully",
+  }
+
+}
+
+export const signOut = async () => {
+
+  try {
+    const {session} = await validateRequest()
+
+    if(!session){
+      return {
+        error: "Unauthorized"
+      }
+    }
+  
+    await lucia.invalidateSession(session.id)
+  
+    const sessionCookie = lucia.createBlankSessionCookie()
+  
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    )
+
+  }
+  catch (error: any){
+    return {
+      error: error.message,
+    }
+  }
+
+}

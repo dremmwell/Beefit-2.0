@@ -1,3 +1,6 @@
+import { validateRequest } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
 import Table from "./Table"
 import { columns } from "./columns";
 import { AddFormDialog } from "./AddFormDialog";
@@ -7,6 +10,13 @@ import { Ingredient } from "@/lib/definitions";
 import { getIngredients } from "../../actions/db.actions";
 
 export default async function Page() { 
+
+  const { user } = await validateRequest()
+
+  if(!user) {
+    return redirect("/")
+  }
+
 
 const ingredients = await getIngredients();
 

@@ -6,8 +6,6 @@ const prisma = new PrismaClient()
 import { Ingredient } from "@/lib/definitions"
 
 export async function seedIngredients() {
-    await db.ingredient.create({
-
-    })
+    await db.ingredient.create({})
 }
 

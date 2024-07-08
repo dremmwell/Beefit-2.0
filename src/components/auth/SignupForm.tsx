@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { SignUpSchema } from "@/app/types"
+
+import { SignUpSchema } from "@/app/types/auth.schema"
 import { signUp } from "@/app/actions/auth.actions"
 import { toast } from "../ui/use-toast"
 import { useRouter } from "next/navigation"

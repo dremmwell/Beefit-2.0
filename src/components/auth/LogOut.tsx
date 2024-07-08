@@ -1,3 +1,4 @@
+import { signOut } from "@/app/actions/auth.actions"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,12 +13,15 @@ import {
 import { Button } from "@/components/ui/button"
 import { buttonVariants } from "@/components/ui/button"
 import Link from "next/link"
+import { Form } from "react-hook-form"
 
 export function LogOut() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">Log out</Button>
+        <form action={signOut}>
+          <Button variant="outline" type="submit">Log out</Button>
+        </form>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
