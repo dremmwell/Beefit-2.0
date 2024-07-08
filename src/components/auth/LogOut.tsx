@@ -13,15 +13,12 @@ import {
 import { Button } from "@/components/ui/button"
 import { buttonVariants } from "@/components/ui/button"
 import Link from "next/link"
-import { Form } from "react-hook-form"
 
 export function LogOut() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <form action={signOut}>
-          <Button variant="outline" type="submit">Log out</Button>
-        </form>
+          <Button variant="outline">Log out</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -35,7 +32,9 @@ export function LogOut() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Link href="/" className={buttonVariants({ variant: "default"})}>Log out</Link>
+          <form action={signOut}>
+            <Button type="submit" variant="default">Log out</Button>
+          </form>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
