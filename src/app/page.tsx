@@ -1,8 +1,17 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
+import { validateRequest } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+
+  const { user } = await validateRequest()
+
+  if(user) {
+    return redirect("/app")
+  }
+
   return (
     <main className="flex flex-col">
       <div className="m-1 self-end">
