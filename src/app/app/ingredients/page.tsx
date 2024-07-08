@@ -4,7 +4,7 @@ import { AddFormDialog } from "./AddFormDialog";
 
 import db from "@/db/db";
 import { Ingredient } from "@/lib/definitions";
-import { getIngredients } from "../../actions/actions";
+import { getIngredients } from "../../actions/db.actions";
 
 export default async function Page() { 
 

@@ -30,7 +30,7 @@ import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import {createNewIngredient} from '../../../lib/ingredients_utils'
-import { createIngredient } from "../../actions/actions"
+import { createIngredient } from "../../actions/db.actions"
 import { Ingredient } from "@/lib/definitions"
  
 const ingredientFormSchema = z.object({
@@ -77,11 +77,11 @@ export function AddFormDialog () {
         name: "",
         measureType: "100g",
         customMeasureName: "",
-        measureWeight: undefined,
-        calories: undefined,
-        proteins: undefined,
-        carbs: undefined,
-        fats: undefined
+        measureWeight: 0,
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0
       }
     });
 

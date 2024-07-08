@@ -14,19 +14,18 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  password: z.string().min(8, {message: "Password must be at least 8 characters long"}),
-  confirmPassword: z.string().min(8, {message: "Password must be at least 8 characters long"})
-}).refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"]
-})
+import { SignUpSchema } from "@/app/types"
+import { signUp } from "@/app/actions/auth.actions"
+import { toast } from "../ui/use-toast"
+import { useRouter } from "next/navigation"
 
 export function SignupForm() {
+
+  const router = useRouter() 
+  
       // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof SignUpSchema>>({
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
       username: "",
       password: "",
@@ -35,10 +34,20 @@ export function SignupForm() {
   })
  
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof SignUpSchema>) {
+    const res = await signUp(values);
+    if(res.error){
+      toast({
+        variant: 'destructive',
+        description: res.error
+      })
+    } else if(res.success) {
+      toast({
+        variant: 'default',
+        description: "Account created sucessfully"
+      })
+      router.push("/app")
+    }
   }
 
   return (
