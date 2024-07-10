@@ -31,67 +31,31 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import {createNewIngredient} from '../../../lib/ingredients_utils'
 import { createIngredient } from "../../actions/db.actions"
-import { Ingredient } from "@/lib/definitions"
- 
-const ingredientFormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Ingredient name must be at least 2 characters.",
-  }),
-  measureType: z.string(),
-  customMeasureName: z.string().optional(),
-  measureWeight: z.coerce.number().optional(),
-  calories: z.coerce.number().positive(),
-  proteins: z.coerce.number().positive(),
-  carbs: z.coerce.number().positive(),
-  fats: z.coerce.number().positive(),
-})
-.refine((data) => {
-  if(data.measureType === "custom") {
-    return !!data.customMeasureName;
-  }
-  return true;
-},
-{
-  message: "Custom measure requires a name",
-  path: ["customMeasureName"],
-}
-)
-.refine((data) => {
-  if(data.measureType === "custom") {
-    return !!data.measureWeight;
-  }
-  return true;
-},
-{
-  message: "Custom measure requires a weight",
-  path: ["measureWeight"],
-}
-);
+
+import { AddIngredientFormSchema } from "@/app/types/form.schema"
 
 export function AddFormDialog () {
 
     //  Define the form.
-    const form = useForm<z.infer<typeof ingredientFormSchema>>({
-      resolver: zodResolver(ingredientFormSchema),
+    const form = useForm<z.infer<typeof AddIngredientFormSchema>>({
+      resolver: zodResolver(AddIngredientFormSchema),
       defaultValues: {
-        name: "",
         measureType: "100g",
         customMeasureName: "",
-        measureWeight: 0,
-        calories: 0,
-        proteins: 0,
-        carbs: 0,
-        fats: 0
+        measureWeight: "",
+        calories: "",
+        fats: "",
+        proteins: "",
+        carbs:""
       }
     });
-
 
     const measureType = form.watch("measureType");
 
     const [open, setOpen] = useState(false);
    
     // Handles submit and data save
-    function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
+    function onSubmit(values: z.infer<typeof AddIngredientFormSchema>) {
       const newIngredient = createNewIngredient(values);
       form.reset();
       createIngredient(newIngredient);
