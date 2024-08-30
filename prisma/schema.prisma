@@ -8,10 +8,13 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  username      String    @unique
+  id            String @id
+  username      String @unique
   password_hash String
-  sessions      Session[]
+
+  sessions    Session[]
+  ingredients Ingredient[]
+  recipes     Recipe[]
 }
 
 model Session {
@@ -31,4 +34,42 @@ model Ingredient {
   proteins     Float
   carbs        Float
   fats         Float
+  userId       String
+
+  bookmarked Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  recipeIngredient RecipeIngredient[]
+
+  user User @relation(references: [id], fields: [userId])
+}
+
+model Recipe {
+  id           String  @id @default(uuid())
+  name         String  @unique
+  bookmarked   Boolean @default(false)
+  instructions String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  ingredients RecipeIngredient[]
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model RecipeIngredient {
+  id           Int    @id @default(autoincrement())
+  recipeId     String
+  ingredientId String
+  grams        String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  recipe     Recipe     @relation(fields: [recipeId], references: [id])
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
 }
