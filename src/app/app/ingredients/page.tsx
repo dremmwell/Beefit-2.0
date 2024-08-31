@@ -18,7 +18,7 @@ export default async function Page() {
   }
 
 
-const ingredients = await getIngredients();
+const ingredients = await getIngredients(user.id);
 
   return (
     <>

@@ -1,10 +1,17 @@
 "use server"
 
- import db from "@/db/db";
- import { Ingredient } from "@/lib/definitions";
+import db from "@/db/db";
+import { Ingredient } from "@/lib/definitions";
+import { User, UserId } from "lucia";
 
-export async function getIngredients() {
-    const data = await db.ingredient.findMany();
+export async function getIngredients(userId: UserId) {
+    const data = await db.ingredient.findMany({
+      where: {
+        userId: userId
+      }
+    }
+
+    );
     const ingredients = JSON.parse(JSON.stringify(data));
     return ingredients
 }

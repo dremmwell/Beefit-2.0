@@ -1,7 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
  
-export async function GET(request: Request) {
+/* export async function GET(request: Request) {
   try {
     const ingredients = await sql`SELECT * FROM ingredients`;
 
@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     console.error('Database Error',error)
     return NextResponse.json({ error }, { status: 500 });
   }
-}
+} */
 
 
 /* export async function POST(request: Request) {
