@@ -7,6 +7,10 @@ export type Ingredient = {
     proteins: number;
     carbs: number;
     fats: number;
+    userId: string;
+    bookmarked: boolean;
+    createdAt: number;
+    updatedAt: number;
 };
 
 export type Recipe = {

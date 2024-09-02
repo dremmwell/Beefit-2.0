@@ -69,3 +69,39 @@ export const AddIngredientFormSchema = z.object({
     path: ["measureWeight"],
   }
 );
+
+
+export const EditIngredientFormSchema = z.object({
+  name: z.string().min(2, {
+    message: "Ingredient name must be at least 2 characters.",
+  }),
+  measureType: z.string(),
+  customMeasureName: z.string().optional(),
+  measureWeight: z.coerce.number().optional(),
+  calories: z.coerce.number().positive(),
+  proteins: z.coerce.number().positive(),
+  carbs: z.coerce.number().positive(),
+  fats: z.coerce.number().positive(),
+})
+.refine((data) => {
+  if(data.measureType === "custom") {
+    return !!data.customMeasureName;
+  }
+  return true;
+},
+{
+  message: "Custom measure requires a name",
+  path: ["customMeasureName"],
+}
+)
+.refine((data) => {
+  if(data.measureType === "custom") {
+    return !!data.measureWeight;
+  }
+  return true;
+},
+{
+  message: "Custom measure requires a weight",
+  path: ["measureWeight"],
+}
+);

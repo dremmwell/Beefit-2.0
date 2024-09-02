@@ -29,10 +29,39 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import {createNewIngredient} from '../../../lib/ingredients_utils'
 import { createIngredient } from "../../actions/db.actions"
 
 import { AddIngredientFormSchema } from "@/app/types/form.schema"
+import { Ingredient } from "@/lib/definitions"
+import { v4 as uuidv4 } from 'uuid';
+
+// Create a new ingredient object from the add ingredient form
+
+export function createNewIngredient(data: any,) {
+    
+  const uuid = uuidv4();
+  const ingredient: Ingredient = {
+      id: uuid,
+      name: data.name,
+      unit: data.measureType,
+      gramsPerUnit: data.measureWeight,
+      calories: data.calories,
+      proteins: data.proteins,
+      carbs: data.carbs,
+      fats: data.fats,
+      userId: "",
+      bookmarked: false,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+  }
+  if(data.measureType === "100g"){
+      ingredient.gramsPerUnit = 100;
+  }
+  else{
+      ingredient.unit = data.customMeasureName;
+  }
+  return ingredient
+}
 
 export function AddFormDialog () {
 

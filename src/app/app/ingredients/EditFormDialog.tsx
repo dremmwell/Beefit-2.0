@@ -23,44 +23,36 @@ import {
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {editIngredient} from '../../../lib/ingredients_utils'
 import { updateIngredient } from "../../actions/db.actions"
 import { Ingredient } from "@/lib/definitions"
- 
-const ingredientFormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Ingredient name must be at least 2 characters.",
-  }),
-  measureType: z.string(),
-  customMeasureName: z.string().optional(),
-  measureWeight: z.coerce.number().optional(),
-  calories: z.coerce.number().positive(),
-  proteins: z.coerce.number().positive(),
-  carbs: z.coerce.number().positive(),
-  fats: z.coerce.number().positive(),
-})
-.refine((data) => {
-  if(data.measureType === "custom") {
-    return !!data.customMeasureName;
+import { EditIngredientFormSchema } from "@/app/types/form.schema"
+
+// Edit the selected ingredient through the edit form
+
+export function editIngredient(data: any, ingredient: Ingredient) {
+    
+  const newIngredient: Ingredient = {
+      id: ingredient.id,
+      name: data.name,
+      unit: data.measureType,
+      gramsPerUnit: data.measureWeight,
+      calories: data.calories,
+      proteins: data.proteins,
+      carbs: data.carbs,
+      fats: data.fats,
+      userId: ingredient.userId,
+      bookmarked: ingredient.bookmarked,
+      createdAt: ingredient.createdAt,
+      updatedAt: Date.now(),
   }
-  return true;
-},
-{
-  message: "Custom measure requires a name",
-  path: ["customMeasureName"],
-}
-)
-.refine((data) => {
-  if(data.measureType === "custom") {
-    return !!data.measureWeight;
+  if(data.measureType === "100g"){
+      newIngredient.gramsPerUnit = 100;
   }
-  return true;
-},
-{
-  message: "Custom measure requires a weight",
-  path: ["measureWeight"],
+  else{
+      newIngredient.unit = data.customMeasureName;
+  }
+  return newIngredient
 }
-);
 
 interface EditFormDialogProps {
   ingredient: Ingredient,
@@ -77,8 +69,8 @@ export function EditFormDialog ({ingredient}: EditFormDialogProps) {
   }
 
     //  Define the form.
-    const form = useForm<z.infer<typeof ingredientFormSchema>>({
-      resolver: zodResolver(ingredientFormSchema),
+    const form = useForm<z.infer<typeof EditIngredientFormSchema>>({
+      resolver: zodResolver(EditIngredientFormSchema),
       defaultValues: {
         name: ingredient.name,
         measureType: initialMeasureType,
@@ -97,7 +89,7 @@ export function EditFormDialog ({ingredient}: EditFormDialogProps) {
     const [open, setOpen] = useState(false);
    
     // Handles submit and data save
-    function onSubmit(values: z.infer<typeof ingredientFormSchema>) {
+    function onSubmit(values: z.infer<typeof EditIngredientFormSchema>) {
       const newIngredient = editIngredient(values,ingredient);
       form.reset();
       updateIngredient(newIngredient);
