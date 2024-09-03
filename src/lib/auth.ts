@@ -52,8 +52,13 @@ export const validateRequest = cache(async () => {
 				sessionCookie.value, 
 				sessionCookie.attributes);
 		}
-	} catch {
+	} catch (error){
 		// Next.js throws error when attempting to set cookies when rendering page
+		console.error("Error setting cookie:", error);
+		return {
+			user: null,
+			session: null,
+		  };
 	}
 	return {
 		user,
