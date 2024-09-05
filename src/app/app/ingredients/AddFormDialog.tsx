@@ -32,7 +32,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { createIngredient } from "../../actions/db.actions"
 
 import { AddIngredientFormSchema } from "@/app/types/form.schema"
-import { Ingredient } from "@/lib/definitions"
+import { Ingredient } from 'prisma/prisma-client'
 import { v4 as uuidv4 } from 'uuid';
 
 // Create a new ingredient object from the add ingredient form
@@ -51,8 +51,8 @@ export function createNewIngredient(data: any,) {
       fats: data.fats,
       userId: "",
       bookmarked: false,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
   }
   if(data.measureType === "100g"){
       ingredient.gramsPerUnit = 100;

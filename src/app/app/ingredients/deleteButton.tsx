@@ -9,7 +9,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-  import { Ingredient } from "@/lib/definitions"
+  import { Ingredient } from '@prisma/client'
   import { deleteIngredient } from "../../actions/db.actions" 
 
 import { Button } from "@/components/ui/button"

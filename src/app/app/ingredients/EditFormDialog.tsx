@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { updateIngredient } from "../../actions/db.actions"
-import { Ingredient } from "@/lib/definitions"
+import { Ingredient } from "@prisma/client"
 import { EditIngredientFormSchema } from "@/app/types/form.schema"
 
 // Edit the selected ingredient through the edit form
@@ -43,7 +43,7 @@ export function editIngredient(data: any, ingredient: Ingredient) {
       userId: ingredient.userId,
       bookmarked: ingredient.bookmarked,
       createdAt: ingredient.createdAt,
-      updatedAt: Date.now(),
+      updatedAt: new Date()
   }
   if(data.measureType === "100g"){
       newIngredient.gramsPerUnit = 100;

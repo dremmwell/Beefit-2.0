@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Ingredient } from "@/lib/definitions"
+import { Ingredient } from '@prisma/client'
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"

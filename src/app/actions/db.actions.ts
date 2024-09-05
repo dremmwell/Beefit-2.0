@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/db/db";
-import { Ingredient, Recipe } from "@/lib/definitions";
+import { Ingredient, Recipe } from '@prisma/client';
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'

@@ -1,7 +1,7 @@
 "use client"
  
 import { ColumnDef, Visibility } from "@tanstack/react-table";
-import { Ingredient } from "@/lib/definitions";
+import { Ingredient } from '@prisma/client'
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
