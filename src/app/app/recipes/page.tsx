@@ -1,4 +1,4 @@
-import { getRecipes } from "@/app/actions/db.actions";
+import { getRecipeIngredients, getRecipes } from "@/app/actions/db.actions";
 import {
   Card,
   CardContent,
@@ -20,7 +20,7 @@ export default async function Page() {
     return redirect("/")
   }
 
-  const recipes = await getRecipes(user.id)
+  const recipes = await getRecipes(user.id);
 
   return (
     <div className="container my-10 flex flex-col gap-2">

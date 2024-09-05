@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/db/db";
-import { Ingredient, Recipe } from '@prisma/client';
+import { Ingredient, Recipe, RecipeIngredient } from '@prisma/client';
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
@@ -82,4 +82,16 @@ export async function getRecipes(userId: UserId): Promise<Recipe[]> {
   });
   const recipes = JSON.parse(JSON.stringify(data));
   return recipes
+}
+
+// Recipe_Ingredients actions //
+
+export async function getRecipeIngredients(recipe: Recipe) {
+  const data = await db.recipeIngredient.findMany({
+    where: {
+      recipeId: recipe.id
+    }
+  });
+  const recipeIngredient = JSON.parse(JSON.stringify(data));
+  return recipeIngredient
 }
