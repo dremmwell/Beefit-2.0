@@ -33,7 +33,9 @@ export function LogOut() {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <form action={signOut}>
-            <Button type="submit" variant="default">Log out</Button>
+            <div className="flex">
+              <Button type="submit" variant="default" className="flex-grow">Log out</Button>
+            </div>
           </form>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,20 +1,19 @@
 "use server"
 
 import db from "@/db/db";
-import { Ingredient } from "@/lib/definitions";
-import { User, UserId } from "lucia";
+import { Ingredient, Recipe } from "@/lib/definitions";
+import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
-import { date } from "zod";
+
+// Ingredients CRUD operations //
 
 export async function getIngredients(userId: UserId) {
     const data = await db.ingredient.findMany({
       where: {
         userId: userId
       }
-    }
-
-    );
+    });
     const ingredients = JSON.parse(JSON.stringify(data));
     return ingredients
 }
@@ -73,3 +72,14 @@ export async function deleteIngredient(ingredient: Ingredient) {
   }
 }
 
+// Recipes CRUD operations //
+
+export async function getRecipes(userId: UserId): Promise<Recipe[]> {
+  const data = await db.recipe.findMany({
+    where: {
+      userId: userId
+    }
+  });
+  const recipes = JSON.parse(JSON.stringify(data));
+  return recipes
+}

@@ -16,5 +16,5 @@ export type Ingredient = {
 export type Recipe = {
     id: string;
     name: string;
-    ingrdient: Ingredient;
+    ingredient: Ingredient;
 }
