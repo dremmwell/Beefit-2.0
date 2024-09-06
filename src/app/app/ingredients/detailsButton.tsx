@@ -119,8 +119,17 @@ interface DetailsButtonProps {
             </>
             }
               <div className="flex items-center space-x-2 mt-4 text-muted-foreground">
-                <Switch checked={converted} onCheckedChange={setConverted} />
-                <Label htmlFor="converted">convert for 100g</Label>
+                {converted ? 
+                    <>
+                        <Switch checked={converted} onCheckedChange={setConverted} />
+                        <Label htmlFor="converted">convert for {ingredient.unit}</Label>
+                    </>
+                    :
+                    <>
+                        <Switch checked={converted} onCheckedChange={setConverted} />
+                        <Label htmlFor="converted">convert for 100g</Label>
+                    </>
+                } 
               </div>
             </>
           }

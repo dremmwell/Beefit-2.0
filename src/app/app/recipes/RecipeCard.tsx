@@ -1,14 +1,9 @@
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"
-  import { Ingredient, Recipe, RecipeIngredient } from '@prisma/client'
-  import { getIngredients, getRecipeIngredients } from "@/app/actions/db.actions"
-  import db from "@/db/db"
+
+import { Ingredient, Recipe, RecipeIngredient } from '@prisma/client'
+import { getIngredients, getRecipeIngredients } from "@/app/actions/db.actions"
+import db from "@/db/db"
+import InfoCard from "./InfoCard";
+import { IngredientInRecipe } from "@/app/types/definitions";
 
 
 interface RecipeCardProps {
@@ -17,7 +12,7 @@ interface RecipeCardProps {
 
 export default async function RecipeCard({recipe}: RecipeCardProps) {
 
-  const ingredientsInRecipe: Array<any>= [];
+  const ingredientsInRecipe: Array<IngredientInRecipe>= [];
 
   const recipeIngredients: Array<RecipeIngredient> = await getRecipeIngredients(recipe);
   
@@ -33,16 +28,8 @@ export default async function RecipeCard({recipe}: RecipeCardProps) {
           ingredientsInRecipe.push(JSON.parse(JSON.stringify(ingredientInRecipe)));
       }
   }));
-
-  console.log(ingredientsInRecipe);
-
+  
   return (
-      <Card key={recipe.id}>
-          <CardHeader>
-              <CardTitle>{recipe.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-          </CardContent>
-      </Card>
+    <InfoCard recipe={recipe} ingredientsInRecipe={ingredientsInRecipe}/>
   );
 }
