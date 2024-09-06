@@ -84,6 +84,10 @@ export async function getRecipes(userId: UserId): Promise<Recipe[]> {
   return recipes
 }
 
+export async function deleteRecipe(recipeId: string) {
+  console.log(`Recipe ID : ${recipeId} to be deleted`)
+}
+
 // Recipe_Ingredients actions //
 
 export async function getRecipeIngredients(recipe: Recipe) {
