@@ -26,42 +26,6 @@ export default async function Page() {
           {recipes.map(recipe => (
               <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
           ))}
-                  {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                  {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                  {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                  {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                  {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                  {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                          {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                          {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                          {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                          {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                          {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
-                          {recipes.map(recipe => (
-              <RecipeCard key={recipe.id} recipe={recipe}></RecipeCard>
-          ))}
         </div>
       </ScrollArea>
     </div>

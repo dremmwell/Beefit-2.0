@@ -14,22 +14,21 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
 import { deleteRecipe } from '@/app/actions/db.actions';
+import { Recipe } from '@prisma/client';
 
 export default function DeleteDialog({
-  recipeId,
-  recipeName,
+  recipe,
   isOpen,
   setIsOpen
 }: {
-  recipeId: string;
-  recipeName: string;
+  recipe: Recipe
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
 
   const onDelete = async () => {
     try {
-      deleteRecipe(recipeId)
+      deleteRecipe(recipe.id)
       setIsOpen(false)
     }
     catch (error) {
@@ -41,7 +40,7 @@ export default function DeleteDialog({
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
         <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure to delete your recipe of {recipeName}?</AlertDialogTitle>
+            <AlertDialogTitle>Are you absolutely sure to delete your recipe of {recipe.name}?</AlertDialogTitle>
             <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your ingredient and remove it from the database.
             </AlertDialogDescription>

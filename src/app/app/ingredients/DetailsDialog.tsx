@@ -1,5 +1,4 @@
-'use client'
-
+import React, { Dispatch, SetStateAction } from 'react';
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -14,12 +13,14 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { convertTo100g } from "@/lib/ingredients_utils"
+import IconMenu from '@/components/icon-menu';
+import { Trash2, ListCollapse } from 'lucide-react';
 
-interface DetailsButtonProps {
+interface DetailsDialogProps {
     ingredient: Ingredient,
 }
    
-  export function DetailsButton({ingredient}: DetailsButtonProps) {
+export default function DetailsDialog({ingredient}: DetailsDialogProps) {
 
     const [converted, setConverted] = useState(false);
     const convertedIngredient: Ingredient = convertTo100g(ingredient);
@@ -27,7 +28,14 @@ interface DetailsButtonProps {
     return (
       <Dialog >
         <DialogTrigger asChild>
-          <Button className="self-start" variant="ghost">Details</Button>
+          <button
+            className="w-full justify-start flex rounded-md p-2"
+          >
+          <IconMenu
+            text="Details"
+            icon={<ListCollapse className="h-4 w-4" />}
+            />
+          </button>
         </DialogTrigger>
         <DialogContent className="rounded-[0.5rem]">
           <div className="flex flex-col">

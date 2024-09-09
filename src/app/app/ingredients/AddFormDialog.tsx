@@ -97,8 +97,10 @@ export function AddFormDialog () {
           <Button className="self-end">Add Ingredient</Button>
           </DialogTrigger>
             <DialogContent className="overflow-x-auto">
-              <h3 className="text-lg font-medium">Add Ingredient</h3>
-              <p className="text-sm text-muted-foreground">Add a new ingredient to your list !</p>
+              <DialogHeader>
+                <DialogTitle>Add Ingredient</DialogTitle>
+                <DialogDescription>Save a new ingredient in your list !</DialogDescription>
+              </DialogHeader>
               <Separator /> 
                 <Form {...form}>
                   <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>

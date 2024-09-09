@@ -42,6 +42,7 @@ export default function InfoCard({recipe, ingredientsInRecipe}: InfoCardProps) {
     const [converted, setConverted] = useState(false);
     const convertedRecipeValues: RecipeValues = convertTo100g(recipeValues);
 
+    const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
@@ -49,21 +50,26 @@ export default function InfoCard({recipe, ingredientsInRecipe}: InfoCardProps) {
     <>
 {/* Dialogs open/close and props setup */}  
       <DeleteDialog 
-        recipeId={recipe.id}
-        recipeName={recipe.name}
+        recipe={recipe}
         isOpen={isDeleteOpen}
         setIsOpen={setIsDeleteOpen}
       />
 
+      <DetailsDialog 
+      recipe={recipe}
+      isOpen={isDetailsOpen}
+      setIsOpen={setIsDetailsOpen}
+      />
+
 {/* InfoCard layout */}      
-      <Card >
+      <Card className="shadow-md relative hover:shadow-xl duration-200 transition-all">
         <CardHeader >
               <CardTitle >
                   {recipe.name}
               </CardTitle>
               <CardDescription className="overflow-hidden">
                   {ingredientsInRecipe.slice(0,3).map(ingredientInRecipe => (
-                      <>{ingredientInRecipe.name}, </>
+                      <a key = {ingredientInRecipe.id}>{ingredientInRecipe.name}, </a>
                   ))} ...
               </CardDescription>
         </CardHeader>
@@ -141,11 +147,11 @@ export default function InfoCard({recipe, ingredientsInRecipe}: InfoCardProps) {
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-[160px] z-50">
+                      <DropdownMenuContent align="end">
                         <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
                           <button
                             onClick={() => {
-                              setIsEditOpen(true);
+                              setIsDetailsOpen(true);
                             }}
                             className="w-full justify-start flex rounded-md p-2"
                           >

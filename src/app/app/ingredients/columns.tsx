@@ -10,11 +10,11 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
-import { DeleteButton } from "./deleteButton";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { EditFormDialog } from "./EditFormDialog";
-import { DetailsButton } from "./detailsButton";
-
+import DeleteDialog from "./DeleteDialog";
+import DetailsDialog from "./DetailsDialog";
+import { Separator } from "@/components/ui/separator";
 
 
 export const columns: ColumnDef<Ingredient>[] = [
@@ -104,7 +104,6 @@ export const columns: ColumnDef<Ingredient>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const ingredient = row.original 
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -114,11 +113,16 @@ export const columns: ColumnDef<Ingredient>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <div className="flex flex-col">
-                <DetailsButton ingredient={ingredient}/> 
-                <EditFormDialog ingredient={ingredient} />
-              <DropdownMenuSeparator />
-                <DeleteButton ingredient={ingredient} />
+           <div className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
+                <DetailsDialog ingredient={ingredient}/> 
+            </div>
+            <Separator />
+            <div className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
+                <EditFormDialog ingredient={ingredient}/> 
+            </div>
+            <Separator />
+            <div className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
+              <DeleteDialog ingredient={ingredient} />
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
