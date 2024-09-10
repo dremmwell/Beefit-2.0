@@ -12,11 +12,14 @@ export const columns: ColumnDef<Ingredient>[] = [
     accessorKey: "name",
     header: ({ column }) => {
       return (
-        <div
-          className="text-center md:text-left md:pl-8"
+      <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="ml-auto md:ml-4"
         >
           Name
-        </div>
+          <ArrowUpDown className="text-center md:ml-2 h-4 w-4" />
+        </Button>
       )
     },
   },

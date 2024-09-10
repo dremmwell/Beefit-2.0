@@ -5,6 +5,7 @@ import db from "@/db/db";
 import RecipeCard from "./RecipeCard";
 import { RecipeData } from "@/app/types/definitions";
 import { User } from "lucia";
+import { AddRecipeDialog } from "./AddRecipeDialog";
 
 
 async function getRecipesAndIngredients(user : User) {
@@ -40,13 +41,57 @@ export default async function Page() {
       <div>
         SearchBar
       </div>
-      <ScrollArea>
+      <ScrollArea className="py-2">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 overflow-scroll no-scrollbar mr-4">
           {recipes.map((recipe: RecipeData) => (
               <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+                    {recipes.map((recipe: RecipeData) => (
+              <RecipeCard key={recipe.id} recipe={recipe} />
+          ))}
+
         </div>
       </ScrollArea>
+      <AddRecipeDialog /> 
     </div>
   )
 }

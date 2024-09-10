@@ -24,6 +24,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
 import { useState, useEffect } from "react"
+import { AddFormDialog } from "./AddFormDialog"
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 
 interface DataTableProps<TData, TValue> {
@@ -102,8 +103,11 @@ export function DataTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className="max-w-sm"
+            className="max-w-sm mr-4"
           />
+          <div className="ml-auto">
+            <AddFormDialog />
+          </div>
         </div>
         <ScrollArea className="rounded-md border h-5/6">
             <Table>
