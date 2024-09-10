@@ -1,33 +1,32 @@
-import { IngredientInRecipe, RecipeValues } from "@/app/types/definitions";
-import { Recipe } from "@prisma/client";
+import { RecipeData, RecipeValues } from "@/app/types/definitions";
 
-export function getRecipeValues(recipe: Recipe, ingredientsInRecipe: Array<IngredientInRecipe>) {
+export function getRecipeValues(recipe: RecipeData) {
 
     // Sums the nutritional values of each ingredient normalized to 100g //
 
     let weight : number = 0;
-    for (let i = 0; i < ingredientsInRecipe.length; i++) {
-        weight += +ingredientsInRecipe[i].gramsInRecipe;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        weight += +recipe.ingredients[i].grams;
     }
 
     let calories : number = 0;
-    for (let i = 0; i < ingredientsInRecipe.length; i++) {
-        calories += (+ingredientsInRecipe[i].calories*100/ +ingredientsInRecipe[i].gramsPerUnit)* +ingredientsInRecipe[i].gramsInRecipe/100;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        calories += (+recipe.ingredients[i].ingredient.calories*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
     }
 
     let proteins : number = 0;
-    for (let i = 0; i < ingredientsInRecipe.length; i++) {
-        proteins += (+ingredientsInRecipe[i].proteins*100/ +ingredientsInRecipe[i].gramsPerUnit)* +ingredientsInRecipe[i].gramsInRecipe/100;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        proteins += (+recipe.ingredients[i].ingredient.proteins*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
     }
 
     let carbs : number = 0;
-    for (let i = 0; i < ingredientsInRecipe.length; i++) {
-        carbs += (+ingredientsInRecipe[i].carbs*100/ +ingredientsInRecipe[i].gramsPerUnit)* +ingredientsInRecipe[i].gramsInRecipe/100;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        carbs += (+recipe.ingredients[i].ingredient.carbs*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
     }
 
     let fats : number = 0;
-    for (let i = 0; i < ingredientsInRecipe.length; i++) {
-        fats += (+ingredientsInRecipe[i].fats*100/ +ingredientsInRecipe[i].gramsPerUnit)* +ingredientsInRecipe[i].gramsInRecipe/100;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        fats += (+recipe.ingredients[i].ingredient.fats*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
     }
 
     // Returns the nutritional values of the recipe //

@@ -1,3 +1,4 @@
+import { Ingredient, Recipe, RecipeIngredient } from "@prisma/client";
 import { LargeNumberLike } from "crypto";
 
 export type RecipeValues = {
@@ -9,18 +10,23 @@ export type RecipeValues = {
     fats: number;
 }
 
-export type IngredientInRecipe = {
+export type RecipeData = {
     id: string;
     name: string;
-    unit: string;
-    gramsPerUnit: number;
-    calories: number;
-    proteins: number;
-    carbs: number;
-    fats: number;
-    userId: string;
     bookmarked: boolean;
+    instructions: string;
     createdAt: number;
     updatedAt: number;
-    gramsInRecipe: number
-};
+    userId: string;
+    ingredients: Array<IngredientInRecipe>;
+}
+
+export type IngredientInRecipe = {
+    id: string;
+    recipeId: string;
+    ingredientId: string;
+    grams: string;
+    createdAt: number;
+    updatedAt: number;
+    ingredient: Ingredient;
+}
