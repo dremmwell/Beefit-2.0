@@ -32,36 +32,51 @@ import RecipeEditForm from "./RecipeEditForm";
 import DeleteDialog from "./DeleteDialog";
 import DetailsDialog from "./DetailsDialog";
 import IconMenu from "@/components/icon-menu";
+import EditDialog from './EditDialog';
 
 
 export default function RecipeCard( recipeData : any) {
 
-  const recipe = recipeData.recipe;
+
+
+  // Recipe Props are passed in a "nested" object (can't figure out why): recipeData = {recipe {... the recipe object}}, so the next line removes the outer "recipe" layer//
+  const recipe = recipeData.recipe; 
+
+  // Extract nutritional values of the Recipe //
   const recipeValues = getRecipeValues(recipe)
 
+  // Converts recipes nutritional values between 100 grams and total weight and handles toggle //
   const [converted, setConverted] = useState(false);
   const convertedRecipeValues: RecipeValues = convertTo100g(recipeValues);
 
+  // Handles Dioalog open/close state //
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   return (
-    <>
-{/* Dialogs open/close and props setup */}  
-      <DeleteDialog 
-        recipe={recipe}
-        isOpen={isDeleteOpen}
-        setIsOpen={setIsDeleteOpen}
-      />
+    <>   
 
+{/* Dialog Modals handled in the component */}
       <DetailsDialog 
       recipe={recipe}
       isOpen={isDetailsOpen}
       setIsOpen={setIsDetailsOpen}
       />
 
-{/* InfoCard layout */}      
+      <EditDialog 
+        recipe={recipe}
+        isOpen={isEditOpen}
+        setIsOpen={setIsEditOpen}
+      />
+
+      <DeleteDialog 
+        recipe={recipe}
+        isOpen={isDeleteOpen}
+        setIsOpen={setIsDeleteOpen}
+      />
+
+{/* Componenent Layout */}
       <Card className="shadow-md relative hover:shadow-xl duration-200 transition-all">
         <CardHeader >
               <CardTitle >
@@ -140,7 +155,7 @@ export default function RecipeCard( recipeData : any) {
                       </>
                   } 
                   <div className="ml-auto">
-                    <DropdownMenu>
+                    <DropdownMenu modal={false}> {/* modal={false} prevents instantly closing dialog modals */}
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">
                           <span className="sr-only">Open menu</span>

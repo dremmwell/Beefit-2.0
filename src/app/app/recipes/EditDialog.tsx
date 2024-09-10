@@ -13,7 +13,7 @@ import {
 import { deleteRecipe } from '@/app/actions/db.actions';
 import { Recipe } from '@prisma/client';
 
-export default function DetailsDialog({
+export default function EditDialog({
   recipe,
   isOpen,
   setIsOpen
@@ -36,7 +36,7 @@ export default function DetailsDialog({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Details</DialogTitle>
+          <DialogTitle>Edit</DialogTitle>
           <DialogDescription>
             This action cannot be undone. This will permanently delete your account
             and remove your data from our servers.
