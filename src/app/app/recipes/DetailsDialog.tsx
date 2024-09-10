@@ -23,15 +23,6 @@ export default function DetailsDialog({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
 
-  const onDelete = async () => {
-    try {
-      setIsOpen(false)
-    }
-    catch (error) {
-      console.log(error)
-    }
-  }
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>

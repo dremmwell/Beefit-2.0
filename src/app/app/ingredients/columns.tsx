@@ -3,18 +3,8 @@
 import { ColumnDef, Visibility } from "@tanstack/react-table";
 import { Ingredient } from '@prisma/client'
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuItem
-} from "@/components/ui/dropdown-menu";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import { EditFormDialog } from "./EditFormDialog";
-import DeleteDialog from "./DeleteDialog";
-import DetailsDialog from "./DetailsDialog";
-import { Separator } from "@/components/ui/separator";
+import { DataTableRowActions } from "./data-table-row-actions";
 
 
 export const columns: ColumnDef<Ingredient>[] = [
@@ -98,35 +88,8 @@ export const columns: ColumnDef<Ingredient>[] = [
       )
     },
   },
-
   {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const ingredient = row.original 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-           <div className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
-                <DetailsDialog ingredient={ingredient}/> 
-            </div>
-            <Separator />
-            <div className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
-                <EditFormDialog ingredient={ingredient}/> 
-            </div>
-            <Separator />
-            <div className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
-              <DeleteDialog ingredient={ingredient} />
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
-    },
+    id: 'actions',
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ]

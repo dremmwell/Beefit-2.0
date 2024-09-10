@@ -26,6 +26,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { updateIngredient } from "../../actions/db.actions"
 import { Ingredient } from "@prisma/client"
 import { EditIngredientFormSchema } from "@/app/types/form.schema"
+import React, { Dispatch, SetStateAction } from 'react';
+
 
 // Edit the selected ingredient through the edit form
 
@@ -58,7 +60,15 @@ interface EditFormDialogProps {
   ingredient: Ingredient,
 }
 
-export function EditFormDialog ({ingredient}: EditFormDialogProps) {
+export function EditFormDialog ( {
+  ingredient,
+  isOpen,
+  setIsOpen
+}: {
+  ingredient: Ingredient
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}){
 
   let initialMeasureType;
   if(ingredient.gramsPerUnit == 100){
@@ -85,192 +95,193 @@ export function EditFormDialog ({ingredient}: EditFormDialogProps) {
 
     let measureType = initialMeasureType;
     measureType = form.watch("measureType");
-
-    const [open, setOpen] = useState(false);
    
     // Handles submit and data save
-    function onSubmit(values: z.infer<typeof EditIngredientFormSchema>) {
-      const newIngredient = editIngredient(values,ingredient);
-      form.reset();
-      updateIngredient(newIngredient);
-      setOpen(false);
+
+    const onSubmit = async (values: z.infer<typeof EditIngredientFormSchema>) => {
+      try {
+        const newIngredient = editIngredient(values,ingredient);
+        form.reset();
+        updateIngredient(newIngredient);
+        setIsOpen(false);
+      }
+      catch (error) {
+        console.log(error)
+      }
     }
 
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button className="self-start" variant="ghost">Edit</Button>
-          </DialogTrigger>
-            <DialogContent className="overflow-x-auto">
-              <h3 className="text-lg font-medium">Edit {ingredient.name}</h3>
-              <p className="text-sm text-muted-foreground">Edit the properties of your ingredient !</p>
-              <Separator /> 
-                <Form {...form}>
-                  <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="overflow-x-auto">
+          <h3 className="text-lg font-medium">Edit {ingredient.name}</h3>
+          <p className="text-sm text-muted-foreground">Edit the properties of your ingredient !</p>
+          <Separator /> 
+            <Form {...form}>
+              <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="ingredient name..." required {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              <FormField
+                control={form.control}
+                name="measureType"
+                render={({field}) => (
+                  <Tabs defaultValue= {measureType} 
+                        onValueChange={field.onChange} >
+                    <TabsList className="mb-2">
+                      <TabsTrigger value="100g">Per 100g</TabsTrigger>
+                      <TabsTrigger value="custom">Custom Measure</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                )}
+              />
+              {measureType === "custom" &&
+                <div className="flex gap-4">
+                    <div className="w-5/6">
+                      <FormField
                       control={form.control}
-                      name="name"
+                      name="customMeasureName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Name</FormLabel>
+                          <FormLabel>Measure Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="ingredient name..." required {...field} />
+                            <Input {...field} />
                           </FormControl>
+                          <FormDescription>
+                          Per item, pint, tsp...
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    </div>
+                      <FormField
+                      control={form.control}
+                      name="measureWeight"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Measure Weight (g)</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormDescription>
+                          Please indicate how many grams your custom measure weights.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  }
+                  <div className="flex gap-4">
+                    <FormField
+                      control={form.control}
+                      name="calories"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Calories (g)</FormLabel>
+                          <FormControl>
+                            <Input required {...field} />
+                          </FormControl>
+                          {measureType === "100g" &&
+                            <FormDescription>
+                              calories per 100g
+                            </FormDescription>
+                          }
+                          {measureType === "custom" &&
+                            <FormDescription>
+                              calories per measure
+                            </FormDescription>
+                          }
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   <FormField
                     control={form.control}
-                    name="measureType"
-                    render={({field}) => (
-                      <Tabs defaultValue= {measureType} 
-                            onValueChange={field.onChange} >
-                        <TabsList className="mb-2">
-                          <TabsTrigger value="100g">Per 100g</TabsTrigger>
-                          <TabsTrigger value="custom">Custom Measure</TabsTrigger>
-                        </TabsList>
-                      </Tabs>
+                    name="proteins"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Proteins (g)</FormLabel>
+                        <FormControl>
+                          <Input required {...field} />
+                        </FormControl>
+                        {measureType === "100g" &&
+                            <FormDescription>
+                              proteins per 100g
+                            </FormDescription>
+                          }
+                          {measureType === "custom" &&
+                            <FormDescription>
+                              proteins per measure
+                            </FormDescription>
+                          }
+                        <FormMessage />
+                      </FormItem>
                     )}
                   />
-                  {measureType === "custom" &&
-                    <div className="flex gap-4">
-                        <div className="w-5/6">
-                          <FormField
-                          control={form.control}
-                          name="customMeasureName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Measure Name</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormDescription>
-                              Per item, pint, tsp...
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        </div>
-                          <FormField
-                          control={form.control}
-                          name="measureWeight"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Measure Weight (g)</FormLabel>
-                              <FormControl>
-                                <Input {...field} />
-                              </FormControl>
-                              <FormDescription>
-                              Please indicate how many grams your custom measure weights.
-                              </FormDescription>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      }
-                      <div className="flex gap-4">
-                        <FormField
-                          control={form.control}
-                          name="calories"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Calories (g)</FormLabel>
-                              <FormControl>
-                                <Input required {...field} />
-                              </FormControl>
-                              {measureType === "100g" &&
-                                <FormDescription>
-                                  calories per 100g
-                                </FormDescription>
-                              }
-                              {measureType === "custom" &&
-                                <FormDescription>
-                                  calories per measure
-                                </FormDescription>
-                              }
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      <FormField
-                        control={form.control}
-                        name="proteins"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Proteins (g)</FormLabel>
-                            <FormControl>
-                              <Input required {...field} />
-                            </FormControl>
-                            {measureType === "100g" &&
-                                <FormDescription>
-                                  proteins per 100g
-                                </FormDescription>
-                              }
-                              {measureType === "custom" &&
-                                <FormDescription>
-                                  proteins per measure
-                                </FormDescription>
-                              }
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      </div>
-                      <div className="flex gap-4">
-                      <FormField
-                        control={form.control}
-                        name="carbs"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Carbs (g)</FormLabel>
-                            <FormControl>
-                              <Input required {...field} />
-                            </FormControl>
-                            {measureType === "100g" &&
-                                <FormDescription>
-                                  carbs per 100g
-                                </FormDescription>
-                              }
-                              {measureType === "custom" &&
-                                <FormDescription>
-                                  carbs per measure
-                                </FormDescription>
-                              }
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                        <FormField
-                        control={form.control}
-                        name="fats"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Fats (g)</FormLabel>
-                            <FormControl>
-                              <Input required {...field} />
-                            </FormControl>
-                            {measureType === "100g" &&
-                                <FormDescription>
-                                  fats per 100g
-                                </FormDescription>
-                              }
-                              {measureType === "custom" &&
-                                <FormDescription>
-                                  fats per measure
-                                </FormDescription>
-                              }
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      </div>
-                    <Button type="submit">Edit</Button>
-                  </form>
-                </Form>
-            </DialogContent>
-           </Dialog>
+                  </div>
+                  <div className="flex gap-4">
+                  <FormField
+                    control={form.control}
+                    name="carbs"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Carbs (g)</FormLabel>
+                        <FormControl>
+                          <Input required {...field} />
+                        </FormControl>
+                        {measureType === "100g" &&
+                            <FormDescription>
+                              carbs per 100g
+                            </FormDescription>
+                          }
+                          {measureType === "custom" &&
+                            <FormDescription>
+                              carbs per measure
+                            </FormDescription>
+                          }
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                    <FormField
+                    control={form.control}
+                    name="fats"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Fats (g)</FormLabel>
+                        <FormControl>
+                          <Input required {...field} />
+                        </FormControl>
+                        {measureType === "100g" &&
+                            <FormDescription>
+                              fats per 100g
+                            </FormDescription>
+                          }
+                          {measureType === "custom" &&
+                            <FormDescription>
+                              fats per measure
+                            </FormDescription>
+                          }
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  </div>
+                <Button type="submit">Edit</Button>
+              </form>
+            </Form>
+        </DialogContent>
+      </Dialog>
     )
 }

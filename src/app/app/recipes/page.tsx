@@ -4,15 +4,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import db from "@/db/db";
 import RecipeCard from "./RecipeCard";
 import { RecipeData } from "@/app/types/definitions";
+import { User } from "lucia";
 
-export default async function Page() { 
-  
-  const { user } = await validateRequest()
 
-  if(!user) {
-    return redirect("/")
-  }
-
+async function getRecipesAndIngredients(user : User) {
   const data = await db.recipe.findMany({
     where: {
       userId: user.id
@@ -26,6 +21,18 @@ export default async function Page() {
     }
   });
   const recipes = JSON.parse(JSON.stringify(data));
+  return recipes
+}
+
+export default async function Page() { 
+  
+  const { user } = await validateRequest()
+
+  if(!user) {
+    return redirect("/")
+  }
+
+  const recipes = await getRecipesAndIngredients(user);
 
   return (
     <div className="container my-10 flex flex-col gap-2">

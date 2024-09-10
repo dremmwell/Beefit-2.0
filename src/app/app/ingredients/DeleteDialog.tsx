@@ -18,13 +18,18 @@ import { Trash2, ListCollapse } from 'lucide-react';
 
 export default function DeleteDialog({
   ingredient,
+  isOpen,
+  setIsOpen
 }: {
   ingredient: Ingredient
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
 
   const onDelete = async () => {
     try {
       deleteIngredient(ingredient)
+      setIsOpen(false)
     }
     catch (error) {
       console.log(error)
@@ -32,17 +37,7 @@ export default function DeleteDialog({
   }
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-      <button
-            className="w-full justify-start flex rounded-md p-2"
-          >
-          <IconMenu
-            text="Delete"
-            icon={<Trash2 className="h-4 w-4" />}
-            />
-          </button>
-      </AlertDialogTrigger>
+    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure to delete your {ingredient.name}?</AlertDialogTitle>

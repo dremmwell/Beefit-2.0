@@ -47,14 +47,6 @@ DataTableRowActionsProps<TData>) {
 
   return (
     <>
-{/*       <ResponsiveDialog
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        title="Edit Person"
-      >
-        <EditForm ingredientId={ingredientId} setIsOpen={setIsEditOpen} />
-      </ResponsiveDialog>
- */}
 
 {/* Handles Dialogs open/close and props setup */} 
       <DeleteDialog 
@@ -63,11 +55,11 @@ DataTableRowActionsProps<TData>) {
         setIsOpen={setIsDeleteOpen}
       />
 
-{/*       <EditFormDialog
+      <EditFormDialog
         ingredient={row.original}
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
-      /> */}
+      />
 
       <DetailsDialog 
         ingredient={row.original}
@@ -75,7 +67,7 @@ DataTableRowActionsProps<TData>) {
         setIsOpen={setIsDetailsOpen}
       />
 
-      <DropdownMenu> 
+      <DropdownMenu modal={false}> {/* modal={false} prevents instantly closing dialog modals */}
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
             <span className="sr-only">Open menu</span>
@@ -83,7 +75,7 @@ DataTableRowActionsProps<TData>) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-        <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
+          <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
                 <button
                 onClick={() => {
                     setIsDetailsOpen(true);

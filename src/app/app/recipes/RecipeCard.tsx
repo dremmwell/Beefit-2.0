@@ -25,10 +25,7 @@ import {
 import { ArrowUpDown, MoreHorizontal, SquarePen, Trash2, ListCollapse } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Ingredient, Recipe, RecipeIngredient } from '@prisma/client'
-import { Dialog } from "@/components/ui/dialog";
-import RecipeEditForm from "./RecipeEditForm";
+import { Label } from "@/components/ui/label";
 import DeleteDialog from "./DeleteDialog";
 import DetailsDialog from "./DetailsDialog";
 import IconMenu from "@/components/icon-menu";
@@ -36,8 +33,6 @@ import EditDialog from './EditDialog';
 
 
 export default function RecipeCard( recipeData : any) {
-
-
 
   // Recipe Props are passed in a "nested" object (can't figure out why): recipeData = {recipe {... the recipe object}}, so the next line removes the outer "recipe" layer//
   const recipe = recipeData.recipe; 

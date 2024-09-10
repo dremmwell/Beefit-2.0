@@ -20,23 +20,21 @@ interface DetailsDialogProps {
     ingredient: Ingredient,
 }
    
-export default function DetailsDialog({ingredient}: DetailsDialogProps) {
+export default function DetailsDialog({
+  ingredient,
+  isOpen,
+  setIsOpen
+}: {
+  ingredient: Ingredient
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+}) {
 
     const [converted, setConverted] = useState(false);
     const convertedIngredient: Ingredient = convertTo100g(ingredient);
 
     return (
-      <Dialog >
-        <DialogTrigger asChild>
-          <button
-            className="w-full justify-start flex rounded-md p-2"
-          >
-          <IconMenu
-            text="Details"
-            icon={<ListCollapse className="h-4 w-4" />}
-            />
-          </button>
-        </DialogTrigger>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="rounded-[0.5rem]">
           <div className="flex flex-col">
           {ingredient.unit === "100g" ?   
