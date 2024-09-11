@@ -23,7 +23,7 @@ export default function EditDialog({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
 
-  const onDelete = async () => {
+  const onSubmit = async () => {
     try {
       setIsOpen(false)
     }

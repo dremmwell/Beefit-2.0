@@ -9,8 +9,8 @@ import { getIngredients } from "../../actions/db.actions";
 
 export default async function Page() { 
 
+  // Validating Path if valid user // 
   const { user } = await validateRequest()
-
   if(!user) {
     return redirect("/")
   }

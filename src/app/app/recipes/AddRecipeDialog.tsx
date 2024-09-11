@@ -20,7 +20,7 @@ export function AddRecipeDialog () {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="self-end">Add Ingredient</Button>
+          <Button className="self-end">New Recipe</Button>
           </DialogTrigger>
             <DialogContent className="overflow-x-auto">
               <DialogHeader>

@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 
 export default async function Page() { 
 
+  // Validating Path if valid user // 
   const { user } = await validateRequest()
-
   if(!user) {
     return redirect("/")
   }
