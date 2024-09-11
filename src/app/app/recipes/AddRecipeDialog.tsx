@@ -1,33 +1,101 @@
+
 "use client"
 
+import * as React from "react"
+import { useMediaQuery } from "@/lib/hooks/use-media-query"
+import { Button } from "@/components/ui/button"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-  } from "@/components/ui/dialog"
-  import { useState } from "react";
-  import { Button } from "@/components/ui/button";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { useState, useEffect } from "react"
+import { Ingredient } from "@prisma/client"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import IngredientsTable from "./IngredientsTable"
+import { columns } from "./columns"
 
 
-export function AddRecipeDialog () {
-
-    const [open, setOpen] = useState(false);
-   
+export function AddRecipeDialog( {
+  ingredients
+}:{
+  ingredients: Array<Ingredient>
+}) {
+  const [open, setOpen] = useState(false)
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+ 
+  if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="self-end">New Recipe</Button>
-          </DialogTrigger>
-            <DialogContent className="overflow-x-auto">
-              <DialogHeader>
-                <DialogTitle>New Recipe</DialogTitle>
-                <DialogDescription>Create a new recipe and add it to your list!</DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-           </Dialog>
+          <Button >Create Recipe</Button>
+        </DialogTrigger>
+        <DialogContent className="min-w-fit min-h-[620px] flex-1">
+          <DialogHeader>
+            <DialogTitle>New Recipe</DialogTitle>
+            <DialogDescription>
+              Create a new recipe and add it to your list!
+            </DialogDescription>
+          </DialogHeader>
+          <AddRecipeForm ingredients={ingredients}/>
+        </DialogContent>
+      </Dialog>
     )
+  }
+ 
+  return (
+    <Drawer  open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <Button >Create Recipe</Button>
+      </DrawerTrigger>
+      <DrawerContent className="h-[600px]">
+        <DrawerHeader className="text-left">
+          <DrawerTitle>New Recipe</DrawerTitle>
+          <DrawerDescription>
+            Create a new recipe and add it to your list!
+          </DrawerDescription>
+        </DrawerHeader>
+        <AddRecipeForm ingredients={ingredients}/>
+        <DrawerFooter className="pt-2">
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  )
+}
+ 
+function AddRecipeForm({
+  ingredients
+} : {
+  ingredients: Array<Ingredient>
+}) {
+
+  return (
+      <form className="flex flex-col mx-4 my-0 min-h-[500px]">
+        <div className="flex gap-2 items-center">
+          <Label htmlFor="name" className="basis-1/3">
+            Recipe Name
+          </Label>
+          <Input id="name" placeholder="Name..." className="col-span-3" />
+        </div>
+        <div className="mb-auto">
+          <IngredientsTable columns={columns} data={ingredients}/>
+        </div>
+        <Button className="mt-auto" type="submit">Create</Button>
+      </form>
+  )
 }

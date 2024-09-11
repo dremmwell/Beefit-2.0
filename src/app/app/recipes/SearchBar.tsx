@@ -11,7 +11,7 @@ export default function SearchBar() {
 const router = useRouter()
 const [searchInput, setSearchInput] = useState("")
 
-// debouncing means delaying the user query for 500ms not to spam the server at each input change //
+// Debouncing means delaying the user query (here for 200ms) not to spam the server at each input change //
 const [debouncedQuery] = useDebounce(searchInput, 200)
 
 // Pushes the search values to the url so it can be accessed by other components //

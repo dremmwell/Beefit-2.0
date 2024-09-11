@@ -7,6 +7,7 @@ import { RecipeData } from "@/app/types/definitions";
 import { User } from "lucia";
 import { AddRecipeDialog } from "./AddRecipeDialog";
 import SearchBar from "./SearchBar";
+import { getIngredients } from "@/app/actions/db.actions";
 
 
 async function getRecipesAndIngredients(user : User) {
@@ -41,13 +42,14 @@ export default async function Page(
   }
 
   const recipes = await getRecipesAndIngredients(user);
+  const ingredients = await getIngredients(user.id)
 
   // Page prop "searchParams" gets search param in the url //
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined
 
   const filteredRecipes = recipes.filter((recipe : RecipeData) => {
     if (!recipe || !recipe.name) return false;
-    if(!search) return recipes;
+    if (!search) return recipes;
     const lowerCaseName = recipe.name.toLowerCase();
     const lowerCaseSearchTerm = search.toLowerCase();
     return lowerCaseName.includes(lowerCaseSearchTerm);
@@ -60,8 +62,8 @@ export default async function Page(
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0">Recipes</h1>
       <div className="flex py-4">
           <SearchBar />
-        <div className="ml-auto mr-4">
-          <AddRecipeDialog /> 
+        <div className="ml-auto">
+          <AddRecipeDialog ingredients={ingredients}/> 
         </div>
       </div>
       <ScrollArea>
