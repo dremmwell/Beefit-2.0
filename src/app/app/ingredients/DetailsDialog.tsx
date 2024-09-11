@@ -15,6 +15,7 @@ import { useState } from "react"
 import { convertTo100g } from "@/lib/ingredients_utils"
 import IconMenu from '@/components/icon-menu';
 import { Trash2, ListCollapse } from 'lucide-react';
+import { DialogDescription } from '@radix-ui/react-dialog';
 
 interface DetailsDialogProps {
     ingredient: Ingredient,
@@ -39,7 +40,8 @@ export default function DetailsDialog({
           <div className="flex flex-col">
           {ingredient.unit === "100g" ?   
             <>
-              <h2 className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-3">{ingredient.name}</h2>
+            <DialogTitle className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-3">{ingredient.name}</DialogTitle>
+            <DialogDescription></DialogDescription>
               <div className="space-y-4">
                 <div className="flex flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
                   <div>
@@ -67,8 +69,8 @@ export default function DetailsDialog({
             </>
             :
             <>
-            <h2 className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-1">{ingredient.name}</h2>
-            <h2 className="text-muted-foreground border-b pb-2">One {ingredient.unit} of {ingredient.name} weights {ingredient.gramsPerUnit} grams</h2>
+            <DialogTitle className="scroll-m-20 pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-1">{ingredient.name}</DialogTitle>
+            <DialogDescription className="text-muted-foreground border-b pb-2">One {ingredient.unit} of {ingredient.name} weights {ingredient.gramsPerUnit} grams</DialogDescription>
             {converted ?
               <>
               <div className="space-y-4">
