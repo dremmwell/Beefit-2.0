@@ -19,6 +19,8 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -113,8 +115,8 @@ export function EditFormDialog ( {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="overflow-x-auto">
-          <h3 className="text-lg font-medium">Edit {ingredient.name}</h3>
-          <p className="text-sm text-muted-foreground">Edit the properties of your ingredient !</p>
+          <DialogTitle className="text-lg font-medium">Edit {ingredient.name}</DialogTitle>
+          <DialogDescription className="text-sm text-muted-foreground">Edit the properties of your ingredient !</DialogDescription>
           <Separator /> 
             <Form {...form}>
               <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>
