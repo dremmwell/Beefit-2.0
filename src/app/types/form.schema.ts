@@ -3,9 +3,11 @@ import { z } from "zod"
 export const AddIngredientFormSchema = z.object({
     name: z.string().min(2, {
       message: "Ingredient name must be at least 2 characters.",
+    }).max(40, {
+      message: "Ingredient name must be at most 40 characters.",
     }),
     measureType: z.string(),
-    customMeasureName: z.string().optional(),
+    customMeasureName: z.string().max(15).optional(),
     measureWeight: z.union([
         z.coerce
             .number()
@@ -74,9 +76,13 @@ export const AddIngredientFormSchema = z.object({
 export const EditIngredientFormSchema = z.object({
   name: z.string().min(2, {
     message: "Ingredient name must be at least 2 characters.",
+  }).max(40,{
+    message: "Ingredient name must be at most 40 characters."
   }),
   measureType: z.string(),
-  customMeasureName: z.string().optional(),
+  customMeasureName: z.string().max(15, {
+    message: "Cannot exceed 40 characters."
+  }).optional(),
   measureWeight: z.coerce.number().optional(),
   calories: z.coerce.number().positive(),
   proteins: z.coerce.number().positive(),

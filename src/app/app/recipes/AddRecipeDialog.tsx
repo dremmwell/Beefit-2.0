@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { Ingredient } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import IngredientsTable from "./IngredientsTable"
+import AddRecipeForm from "./AddRecipeForm"
 import { columns } from "./columns"
 
 
@@ -52,7 +52,7 @@ export function AddRecipeDialog( {
               Create a new recipe and add it to your list!
             </DialogDescription>
           </DialogHeader>
-          <AddRecipeForm ingredients={ingredients}/>
+          <AddRecipeForm columns={columns} data={ingredients}/>
         </DialogContent>
       </Dialog>
     )
@@ -70,32 +70,10 @@ export function AddRecipeDialog( {
             Create a new recipe and add it to your list!
           </DrawerDescription>
         </DrawerHeader>
-        <AddRecipeForm ingredients={ingredients}/>
+        <AddRecipeForm columns={columns} data={ingredients}/>
         <DrawerFooter className="pt-2">
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
-  )
-}
- 
-function AddRecipeForm({
-  ingredients
-} : {
-  ingredients: Array<Ingredient>
-}) {
-
-  return (
-      <form className="flex flex-col mx-4 my-0 min-h-[500px]">
-        <div className="flex gap-2 items-center">
-          <Label htmlFor="name" className="basis-1/3">
-            Recipe Name
-          </Label>
-          <Input id="name" placeholder="Name..." className="col-span-3" />
-        </div>
-        <div className="mb-auto">
-          <IngredientsTable columns={columns} data={ingredients}/>
-        </div>
-        <Button className="mt-auto" type="submit">Create</Button>
-      </form>
   )
 }
