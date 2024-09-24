@@ -68,6 +68,7 @@ export function AddFormDialog () {
     //  Define the form.
     const form = useForm<z.infer<typeof AddIngredientFormSchema>>({
       resolver: zodResolver(AddIngredientFormSchema),
+      mode: "onBlur",
       defaultValues: {
         measureType: "100g",
         customMeasureName: "",

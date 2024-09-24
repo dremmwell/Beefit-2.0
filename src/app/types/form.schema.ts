@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+// Ingredients form schemas //
+
 export const AddIngredientFormSchema = z.object({
     name: z.string().min(2, {
       message: "Ingredient name must be at least 2 characters.",
@@ -111,3 +113,28 @@ export const EditIngredientFormSchema = z.object({
   path: ["measureWeight"],
 }
 );
+
+
+// Recipe form schemas //
+
+export const AddRecipeFormSchema = z.object({
+  name: z.string().min(2, {
+    message: "Recipe name must be at least 2 characters.",
+  }).max(40,{
+    message: "Recipe name must be at most 40 characters."
+  }),
+  description: z.string().optional(),
+  ingredients: z.array
+  (z.object({
+    id: z.string(),
+    quantity: z.union([
+      z.coerce
+          .number()
+          .positive({
+              message: "must be positive",
+          }),
+      z.literal("")
+    ]),
+    unit : z.string()
+  })).nonempty({ message: "Select an ingredient" })
+})

@@ -46,7 +46,7 @@ export function AddRecipeDialog( {
           <Button >Create Recipe</Button>
         </DialogTrigger>
         <DialogContent className="min-w-fit min-h-[620px] flex-1">
-          <DialogHeader>
+          <DialogHeader >
             <DialogTitle>New Recipe</DialogTitle>
             <DialogDescription>
               Create a new recipe and add it to your list!
@@ -59,18 +59,20 @@ export function AddRecipeDialog( {
   }
  
   return (
-    <Drawer  open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button >Create Recipe</Button>
       </DrawerTrigger>
-      <DrawerContent className="h-[600px]">
+      <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>New Recipe</DrawerTitle>
           <DrawerDescription>
             Create a new recipe and add it to your list!
           </DrawerDescription>
         </DrawerHeader>
-        <AddRecipeForm columns={columns} data={ingredients}/>
+        <ScrollArea className="overflow-y-scroll no-scrollbar">
+          <AddRecipeForm columns={columns} data={ingredients}/>
+        </ScrollArea>
         <DrawerFooter className="pt-2">
         </DrawerFooter>
       </DrawerContent>
