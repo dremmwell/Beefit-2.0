@@ -219,7 +219,7 @@ export default function AddReciepForm<TData, TValue>({
               </div>
             </div>
             <div className="flex flex-col gap-2 grow">
-            <ScrollArea className="max-h-[400px] mx-2">
+            <ScrollArea className="md:max-h-[400px] mx-2">
             {fields.map((fieldArray, index) => (
                 <div  
                 key={fieldArray.id}
@@ -230,13 +230,13 @@ export default function AddReciepForm<TData, TValue>({
                   name={`ingredients.${index}.quantity`}
                   render={({ field }) => (
                     <FormItem className="flex items-center mb-0 gap-2">
-                      <FormLabel className="mt-2 grow">
+                      <FormLabel className="mt-2 basis-1/3">
                         {fieldArray.name}
                       </FormLabel>
                       <FormControl>
                         <Input 
                         {...field} 
-                        className="min-w-[100px]"
+                        className="w-[100px]"
                         placeholder="Quantity..."
                         required
                         />
@@ -292,21 +292,4 @@ export default function AddReciepForm<TData, TValue>({
     </Form>
     )
 }
-
-/* {table.getSelectedRowModel().rows.length > 0 && 
-  <div className="my-2 min-w-[300px]">
-  <ScrollArea className="max-h-[400px] overflow-y-scroll no-scrollbar mx-2">                  
-    {table.getSelectedRowModel().rows.map(row => (
-        <div key={row.id} className="flex gap-2 items-center my-2 mx-2">
-          <Label htmlFor="qty" className="flex-1">
-            {row.original.name}
-          </Label>
-          <Input type="number" id="qty" placeholder="quantity..." className="max-w-28" />
-          <h3 className="text-sm font-medium">grams</h3>
-        </div>
-      ))
-    }
-  </ScrollArea>
-</div>
-}  */
 
