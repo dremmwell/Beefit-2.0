@@ -136,7 +136,7 @@ export const AddRecipeFormSchema = z.object({
   ]),
     unit : z.string(),
     name : z.string(),
-/*     ingredientid: z.string(),
-    rowid: z.string(), */
+    ingredientid: z.string(),
+    rowid: z.string(),
   }))
 })

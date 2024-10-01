@@ -106,15 +106,16 @@ export default function AddReciepForm<TData, TValue>({
 
   const onSubmit = (formValues: z.infer<typeof AddRecipeFormSchema>) => {
     console.log(formValues);
+    remove();
     form.reset();
   };
 
-/*   function handlesRowSelect(row : Row<TData>) {
+  function handlesRowSelect(row : Row<TData>) {
     if(!row.getIsSelected()){
       row.toggleSelected(true)
       append({
-        quantity: 0,
-/*         // @ts-ignore
+        quantity: "",
+         // @ts-ignore
         unit: row.original.unit,
         // @ts-ignore
         name: row.original.name,
@@ -124,23 +125,11 @@ export default function AddReciepForm<TData, TValue>({
       })
     }
   }
- */
 
-  function handlesRowSelect() {
-      append({
-        quantity: "",
-        // @ts-ignore
-        unit: "grams",
-        // @ts-ignore
-        name: "Ingredient Name",
-        // @ts-ignore
-/*         ingredientid: "id", */
-/*         rowid: row.id, */
-      })
-    }
 
-  function handlesDelete(index: number){
-    console.log("clicked")
+  function handlesDelete(index: number, id: string){
+    const row = table.getRow(id);
+    row.toggleSelected(false)
     remove(index);
   }
 
@@ -205,7 +194,7 @@ export default function AddReciepForm<TData, TValue>({
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
                             onClick={() => {
-                              handlesRowSelect();
+                              handlesRowSelect(row);
                             }}
                         >
                             {row.getVisibleCells().map((cell) => (
@@ -256,35 +245,34 @@ export default function AddReciepForm<TData, TValue>({
                     </FormItem>
                   )}
                   />
-                  {fieldArray.unit === "grams" ?
+                  {fieldArray.unit === "100g" ?
                   <div className="flex items-center mt-2">
-                    <div className="text-sm">{fieldArray.unit}</div>
+                    <div className="text-sm">grams</div>
                   </div>
                    :
                     <FormField 
                     control={form.control}
                     name={`ingredients.${index}.unit`}
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <Select onValueChange={field.onChange} defaultValue="grams">
-                          <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Choose a unit" />
-                          </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="grams">grams</SelectItem>
-                            <SelectItem value={fieldArray.unit}>{fieldArray.unit}</SelectItem>
-                            <SelectItem value="test">test</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
+                        <FormItem className="mb-0 flex items-center mt-2">
+                          <Select onValueChange={field.onChange} defaultValue="grams">
+                            <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Choose a unit" />
+                            </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="grams">grams</SelectItem>
+                              <SelectItem value={fieldArray.unit}>{fieldArray.unit}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
                     )}
                     />
                   }
                   <div className="flex items-center mt-2">
                     <button
-                      onMouseDownCapture={() => handlesDelete(index)}
+                      onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
                       className="text-primary"
                     >
                       <IconMenu
