@@ -39,6 +39,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import IconMenu from "@/components/icon-menu"
+import { Trash2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -97,14 +99,12 @@ export default function AddReciepForm<TData, TValue>({
     
   })
 
-
   const { fields, append, remove } = useFieldArray({
     name: "ingredients",
     control: form.control,
   });
 
   const onSubmit = (formValues: z.infer<typeof AddRecipeFormSchema>) => {
-    console.log("clicked")
     console.log(formValues);
     form.reset();
   };
@@ -139,7 +139,8 @@ export default function AddReciepForm<TData, TValue>({
       })
     }
 
-  function handlesDelete(index :any){
+  function handlesDelete(index: number){
+    console.log("clicked")
     remove(index);
   }
 
@@ -185,7 +186,7 @@ export default function AddReciepForm<TData, TValue>({
               Select Ingredients :
           </h2>
           <div className="flex md:flex-row flex-col">
-            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2">
+            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 max-w-[400px] grow-0">
                 <Input
                   id="filterInput"
                   placeholder="Search ingredients..."
@@ -228,23 +229,27 @@ export default function AddReciepForm<TData, TValue>({
                 {table.getSelectedRowModel().rows.length} ingredient(s) selected. 
               </div>
             </div>
-              {fields.map((fieldArray, index) => (
+            <div className="flex flex-col gap-2 grow">
+            <ScrollArea className="max-h-[400px] mx-2">
+            {fields.map((fieldArray, index) => (
                 <div  
                 key={fieldArray.id}
-                className="flex"      
+                className="flex gap-2 p-2"      
                 >
                   <FormField 
                   control={form.control}
                   name={`ingredients.${index}.quantity`}
                   render={({ field }) => (
-                    <FormItem className="flex items-center">
-                      <FormLabel >
+                    <FormItem className="flex items-center mb-0 gap-2">
+                      <FormLabel className="mt-2 grow">
                         {fieldArray.name}
                       </FormLabel>
                       <FormControl>
                         <Input 
                         {...field} 
+                        className="min-w-[100px]"
                         placeholder="Quantity..."
+                        required
                         />
                       </FormControl>
                       <FormMessage />
@@ -252,15 +257,15 @@ export default function AddReciepForm<TData, TValue>({
                   )}
                   />
                   {fieldArray.unit === "grams" ?
-                  <div>
-                      {fieldArray.unit}
+                  <div className="flex items-center mt-2">
+                    <div className="text-sm">{fieldArray.unit}</div>
                   </div>
                    :
                     <FormField 
                     control={form.control}
                     name={`ingredients.${index}.unit`}
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="flex items-center">
                         <Select onValueChange={field.onChange} defaultValue="grams">
                           <FormControl>
                           <SelectTrigger>
@@ -270,17 +275,28 @@ export default function AddReciepForm<TData, TValue>({
                           <SelectContent>
                             <SelectItem value="grams">grams</SelectItem>
                             <SelectItem value={fieldArray.unit}>{fieldArray.unit}</SelectItem>
+                            <SelectItem value="test">test</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormItem>
                     )}
                     />
                   }
-                  <Button onClick={handlesDelete}>
-                    DELETE
-                  </Button>
+                  <div className="flex items-center mt-2">
+                    <button
+                      onMouseDownCapture={() => handlesDelete(index)}
+                      className="text-primary"
+                    >
+                      <IconMenu
+                        text=""
+                        icon={<Trash2 className="h-5 w-5"/>}
+                      />
+                    </button>
+                  </div>
                 </div>
               ))}
+              </ScrollArea>
+            </div>
           </div>
         </div>
         <Button className="mt-auto" type="submit">Create</Button>

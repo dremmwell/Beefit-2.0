@@ -39,6 +39,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { Trash2 } from "lucide-react"
+import IconMenu from "@/components/icon-menu"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
@@ -230,8 +232,14 @@ export default function AddReciepForm<TData, TValue>({
                       min="0"
                     /> 
                   </FormControl>
-                  <button type="button" onClick={() => handlesDelete(index,field.rowid)}>
-                    DELETE
+                  <button
+                    onClick={() => handlesDelete(index, "0")}
+                    className="w-full justify-start flex rounded-md p-2"
+                  >
+                    <IconMenu
+                      text=""
+                      icon={<Trash2 className="h-4 w-4" />}
+                    />
                   </button>
                 </FormItem>
               </div>
