@@ -38,6 +38,10 @@ export function AddRecipeDialog( {
 }) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+
+  const handleCloseDialog = () => {
+    setOpen(false)
+  }
  
   if (isDesktop) {
     return (
@@ -52,7 +56,7 @@ export function AddRecipeDialog( {
               Create a new recipe and add it to your list!
             </DialogDescription>
           </DialogHeader>
-          <AddRecipeForm columns={columns} data={ingredients}/>
+          <AddRecipeForm columns={columns} data={ingredients} onSave={handleCloseDialog}/>
         </DialogContent>
       </Dialog>
     )
@@ -71,7 +75,7 @@ export function AddRecipeDialog( {
           </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="overflow-y-scroll no-scrollbar">
-          <AddRecipeForm columns={columns} data={ingredients}/>
+          <AddRecipeForm columns={columns} data={ingredients} onSave={(handleCloseDialog)}/>
         </ScrollArea>
         <DrawerFooter className="pt-2">
         </DrawerFooter>
