@@ -52,7 +52,6 @@ import * as z from "zod";
 import { AddRecipeFormSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 
-
 interface AddRecipeForm<TData, TValue> {
   columns: ColumnDef<TData, TValue>[],
   data: TData[]
@@ -109,37 +108,25 @@ export default function AddReciepForm<TData, TValue>({
     form.reset();
   };
 
-/*   function handlesRowSelect(row : Row<TData>) {
+  function handlesRowSelect(row : Row<TData>) {
     if(!row.getIsSelected()){
       row.toggleSelected(true)
       append({
-        quantity: 0,
-/*         // @ts-ignore
+        quantity: "",
+        // @ts-ignore
         unit: row.original.unit,
         // @ts-ignore
         name: row.original.name,
         // @ts-ignore
         ingredientid: row.original.id,
-        rowid: row.id, 
+        rowid: row.id,
       })
     }
   }
- */
 
-  function handlesRowSelect() {
-      append({
-        quantity: "",
-        // @ts-ignore
-        unit: "grams",
-        // @ts-ignore
-        name: "Ingredient Name",
-        // @ts-ignore
-/*         ingredientid: "id", */
-/*         rowid: row.id, */
-      })
-    }
-
-  function handlesDelete(index :any){
+  function handlesDelete(index :any, id : string){
+    const row = table.getRow(id);
+    row.toggleSelected(false)
     remove(index);
   }
 
@@ -204,7 +191,7 @@ export default function AddReciepForm<TData, TValue>({
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
                             onClick={() => {
-                              handlesRowSelect();
+                              handlesRowSelect(row);
                             }}
                         >
                             {row.getVisibleCells().map((cell) => (
@@ -228,59 +215,27 @@ export default function AddReciepForm<TData, TValue>({
                 {table.getSelectedRowModel().rows.length} ingredient(s) selected. 
               </div>
             </div>
-              {fields.map((fieldArray, index) => (
-                <div  
-                key={fieldArray.id}
-                className="flex"      
-                >
-                  <FormField 
-                  control={form.control}
-                  name={`ingredients.${index}.quantity`}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center">
-                      <FormLabel >
-                        {fieldArray.name}
-                      </FormLabel>
-                      <FormControl>
-                        <Input 
-                        {...field} 
-                        placeholder="Quantity..."
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                  />
-                  {fieldArray.unit === "grams" ?
-                  <div>
-                      {fieldArray.unit}
-                  </div>
-                   :
-                    <FormField 
-                    control={form.control}
-                    name={`ingredients.${index}.unit`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <Select onValueChange={field.onChange} defaultValue="grams">
-                          <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Choose a unit" />
-                          </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="grams">grams</SelectItem>
-                            <SelectItem value={fieldArray.unit}>{fieldArray.unit}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormItem>
-                    )}
-                    />
-                  }
-                  <Button onClick={handlesDelete}>
+              {fields.map((field, index) => (
+              <div key={field.id}>
+                <FormItem>
+                  <FormLabel>
+                    {field.name}
+                  </FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Quantity..."
+                      required {...field}
+                      className="w-full"
+                      type="number"
+                      min="0"
+                    /> 
+                  </FormControl>
+                  <button type="button" onClick={() => handlesDelete(index,field.rowid)}>
                     DELETE
-                  </Button>
-                </div>
-              ))}
+                  </button>
+                </FormItem>
+              </div>
+            ))}
           </div>
         </div>
         <Button className="mt-auto" type="submit">Create</Button>
@@ -288,6 +243,7 @@ export default function AddReciepForm<TData, TValue>({
     </Form>
     )
 }
+
 
 /* {table.getSelectedRowModel().rows.length > 0 && 
   <div className="my-2 min-w-[300px]">

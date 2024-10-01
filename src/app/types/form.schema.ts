@@ -118,7 +118,7 @@ export const EditIngredientFormSchema = z.object({
 // Recipe form schemas //
 
 export const AddRecipeFormSchema = z.object({
-  name: z.string().min(2, {
+  recipeName: z.string().min(2, {
     message: "Recipe name must be at least 2 characters.",
   }).max(40,{
     message: "Recipe name must be at most 40 characters."
@@ -126,15 +126,17 @@ export const AddRecipeFormSchema = z.object({
   description: z.string().optional(),
   ingredients: z.array
   (z.object({
-    id: z.string(),
     quantity: z.union([
       z.coerce
           .number()
           .positive({
-              message: "must be positive",
+              message: "must be greater than 0",
           }),
       z.literal("")
-    ]),
-    unit : z.string()
-  })).nonempty({ message: "Select an ingredient" })
+  ]),
+    unit : z.string(),
+    name : z.string(),
+/*     ingredientid: z.string(),
+    rowid: z.string(), */
+  }))
 })

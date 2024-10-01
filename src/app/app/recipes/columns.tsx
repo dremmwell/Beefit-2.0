@@ -9,16 +9,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 export const columns: ColumnDef<Ingredient>[] = [
   {
-    id: "select",
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    )
-  },
-  {
     accessorKey: "name",
     header: ({ column }) => {
       return (
