@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input"
 import * as React from "react"
 import { useState, useEffect } from "react"
 import { AddFormDialog } from "./AddFormDialog"
+import { AddIngredientDialog } from "./AddIngredientDialog"
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 
 interface DataTableProps<TData, TValue> {
@@ -106,7 +107,7 @@ export function DataTable<TData, TValue>({
             className="max-w-sm mr-4"
           />
           <div className="ml-auto">
-            <AddFormDialog />
+            <AddIngredientDialog />
           </div>
         </div>
         <ScrollArea className="rounded-md border h-5/6">

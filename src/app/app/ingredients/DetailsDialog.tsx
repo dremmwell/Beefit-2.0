@@ -16,10 +16,6 @@ import { convertTo100g } from "@/lib/ingredients_utils"
 import IconMenu from '@/components/icon-menu';
 import { Trash2, ListCollapse } from 'lucide-react';
 import { DialogDescription } from '@radix-ui/react-dialog';
-
-interface DetailsDialogProps {
-    ingredient: Ingredient,
-}
    
 export default function DetailsDialog({
   ingredient,
