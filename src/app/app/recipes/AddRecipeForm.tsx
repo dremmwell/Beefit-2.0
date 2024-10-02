@@ -92,9 +92,10 @@ export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>){
 export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipeFormSchema>, recipe : Recipe) {
     const recipeIngredients : Array<RecipeIngredient> = []
     values.ingredients.forEach(ingredient => {
+      console.log(ingredient.quantity, ingredient.unit, ingredient.gramsPerUnit)
         let quantityInGrams : number = 0;
         if(ingredient.quantity){
-          if(ingredient.unit === "100g"){
+          if(ingredient.unit === "grams"){
             quantityInGrams = ingredient.quantity;
           }else{
             quantityInGrams = ingredient.quantity*ingredient.gramsPerUnit
@@ -178,14 +179,16 @@ export default function AddReciepForm<TData, TValue>({
       append({
         quantity: "",
          // @ts-ignore
-        unit: row.original.unit,
+        unit: "grams",
         // @ts-ignore
         name: row.original.name,
         // @ts-ignore
         ingredientid: row.original.id,
         rowid: row.id, 
         // @ts-ignore
-        gramsPerUnit: row.original.gramsPerUnit
+        gramsPerUnit: row.original.gramsPerUnit,
+        // @ts-ignore
+        ingredientUnit: row.original.unit
       })
     }
   }
@@ -309,7 +312,7 @@ export default function AddReciepForm<TData, TValue>({
                     </FormItem>
                   )}
                   />
-                  {fieldArray.unit === "100g" ?
+                  {fieldArray.ingredientUnit === "100g" ?
                   <div className="flex items-center">
                     <div className="text-sm">grams</div>
                   </div>
@@ -327,7 +330,7 @@ export default function AddReciepForm<TData, TValue>({
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="grams">grams</SelectItem>
-                              <SelectItem value={fieldArray.unit}>{fieldArray.unit}</SelectItem>
+                              <SelectItem value={fieldArray.ingredientUnit}>{fieldArray.ingredientUnit}</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormItem>

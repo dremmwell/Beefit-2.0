@@ -3,7 +3,6 @@ import { redirect } from "next/navigation";
 
 import Table from "./Table"
 import { columns } from "./columns";
-import { AddFormDialog } from "./AddFormDialog";
 
 import { getIngredients } from "../../actions/db.actions";
 

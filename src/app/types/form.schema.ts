@@ -139,5 +139,6 @@ export const AddRecipeFormSchema = z.object({
     name : z.string(),
     ingredientid: z.string(),
     rowid: z.string(),
+    ingredientUnit: z.string()
   })).nonempty("Select at least one ingredient")
 })

@@ -140,7 +140,7 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
                         <Input {...field} />
                         </FormControl>
                         <FormDescription>
-                        Per item, pint, tsp...
+                        Item, pint, tsp, cup...
                         </FormDescription>
                         <FormMessage />
                     </FormItem>

@@ -58,7 +58,7 @@ export default async function Page(
 
 
   return (
-    <div className="container my-10 flex flex-col gap-2">
+    <div className="container sm:my-10 my-5 flex flex-col gap-2 max-h-fit min-h-0 px-3 sm:px-10">
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0">Recipes</h1>
       <div className="flex py-4">
           <SearchBar />
@@ -66,7 +66,7 @@ export default async function Page(
           <AddRecipeDialog ingredients={ingredients}/> 
         </div>
       </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 overflow-scroll no-scrollbar">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 overflow-scroll no-scrollbar py-2">
           {filteredRecipes.map((recipe: RecipeData) => (
               <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
