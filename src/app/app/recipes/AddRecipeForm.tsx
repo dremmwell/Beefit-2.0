@@ -56,6 +56,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
 import { createRecipe } from "@/app/actions/db.actions"
+import { useToast } from "@/components/ui/use-toast"
 
 
 interface AddRecipeForm<TData, TValue> {
@@ -92,7 +93,6 @@ export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>){
 export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipeFormSchema>, recipe : Recipe) {
     const recipeIngredients : Array<RecipeIngredient> = []
     values.ingredients.forEach(ingredient => {
-      console.log(ingredient.quantity, ingredient.unit, ingredient.gramsPerUnit)
         let quantityInGrams : number = 0;
         if(ingredient.quantity){
           if(ingredient.unit === "grams"){
@@ -100,6 +100,7 @@ export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipe
           }else{
             quantityInGrams = ingredient.quantity*ingredient.gramsPerUnit
           }
+          console.log(quantityInGrams)
         }
         const recipeIngredient : RecipeIngredient = {
           id: uuidv4(),
@@ -144,6 +145,8 @@ export default function AddReciepForm<TData, TValue>({
     },
   })
 
+  const { toast } = useToast()
+ 
   const form = useForm<z.infer<typeof AddRecipeFormSchema>>({
     resolver: zodResolver(AddRecipeFormSchema),
     mode: "onBlur",
@@ -160,12 +163,16 @@ export default function AddReciepForm<TData, TValue>({
     control: form.control,
   });
 
-  const onSubmit = (formValues: z.infer<typeof AddRecipeFormSchema>) => {
+  async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
 
     //Handles data formatting and db storing //
     const recipe = createNewRecipe(formValues);
     const recipeIngredientArray = createNewRecipeIngredientArray(formValues, recipe);
-    createRecipe(recipe, recipeIngredientArray);
+    await createRecipe(recipe, recipeIngredientArray);
+    toast({
+      title: `Recipe ${recipe.name} saved`,
+      description: ` ${recipe.name} have been added to the database.`,
+    });
 
     // Handles form reset and close //
     remove();

@@ -13,8 +13,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { deleteIngredient } from "../../actions/db.actions" 
 import { Ingredient } from '@prisma/client';
-import IconMenu from '@/components/icon-menu';
-import { Trash2, ListCollapse } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
 export default function DeleteDialog({
   ingredient,
@@ -26,9 +25,15 @@ export default function DeleteDialog({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
 
+  const { toast } = useToast()
+
   const onDelete = async () => {
     try {
-      deleteIngredient(ingredient)
+      await deleteIngredient(ingredient)
+      toast({
+        title: `Ingredient ${ingredient.name} deleted`,
+        description: `${ingredient.name} have been removed from the database.`,
+    });
       setIsOpen(false)
     }
     catch (error) {

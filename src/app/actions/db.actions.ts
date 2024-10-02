@@ -36,6 +36,7 @@ export async function createIngredient(ingredient: Ingredient) {
     });
     revalidatePath('/app/ingredients')
   }
+  return
 }
   
 export async function updateIngredient(ingredient:Ingredient) {
@@ -56,6 +57,7 @@ export async function updateIngredient(ingredient:Ingredient) {
       }
     })
     revalidatePath('/app/ingredients')
+    return
 }
   
 export async function deleteIngredient(ingredient: Ingredient) {
@@ -70,6 +72,7 @@ export async function deleteIngredient(ingredient: Ingredient) {
     }
     revalidatePath('/app/ingredients')
   }
+  return
 }
 
 // Recipes CRUD operations //
@@ -103,6 +106,7 @@ export async function createRecipe(recipe : Recipe, recipeIngredientArray : Arra
     })
     revalidatePath('/app/recipe')
   }
+  return
 }
 
 export async function deleteRecipe(recipe : Recipe) {
@@ -117,6 +121,7 @@ export async function deleteRecipe(recipe : Recipe) {
     }
     revalidatePath('/app/recipe')
   }
+  return
 }
 
 // Recipe_Ingredients actions //

@@ -29,6 +29,7 @@ import { updateIngredient } from "../../actions/db.actions"
 import { Ingredient } from "@prisma/client"
 import { EditIngredientFormSchema } from "@/app/types/form.schema"
 import React, { Dispatch, SetStateAction } from 'react';
+import { useToast } from "@/components/ui/use-toast"
 
 
 // Edit the selected ingredient through the edit form
@@ -91,6 +92,8 @@ export function EditIngredientForm ( {
 
     let measureType = initialMeasureType;
     measureType = form.watch("measureType");
+
+    const { toast } = useToast()
    
     // Handles submit and data save
 
@@ -98,7 +101,11 @@ export function EditIngredientForm ( {
       try {
         const newIngredient = editIngredient(values,ingredient);
         form.reset();
-        updateIngredient(newIngredient);
+        await updateIngredient(newIngredient);
+        toast({
+          title: `Ingredient ${ingredient.name} updated`,
+          description: `${ingredient.name} have been updated on the database`,
+      });
         onSave()
       }
       catch (error) {

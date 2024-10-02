@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction } from 'react';
+import { useToast } from '@/components/ui/use-toast';
 
 import { Button } from '@/components/ui/button';
 
@@ -26,9 +27,15 @@ export default function DeleteDialog({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
 
+  const { toast } = useToast()
+
   const onDelete = async () => {
     try {
-      deleteRecipe(recipe)
+      await deleteRecipe(recipe)
+      toast({
+        title: `Recipe ${recipe.name} deleted`,
+        description: ` ${recipe.name} have been removed to the database.`,
+      });
       setIsOpen(false)
     }
     catch (error) {

@@ -34,6 +34,7 @@ import { createIngredient } from "../../actions/db.actions"
 import { AddIngredientFormSchema } from "@/app/types/form.schema"
 import { Ingredient } from 'prisma/prisma-client'
 import { v4 as uuidv4 } from 'uuid';
+import { useToast } from "@/components/ui/use-toast"
 
 // Create a new ingredient object from the add ingredient form
 
@@ -84,13 +85,18 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
       }
     });
 
+    const { toast } = useToast()
     const measureType = form.watch("measureType");
    
     // Handles submit and data save
-    function onSubmit(values: z.infer<typeof AddIngredientFormSchema>) {
+    async function onSubmit(values: z.infer<typeof AddIngredientFormSchema>) {
       const newIngredient = createNewIngredient(values);
       form.reset();
-      createIngredient(newIngredient);
+      await createIngredient(newIngredient);
+      toast({
+        title: `Ingredient ${newIngredient.name} saved`,
+        description: `${newIngredient.name} have been added to the database.`,
+    });
       onSave();
     }
 

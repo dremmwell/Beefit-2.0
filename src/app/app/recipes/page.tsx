@@ -8,6 +8,7 @@ import { User } from "lucia";
 import { AddRecipeDialog } from "./AddRecipeDialog";
 import SearchBar from "./SearchBar";
 import { getIngredients } from "@/app/actions/db.actions";
+import { Toaster } from "@/components/ui/toaster";
 
 
 async function getRecipesAndIngredients(user : User) {
@@ -71,6 +72,7 @@ export default async function Page(
               <RecipeCard key={recipe.id} recipe={recipe} />
           ))}
         </div>
+        <Toaster />
     </div>
   )
 }
