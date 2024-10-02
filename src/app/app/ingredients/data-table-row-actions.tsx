@@ -15,8 +15,8 @@ import { Row } from '@tanstack/react-table';
 import { MoreHorizontal, SquarePen, Trash2,ListCollapse } from 'lucide-react';
 import DeleteDialog from './DeleteDialog';
 import { Ingredient } from '@prisma/client';
-import { EditFormDialog } from './EditFormDialog';
 import DetailsDialog from './DetailsDialog';
+import { EditIngredientDialog } from './EditIngredientDialog';
 
 interface CommonIngredient {
         id: string;
@@ -55,7 +55,7 @@ DataTableRowActionsProps<TData>) {
         setIsOpen={setIsDeleteOpen}
       />
 
-      <EditFormDialog
+      <EditIngredientDialog
         ingredient={row.original}
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}

@@ -58,18 +58,12 @@ export function editIngredient(data: any, ingredient: Ingredient) {
   return newIngredient
 }
 
-interface EditFormDialogProps {
-  ingredient: Ingredient,
-}
-
-export function EditFormDialog ( {
+export function EditIngredientForm ( {
   ingredient,
-  isOpen,
-  setIsOpen
+  onSave
 }: {
   ingredient: Ingredient
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  onSave: Function;
 }){
 
   let initialMeasureType;
@@ -105,7 +99,7 @@ export function EditFormDialog ( {
         const newIngredient = editIngredient(values,ingredient);
         form.reset();
         updateIngredient(newIngredient);
-        setIsOpen(false);
+        onSave()
       }
       catch (error) {
         console.log(error)
@@ -113,13 +107,8 @@ export function EditFormDialog ( {
     }
 
     return (
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="overflow-x-auto">
-          <DialogTitle className="text-lg font-medium">Edit {ingredient.name}</DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground">Edit the properties of your ingredient !</DialogDescription>
-          <Separator /> 
             <Form {...form}>
-              <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)}>
+              <form id="ingredientForm" onSubmit={form.handleSubmit(onSubmit)} className="px-4 md:px-0">
                 <FormField
                   control={form.control}
                   name="name"
@@ -280,10 +269,8 @@ export function EditFormDialog ( {
                     )}
                   />
                   </div>
-                <Button type="submit">Edit</Button>
+                <Button className="mt-auto w-full" type="submit">Edit</Button>
               </form>
             </Form>
-        </DialogContent>
-      </Dialog>
     )
 }
