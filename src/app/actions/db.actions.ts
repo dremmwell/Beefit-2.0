@@ -84,8 +84,39 @@ export async function getRecipes(userId: UserId): Promise<Recipe[]> {
   return recipes
 }
 
-export async function deleteRecipe(recipeId: string) {
-  console.log(`Recipe ID : ${recipeId} to be deleted`)
+export async function createRecipe(recipe : Recipe, recipeIngredientArray : Array<RecipeIngredient>) {
+
+  const { user } = await validateRequest()
+  if(user){
+    recipe.userId = user.id;
+    await db.recipe.create({
+      data : {
+        id: recipe.id,
+        name: recipe.name,
+        instructions: recipe.instructions,
+        userId: user.id
+      }
+    })
+    const data = recipeIngredientArray;
+    await db.recipeIngredient.createMany({
+      data
+    })
+    revalidatePath('/app/recipe')
+  }
+}
+
+export async function deleteRecipe(recipe : Recipe) {
+  const { user } = await validateRequest()
+  if(user){
+    if(user.id === recipe.userId){
+      await db.recipe.delete({
+        where: {
+          id: recipe.id
+        }
+      })
+    }
+    revalidatePath('/app/recipe')
+  }
 }
 
 // Recipe_Ingredients actions //

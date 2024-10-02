@@ -135,6 +135,7 @@ export const AddRecipeFormSchema = z.object({
       z.literal("")
   ]),
     unit : z.string(),
+    gramsPerUnit : z.number(),
     name : z.string(),
     ingredientid: z.string(),
     rowid: z.string(),

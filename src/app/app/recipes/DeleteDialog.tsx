@@ -28,7 +28,7 @@ export default function DeleteDialog({
 
   const onDelete = async () => {
     try {
-      deleteRecipe(recipe.id)
+      deleteRecipe(recipe)
       setIsOpen(false)
     }
     catch (error) {

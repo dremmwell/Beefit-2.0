@@ -53,16 +53,71 @@ import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { AddRecipeFormSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { v4 as uuidv4 } from 'uuid';
+import { Recipe, RecipeIngredient } from "@prisma/client"
+import { createRecipe } from "@/app/actions/db.actions"
 
 
 interface AddRecipeForm<TData, TValue> {
   columns: ColumnDef<TData, TValue>[],
-  data: TData[]
+  data: TData[],
+  onSave: Function
 }
+
+
+export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>){
+
+    const uuid = uuidv4();
+
+    let instructions : string = "";
+    if(values.description == undefined){
+        instructions = "";
+    }
+    else{
+      instructions = values.description
+    }
+
+    const recipe : Recipe = {
+        id : uuid,
+        name: values.recipeName,
+        instructions: instructions,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: "",
+        bookmarked: false,
+    }
+    return recipe
+}
+
+export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipeFormSchema>, recipe : Recipe) {
+    const recipeIngredients : Array<RecipeIngredient> = []
+    values.ingredients.forEach(ingredient => {
+        let quantityInGrams : number = 0;
+        if(ingredient.quantity){
+          if(ingredient.unit === "100g"){
+            quantityInGrams = ingredient.quantity;
+          }else{
+            quantityInGrams = ingredient.quantity*ingredient.gramsPerUnit
+          }
+        }
+        const recipeIngredient : RecipeIngredient = {
+          id: uuidv4(),
+          recipeId: recipe.id,
+          ingredientId: ingredient.ingredientid,
+          grams: quantityInGrams,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+        recipeIngredients.push(recipeIngredient);
+    });
+    return recipeIngredients
+}
+
 
 export default function AddReciepForm<TData, TValue>({
   columns,
-  data
+  data,
+  onSave
 }: AddRecipeForm<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([])
@@ -105,9 +160,16 @@ export default function AddReciepForm<TData, TValue>({
   });
 
   const onSubmit = (formValues: z.infer<typeof AddRecipeFormSchema>) => {
-    console.log(formValues);
+
+    //Handles data formatting and db storing //
+    const recipe = createNewRecipe(formValues);
+    const recipeIngredientArray = createNewRecipeIngredientArray(formValues, recipe);
+    createRecipe(recipe, recipeIngredientArray);
+
+    // Handles form reset and close //
     remove();
     form.reset();
+    onSave();
   };
 
   function handlesRowSelect(row : Row<TData>) {
@@ -122,6 +184,8 @@ export default function AddReciepForm<TData, TValue>({
         // @ts-ignore
         ingredientid: row.original.id,
         rowid: row.id, 
+        // @ts-ignore
+        gramsPerUnit: row.original.gramsPerUnit
       })
     }
   }
@@ -223,20 +287,20 @@ export default function AddReciepForm<TData, TValue>({
             {fields.map((fieldArray, index) => (
                 <div  
                 key={fieldArray.id}
-                className="flex gap-2 p-2"      
+                className="flex gap-2 p-2 justify-between"      
                 >
+                  <div className="text-sm mt-2 basis-1/3">
+                       {fieldArray.name}
+                  </div>
                   <FormField 
                   control={form.control}
                   name={`ingredients.${index}.quantity`}
                   render={({ field }) => (
                     <FormItem className="flex items-center mb-0 gap-2">
-                      <FormLabel className="mt-2 basis-1/3">
-                        {fieldArray.name}
-                      </FormLabel>
                       <FormControl>
                         <Input 
                         {...field} 
-                        className="w-[100px]"
+                        className="w-[100px] justify-end"
                         placeholder="Quantity..."
                         required
                         />
@@ -246,7 +310,7 @@ export default function AddReciepForm<TData, TValue>({
                   )}
                   />
                   {fieldArray.unit === "100g" ?
-                  <div className="flex items-center mt-2">
+                  <div className="flex items-center">
                     <div className="text-sm">grams</div>
                   </div>
                    :
@@ -254,10 +318,10 @@ export default function AddReciepForm<TData, TValue>({
                     control={form.control}
                     name={`ingredients.${index}.unit`}
                     render={({ field }) => (
-                        <FormItem className="mb-0 flex items-center mt-2">
+                        <FormItem className="mb-0 flex items-center">
                           <Select onValueChange={field.onChange} defaultValue="grams">
                             <FormControl>
-                            <SelectTrigger>
+                            <SelectTrigger className="max-w-[100px]">
                               <SelectValue placeholder="Choose a unit" />
                             </SelectTrigger>
                             </FormControl>
@@ -270,7 +334,7 @@ export default function AddReciepForm<TData, TValue>({
                     )}
                     />
                   }
-                  <div className="flex items-center mt-2">
+                  <div className="flex mt-1">
                     <button
                       onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
                       className="text-primary"

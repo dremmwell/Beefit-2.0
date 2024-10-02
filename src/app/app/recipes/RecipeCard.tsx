@@ -171,7 +171,7 @@ export default function RecipeCard( recipeData : any) {
                             />
                           </button>
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
+{/*                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
                           <button
                             onClick={() => {
@@ -184,7 +184,7 @@ export default function RecipeCard( recipeData : any) {
                               icon={<SquarePen className="h-4 w-4" />}
                             />
                           </button>
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 focus:bg-destructive">
                           <button
