@@ -113,11 +113,6 @@ export default function RecipeCard( recipeData : any) {
               <>
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-center space-x-2 mb-4">
-                  <div>
-                      <h1 className="text-sm text-muted-foreground">Weight</h1>
-                      <h2 className="text-sm font-semibold">{recipeValues.weight} g</h2>
-                    </div>
-                    <Separator orientation="vertical" />
                     <div>
                       <h1 className="text-sm text-muted-foreground">Calories</h1>
                       <h2 className="text-sm font-semibold">{recipeValues.calories} cal</h2>

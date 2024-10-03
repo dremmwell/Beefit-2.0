@@ -70,8 +70,16 @@ export default function DetailsDialog({
             <CardHeader>
               <CardTitle>Instructions :</CardTitle>
             </CardHeader>
-            <CardContent>
-              {recipe.instructions}
+            <CardContent className='flex'>
+              {!recipe.instructions ?
+                <>
+                  <span className='text-sm text-muted-foreground'>None</span>
+                </>
+                :
+                <>
+                  {recipe.instructions}
+                </>
+              }
             </CardContent>
           </Card>
           </DialogDescription>
