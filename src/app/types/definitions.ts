@@ -25,7 +25,8 @@ export type IngredientInRecipe = {
     id: string;
     recipeId: string;
     ingredientId: string;
-    grams: string;
+    quantity: number;
+    unit: string;
     createdAt: number;
     updatedAt: number;
     ingredient: Ingredient;

@@ -31,7 +31,7 @@ export default function DeleteDialog({
     try {
       await deleteIngredient(ingredient)
       toast({
-        title: `Ingredient ${ingredient.name} deleted`,
+        title: `Ingredient "${ingredient.name}" deleted`,
         description: `${ingredient.name} have been removed from the database.`,
     });
       setIsOpen(false)

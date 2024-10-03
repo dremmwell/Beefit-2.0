@@ -94,7 +94,7 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
       form.reset();
       await createIngredient(newIngredient);
       toast({
-        title: `Ingredient ${newIngredient.name} saved`,
+        title: `Ingredient "${newIngredient.name}" saved`,
         description: `${newIngredient.name} have been added to the database.`,
     });
       onSave();

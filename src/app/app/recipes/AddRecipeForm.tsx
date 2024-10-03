@@ -95,22 +95,17 @@ export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipe
     values.ingredients.forEach(ingredient => {
         let quantityInGrams : number = 0;
         if(ingredient.quantity){
-          if(ingredient.unit === "grams"){
-            quantityInGrams = ingredient.quantity;
-          }else{
-            quantityInGrams = ingredient.quantity*ingredient.gramsPerUnit
+          const recipeIngredient : RecipeIngredient = {
+            id: uuidv4(),
+            recipeId: recipe.id,
+            ingredientId: ingredient.ingredientid,
+            quantity: ingredient.quantity,
+            unit: ingredient.unit,
+            createdAt: new Date(),
+            updatedAt: new Date(),
           }
-          console.log(quantityInGrams)
+          recipeIngredients.push(recipeIngredient);
         }
-        const recipeIngredient : RecipeIngredient = {
-          id: uuidv4(),
-          recipeId: recipe.id,
-          ingredientId: ingredient.ingredientid,
-          grams: quantityInGrams,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        }
-        recipeIngredients.push(recipeIngredient);
     });
     return recipeIngredients
 }
@@ -170,7 +165,7 @@ export default function AddReciepForm<TData, TValue>({
     const recipeIngredientArray = createNewRecipeIngredientArray(formValues, recipe);
     await createRecipe(recipe, recipeIngredientArray);
     toast({
-      title: `Recipe ${recipe.name} saved`,
+      title: `Recipe "${recipe.name}" saved`,
       description: ` ${recipe.name} have been added to the database.`,
     });
 
@@ -249,7 +244,7 @@ export default function AddReciepForm<TData, TValue>({
               Select Ingredients :
           </h2>
           <div className="flex md:flex-row flex-col">
-            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 max-w-[400px] grow-0">
+            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0">
                 <Input
                   id="filterInput"
                   placeholder="Search ingredients..."

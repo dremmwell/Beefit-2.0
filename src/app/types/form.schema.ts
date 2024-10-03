@@ -120,7 +120,7 @@ export const EditIngredientFormSchema = z.object({
 export const AddRecipeFormSchema = z.object({
   recipeName: z.string().min(2, {
     message: "Recipe name must be at least 2 characters.",
-  }).max(40,{
+  }).max(100,{
     message: "Recipe name must be at most 40 characters."
   }),
   description: z.string().optional(),

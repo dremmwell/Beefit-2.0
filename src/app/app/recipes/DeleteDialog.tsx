@@ -33,7 +33,7 @@ export default function DeleteDialog({
     try {
       await deleteRecipe(recipe)
       toast({
-        title: `Recipe ${recipe.name} deleted`,
+        title: `Recipe "${recipe.name}" deleted`,
         description: ` ${recipe.name} have been removed to the database.`,
       });
       setIsOpen(false)

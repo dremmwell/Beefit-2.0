@@ -65,7 +65,8 @@ model RecipeIngredient {
   id           String @id @default(uuid())
   recipeId     String
   ingredientId String
-  grams        Float
+  quantity     Float  @default(100)
+  unit         String @default("grams")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

@@ -6,27 +6,52 @@ export function getRecipeValues(recipe: RecipeData) {
 
     let weight : number = 0;
     for (let i = 0; i < recipe.ingredients.length; i++) {
-        weight += +recipe.ingredients[i].grams;
+        if(recipe.ingredients[i].unit === "grams"){
+            weight += +recipe.ingredients[i].quantity;
+        }
+        else{
+            weight += +recipe.ingredients[i].quantity* +recipe.ingredients[i].ingredient.gramsPerUnit
+        }
     }
 
     let calories : number = 0;
     for (let i = 0; i < recipe.ingredients.length; i++) {
-        calories += (+recipe.ingredients[i].ingredient.calories*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
+        if(recipe.ingredients[i].unit === "grams"){
+            calories += +recipe.ingredients[i].ingredient.calories*recipe.ingredients[i].quantity/ +recipe.ingredients[i].ingredient.gramsPerUnit       
+        }
+        else{
+            calories += +recipe.ingredients[i].ingredient.calories*recipe.ingredients[i].quantity
+        }
     }
 
     let proteins : number = 0;
     for (let i = 0; i < recipe.ingredients.length; i++) {
-        proteins += (+recipe.ingredients[i].ingredient.proteins*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
+        if(recipe.ingredients[i].unit === "grams"){
+            proteins += +recipe.ingredients[i].ingredient.proteins*recipe.ingredients[i].quantity/ +recipe.ingredients[i].ingredient.gramsPerUnit       
+        }
+        else{
+            proteins += +recipe.ingredients[i].ingredient.proteins*recipe.ingredients[i].quantity
+        }
     }
 
     let carbs : number = 0;
     for (let i = 0; i < recipe.ingredients.length; i++) {
-        carbs += (+recipe.ingredients[i].ingredient.carbs*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
+        if(recipe.ingredients[i].unit === "grams"){
+            carbs += +recipe.ingredients[i].ingredient.carbs*recipe.ingredients[i].quantity/ +recipe.ingredients[i].ingredient.gramsPerUnit       
+        }
+        else{
+            carbs += +recipe.ingredients[i].ingredient.carbs*recipe.ingredients[i].quantity
+        }
     }
 
     let fats : number = 0;
     for (let i = 0; i < recipe.ingredients.length; i++) {
-        fats += (+recipe.ingredients[i].ingredient.fats*100/ +recipe.ingredients[i].ingredient.gramsPerUnit)* +recipe.ingredients[i].grams/100;
+        if(recipe.ingredients[i].unit === "grams"){
+            fats += +recipe.ingredients[i].ingredient.fats*recipe.ingredients[i].quantity/ +recipe.ingredients[i].ingredient.gramsPerUnit       
+        }
+        else{
+            fats += +recipe.ingredients[i].ingredient.fats*recipe.ingredients[i].quantity
+        }
     }
 
     // Returns the nutritional values of the recipe //

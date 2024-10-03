@@ -103,7 +103,7 @@ export function EditIngredientForm ( {
         form.reset();
         await updateIngredient(newIngredient);
         toast({
-          title: `Ingredient ${ingredient.name} updated`,
+          title: `Ingredient "${ingredient.name}" updated`,
           description: `${ingredient.name} have been updated on the database`,
       });
         onSave()
