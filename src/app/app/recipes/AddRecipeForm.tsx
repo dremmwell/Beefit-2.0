@@ -332,7 +332,7 @@ export default function AddReciepForm<TData, TValue>({
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="grams">grams</SelectItem>
-                              <SelectItem value={fieldArray.ingredientUnit}>{fieldArray.ingredientUnit}</SelectItem>
+                              <SelectItem value={fieldArray.ingredientUnit}>{fieldArray.ingredientUnit}(s)</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormItem>

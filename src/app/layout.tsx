@@ -6,6 +6,9 @@ import * as React from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import SideBar from "@/components/SideBar";
 import { Toaster } from "@/components/ui/toaster";
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
+
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -38,7 +41,9 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" 
+    className={`${GeistSans.variable} ${GeistMono.variable}`}
+    suppressHydrationWarning>
       <body className={cn(
           "min-h-screen bg-background font-sans antialiased flex",
           fontSans.variable

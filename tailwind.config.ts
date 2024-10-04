@@ -74,8 +74,9 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
       },
       fontFamily : {
-        agbalumo: ["Agbalumo", "sans-serif"],
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        sans: ['var(--font-geist-sans)'],
+        mono: ['var(--font-geist-mono)'],
+        agbalumo: ["Agbalumo", "sans-serif"]
       },
     },
   },
