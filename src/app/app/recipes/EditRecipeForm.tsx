@@ -12,7 +12,8 @@ import {
   VisibilityState,
   RowSelectionState,
   CoreRow,
-  Row
+  Row,
+  RowData
 } from "@tanstack/react-table"
 
 import {
@@ -58,10 +59,11 @@ import { Recipe, RecipeIngredient } from "@prisma/client"
 import { createRecipe } from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
+import { Ingredient } from "@prisma/client"
 
 
 interface EditRecipeForm<TData, TValue> {
-  recipe : Recipe,
+  recipe : RecipeAndIngredients,
   columns: ColumnDef<TData, TValue>[],
   data: TData[],
   onSave: Function
@@ -149,7 +151,6 @@ export default function EditRecipeForm<TData, TValue>({
       description: recipe.instructions,
       ingredients: []
     }
-    
   })
 
   const { fields, append, remove } = useFieldArray({
@@ -174,6 +175,43 @@ export default function EditRecipeForm<TData, TValue>({
     onSave();
   };
 
+  //Append to the form field array the list of ingredients that are in recipe to be edited //
+
+  function getRowIdsByIngredients(recipe : RecipeAndIngredients){
+    const ingredientIds : Array<string> = []
+    recipe.ingredients.forEach(ingredient => {
+      ingredientIds.push(ingredient.ingredientId)
+    })
+    const rowIds : Array<string> = []
+    const rows : Array<RowData> = Object.values(table.getRowModel().rowsById)
+    rows.forEach((row : RowData)=> {
+      ingredientIds.forEach(ingredientId => {
+          // @ts-ignore 
+          if(ingredientId === row.original.id){
+          // @ts-ignore 
+              rowIds.push(row.id)
+          // @ts-ignore 
+          }
+      })
+    })
+    return rowIds
+  }
+
+/*   const rowsIds = getRowIdsByIngredients(recipe);
+  for (let index = 0; index < rowsIds.length; index++) {
+    const row = table.getRow(rowsIds[index]);
+    handlesRowSelect(row);
+  } */
+
+  useEffect(() => {
+      const rowsIds = getRowIdsByIngredients(recipe);
+      for (let index = 0; index < rowsIds.length; index++) {
+        const row = table.getRow(rowsIds[index]);
+        handlesRowSelect(row);
+      }
+      return () => remove()
+  }, [])
+
   function handlesRowSelect(row : Row<TData>) {
     if(!row.getIsSelected()){
       row.toggleSelected(true)
@@ -192,13 +230,13 @@ export default function EditRecipeForm<TData, TValue>({
         ingredientUnit: row.original.unit
       })
     }
+    console.log(row)
   }
 
-
-  function handlesDelete(index: number, id: string){
+  function handlesDelete(i: number, id: string){
     const row = table.getRow(id);
     row.toggleSelected(false)
-    remove(index);
+    remove(i);
   }
 
   return (
@@ -288,7 +326,7 @@ export default function EditRecipeForm<TData, TValue>({
             </div>
             <div className="flex flex-col gap-2 grow">
             <ScrollArea className="md:max-h-[400px] mx-2">
-            {fields.map((fieldArray, index) => (
+            {fields.map((fieldArray, i) => (
                 <div  
                 key={fieldArray.id}
                 className="flex gap-2 p-2 justify-between"      
@@ -298,7 +336,7 @@ export default function EditRecipeForm<TData, TValue>({
                   </div>
                   <FormField 
                   control={form.control}
-                  name={`ingredients.${index}.quantity`}
+                  name={`ingredients.${i}.quantity`}
                   render={({ field }) => (
                     <FormItem className="flex items-center mb-0 gap-2">
                       <FormControl>
@@ -320,7 +358,7 @@ export default function EditRecipeForm<TData, TValue>({
                    :
                     <FormField 
                     control={form.control}
-                    name={`ingredients.${index}.unit`}
+                    name={`ingredients.${i}.unit`}
                     render={({ field }) => (
                         <FormItem className="mb-0 flex items-center">
                           <Select onValueChange={field.onChange} defaultValue="grams">
@@ -340,7 +378,7 @@ export default function EditRecipeForm<TData, TValue>({
                   }
                   <div className="flex mt-1">
                     <button
-                      onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
+                      onMouseDownCapture={() => handlesDelete(i, fieldArray.rowid)}
                       className="text-primary"
                     >
                       <IconMenu
