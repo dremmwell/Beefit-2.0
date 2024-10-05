@@ -54,9 +54,9 @@ export function EditIngredientDialog(
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="min-w-fit flex-1">
           <DialogHeader >
-            <DialogTitle>New Ingredient</DialogTitle>
+            <DialogTitle>Edit Ingredient</DialogTitle>
             <DialogDescription>
-            Save a new ingredient in your list !
+              Edit your ingredient !
             </DialogDescription>
           </DialogHeader>
           <EditIngredientForm ingredient={ingredient} onSave={handleCloseDialog}/>
@@ -71,7 +71,7 @@ export function EditIngredientDialog(
         <DrawerHeader className="text-left">
           <DrawerTitle>New Ingredient</DrawerTitle>
           <DrawerDescription>
-            Save a new ingredient in your list !
+            Edit your ingredient !
           </DrawerDescription>
         </DrawerHeader>
           <EditIngredientForm ingredient={ingredient} onSave={(handleCloseDialog)}/>

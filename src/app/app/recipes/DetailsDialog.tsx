@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { RecipeData } from '@/app/types/definitions';
+import { RecipeAndIngredients	 } from '@/app/types/definitions';
 import { Separator } from '@radix-ui/react-separator';
 import {
   Card,
@@ -27,7 +27,7 @@ export default function DetailsDialog({
   isOpen,
   setIsOpen
 }: {
-  recipe: RecipeData
+  recipe: RecipeAndIngredients	
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -43,14 +43,14 @@ export default function DetailsDialog({
               <CardTitle>Ingredients :</CardTitle>
             </CardHeader>
             <CardContent>
-            {recipe.ingredients.map((ingredient) => 
+            {recipe.ingredients.map((ingredient: any) => 
                 <div
                 key={ingredient.ingredient.id}
                 className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
               >
                   <span className="flex h-2 w-2 translate-y-1 rounded-full bg-primary" />
                   <div className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
+                    <div className="text-sm font-medium leading-none">
                       {ingredient.unit === "grams" ?
                       <>
                         {ingredient.quantity} grams of {ingredient.ingredient.name}
@@ -60,7 +60,7 @@ export default function DetailsDialog({
                       {ingredient.quantity} {ingredient.ingredient.unit}(s) of {ingredient.ingredient.name} ({ingredient.quantity*ingredient.ingredient.gramsPerUnit}g)
                       </>
                       }
-                    </p>
+                    </div>
                   </div>
                 </div>
             )}

@@ -109,13 +109,13 @@ export async function createRecipe(recipe : Recipe, recipeIngredientArray : Arra
   return
 }
 
-export async function deleteRecipe(recipe : Recipe) {
+export async function deleteRecipe(recipeId : string, userId: string) {
   const { user } = await validateRequest()
   if(user){
-    if(user.id === recipe.userId){
+    if(user.id === userId){
       await db.recipe.delete({
         where: {
-          id: recipe.id
+          id: recipeId
         }
       })
     }

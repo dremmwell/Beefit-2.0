@@ -1,6 +1,6 @@
 "use client"
 
-import { RecipeData, IngredientInRecipe } from '@/app/types/definitions'
+import { RecipeAndIngredients, IngredientInRecipe } from '@/app/types/definitions'
 import { getRecipeValues } from '@/lib/recipe_utils'
 import React from 'react'
 import { useState } from 'react';
@@ -29,13 +29,17 @@ import { Label } from "@/components/ui/label";
 import DeleteDialog from "./DeleteDialog";
 import DetailsDialog from "./DetailsDialog";
 import IconMenu from "@/components/icon-menu";
-import EditDialog from './EditDialog';
+import EditRecipeDialog from './EditRecipeDialog';
+import { Ingredient } from '@prisma/client';
 
 
-export default function RecipeCard( recipeData : any) {
-
-  // Recipe Props are passed in a "nested" object (can't figure out why): recipeData = {recipe {... the recipe object}}, so the next line removes the outer "recipe" layer//
-  const recipe = recipeData.recipe; 
+export default function RecipeCard( {
+recipe,
+ingredients
+}:{
+recipe : RecipeAndIngredients,
+ingredients : Array<Ingredient>
+}) {
 
   // Extract nutritional values of the Recipe //
   const recipeValues = getRecipeValues(recipe)
@@ -59,8 +63,9 @@ export default function RecipeCard( recipeData : any) {
       setIsOpen={setIsDetailsOpen}
       />
 
-      <EditDialog 
+      <EditRecipeDialog 
         recipe={recipe}
+        ingredients={ingredients}
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
       />
@@ -78,7 +83,7 @@ export default function RecipeCard( recipeData : any) {
                   {recipe.name}
               </CardTitle>
               <CardDescription className="overflow-hidden">
-                  {recipe.ingredients.slice(0,3).map((ingredient : IngredientInRecipe) => (
+                  {recipe.ingredients.slice(0,3).map((ingredient : any) => (
                       <a key = {ingredient.id}>{ingredient.ingredient.name}, </a>
                   ))} ...
               </CardDescription>
@@ -171,7 +176,7 @@ export default function RecipeCard( recipeData : any) {
                             />
                           </button>
                         </DropdownMenuItem>
-{/*                         <DropdownMenuSeparator />
+                        <DropdownMenuSeparator />
                         <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
                           <button
                             onClick={() => {
@@ -184,7 +189,7 @@ export default function RecipeCard( recipeData : any) {
                               icon={<SquarePen className="h-4 w-4" />}
                             />
                           </button>
-                        </DropdownMenuItem> */}
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 focus:bg-destructive">
                           <button

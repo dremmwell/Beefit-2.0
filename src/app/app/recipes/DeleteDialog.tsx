@@ -15,7 +15,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
 import { deleteRecipe } from '@/app/actions/db.actions';
-import { Recipe } from '@prisma/client';
+import { RecipeData } from '@/app/types/definitions';
 
 export default function DeleteDialog({
   recipe,
@@ -31,7 +31,7 @@ export default function DeleteDialog({
 
   const onDelete = async () => {
     try {
-      await deleteRecipe(recipe)
+      await deleteRecipe(recipe.id, recipe.userId)
       toast({
         title: `Recipe "${recipe.name}" deleted`,
         description: ` ${recipe.name} have been removed to the database.`,

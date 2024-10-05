@@ -57,65 +57,64 @@ import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
 import { createRecipe } from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
+import { RecipeAndIngredients } from "@/app/types/definitions"
 
 
-interface AddRecipeForm<TData, TValue> {
+interface EditRecipeForm<TData, TValue> {
+  recipe : Recipe,
   columns: ColumnDef<TData, TValue>[],
   data: TData[],
   onSave: Function
 }
 
+export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>, recipe : Recipe){
 
-export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>){
+  let instructions : string = "";
+  if(values.description == undefined){
+      instructions = "";
+  }
+  else{
+    instructions = values.description
+  }
 
-    const uuid = uuidv4();
-
-    let instructions : string = "";
-    if(values.description == undefined){
-        instructions = "";
-    }
-    else{
-      instructions = values.description
-    }
-
-    const recipe : Recipe = {
-        id : uuid,
-        name: values.recipeName,
-        instructions: instructions,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        userId: "",
-        bookmarked: false,
-        isOriginal: true
-    }
-    return recipe
+  const newRecipe : Recipe = {
+      id : recipe.id,
+      name: values.recipeName,
+      instructions: instructions,
+      createdAt: recipe.createdAt,
+      updatedAt: new Date(),
+      userId: recipe.userId,
+      bookmarked: recipe.bookmarked,
+      isOriginal: recipe.isOriginal
+  }
+  return newRecipe
 }
 
 export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipeFormSchema>, recipe : Recipe) {
-    const recipeIngredients : Array<RecipeIngredient> = []
-    values.ingredients.forEach(ingredient => {
-        if(ingredient.quantity){
-          const recipeIngredient : RecipeIngredient = {
-            id: uuidv4(),
-            recipeId: recipe.id,
-            ingredientId: ingredient.ingredientid,
-            quantity: ingredient.quantity,
-            unit: ingredient.unit,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }
-          recipeIngredients.push(recipeIngredient);
+  const recipeIngredients : Array<RecipeIngredient> = []
+  values.ingredients.forEach(ingredient => {
+      if(ingredient.quantity){
+        const recipeIngredient : RecipeIngredient = {
+          id: uuidv4(),
+          recipeId: recipe.id,
+          ingredientId: ingredient.ingredientid,
+          quantity: ingredient.quantity,
+          unit: ingredient.unit,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
-    });
-    return recipeIngredients
+        recipeIngredients.push(recipeIngredient);
+      }
+  });
+  return recipeIngredients
 }
 
-
-export default function AddReciepForm<TData, TValue>({
+export default function EditRecipeForm<TData, TValue>({
+  recipe,
   columns,
   data,
   onSave
-}: AddRecipeForm<TData, TValue>) {
+}: EditRecipeForm<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -146,8 +145,8 @@ export default function AddReciepForm<TData, TValue>({
     resolver: zodResolver(AddRecipeFormSchema),
     mode: "onBlur",
     defaultValues: {
-      recipeName: "",
-      description: "",
+      recipeName: recipe.name,
+      description: recipe.instructions,
       ingredients: []
     }
     
@@ -161,12 +160,12 @@ export default function AddReciepForm<TData, TValue>({
   async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
 
     //Handles data formatting and db storing //
-    const recipe = createNewRecipe(formValues);
-    const recipeIngredientArray = createNewRecipeIngredientArray(formValues, recipe);
-    await createRecipe(recipe, recipeIngredientArray);
+    const newRecipe = createNewRecipe(formValues,recipe);
+    const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
+    await createRecipe(newRecipe, recipeIngredientArray);
     toast({
-      title: `Recipe "${recipe.name}" saved`,
-      description: ` ${recipe.name} have been added to the database.`,
+      title: `Recipe "${recipe.name}" edited`,
+      description: ` ${newRecipe.name} have been updated on the database.`,
     });
 
     // Handles form reset and close //
