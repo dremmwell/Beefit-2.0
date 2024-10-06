@@ -42,10 +42,8 @@ import {
 } from "@/components/ui/form"
 import IconMenu from "@/components/icon-menu"
 import { Trash2 } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
@@ -56,10 +54,9 @@ import { AddRecipeFormSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
-import { createRecipe } from "@/app/actions/db.actions"
+import { updateRecipe } from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
-import { Ingredient } from "@prisma/client"
 
 
 interface EditRecipeForm<TData, TValue> {
@@ -118,6 +115,8 @@ export default function EditRecipeForm<TData, TValue>({
   onSave
 }: EditRecipeForm<TData, TValue>) {
 
+// Handles table display, filtering and selection //  
+
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -141,7 +140,7 @@ export default function EditRecipeForm<TData, TValue>({
     },
   })
 
-  const { toast } = useToast()
+// Handles form dynamic validation //
  
   const form = useForm<z.infer<typeof AddRecipeFormSchema>>({
     resolver: zodResolver(AddRecipeFormSchema),
@@ -158,12 +157,16 @@ export default function EditRecipeForm<TData, TValue>({
     control: form.control,
   });
 
+// Handles form submit and dialog close //  
+
+  const { toast } = useToast()
+
   async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
 
-    //Handles data formatting and db storing //
+    // Handles data formatting and db storing //
     const newRecipe = createNewRecipe(formValues,recipe);
     const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
-    await createRecipe(newRecipe, recipeIngredientArray);
+    await updateRecipe(newRecipe, recipeIngredientArray);
     toast({
       title: `Recipe "${recipe.name}" edited`,
       description: ` ${newRecipe.name} have been updated on the database.`,
@@ -175,42 +178,74 @@ export default function EditRecipeForm<TData, TValue>({
     onSave();
   };
 
-  //Append to the form field array the list of ingredients that are in recipe to be edited //
+//--------------------------------------Handles displaying the recipe ingredients in the form to be edited ---------------------------------------//
 
-  function getRowIdsByIngredients(recipe : RecipeAndIngredients){
-    const ingredientIds : Array<string> = []
+  //Match former ingredients values with their new row position (rowId) in the table //
+
+  function getIngredientsRow(recipe : RecipeAndIngredients){
+
+    const rows : Array<RowData> = Object.values(table.getRowModel().rowsById);
+    const ingredientWithRowArray : Array<any> = [];
+
     recipe.ingredients.forEach(ingredient => {
-      ingredientIds.push(ingredient.ingredientId)
-    })
-    const rowIds : Array<string> = []
-    const rows : Array<RowData> = Object.values(table.getRowModel().rowsById)
-    rows.forEach((row : RowData)=> {
-      ingredientIds.forEach(ingredientId => {
-          // @ts-ignore 
-          if(ingredientId === row.original.id){
-          // @ts-ignore 
-              rowIds.push(row.id)
-          // @ts-ignore 
-          }
+      const ingredientWithRow = {
+        id: ingredient.id,
+        recipeId: ingredient.recipeId,
+        ingredientId: ingredient.ingredientId,
+        quantity: ingredient.quantity,
+        unit: ingredient.unit,
+        createdAt: ingredient.createdAt,
+        updatedAt: ingredient.updatedAt,
+        rowId: "",
+      }
+      rows.forEach((row : RowData) =>{
+       // @ts-ignore 
+        if(ingredientWithRow.ingredientId === row.original.id){
+       // @ts-ignore 
+          ingredientWithRow.rowId = row.id;
+          ingredientWithRowArray.push(ingredientWithRow)
+        }
       })
     })
-    return rowIds
+    return ingredientWithRowArray
   }
 
-/*   const rowsIds = getRowIdsByIngredients(recipe);
-  for (let index = 0; index < rowsIds.length; index++) {
-    const row = table.getRow(rowsIds[index]);
-    handlesRowSelect(row);
-  } */
+  // Append the list of recipe ingredients to the form field array and set the recipe ingredients values as default for values //
+
+  function appendRecipeIngredients(row : Row<TData>, quantity : number, unit : string) {
+    if(!row.getIsSelected()){
+      row.toggleSelected(true)
+      append({
+        quantity: quantity,
+         // @ts-ignore
+        unit: unit,
+        // @ts-ignore
+        name: row.original.name,
+        // @ts-ignore
+        ingredientid: row.original.id,
+        rowid: row.id, 
+        // @ts-ignore
+        gramsPerUnit: row.original.gramsPerUnit,
+        // @ts-ignore
+        ingredientUnit: row.original.unit
+      })
+    }
+  }
+
+  // Triggers recipe ingredient form append (remove() to render only once in production) //
 
   useEffect(() => {
-      const rowsIds = getRowIdsByIngredients(recipe);
-      for (let index = 0; index < rowsIds.length; index++) {
-        const row = table.getRow(rowsIds[index]);
-        handlesRowSelect(row);
+      const ingredientWithRowArray = getIngredientsRow(recipe);
+      for (let index = 0; index < ingredientWithRowArray.length; index++) {
+        const row = table.getRow(ingredientWithRowArray[index].rowId);
+        appendRecipeIngredients(row, ingredientWithRowArray[index].quantity, ingredientWithRowArray[index].unit);
       }
       return () => remove()
   }, [])
+
+  //-------------------------------------------------- Handles the add recipe form  ------------------------------------------------//
+
+  // Handles adding ingredients to the recipe form and slecting it on the table //
 
   function handlesRowSelect(row : Row<TData>) {
     if(!row.getIsSelected()){
@@ -230,14 +265,16 @@ export default function EditRecipeForm<TData, TValue>({
         ingredientUnit: row.original.unit
       })
     }
-    console.log(row)
   }
 
+//Handles removing ingredient from the recipe form and deselecting it on the table//
+  
   function handlesDelete(i: number, id: string){
     const row = table.getRow(id);
     row.toggleSelected(false)
     remove(i);
   }
+
 
   return (
     <Form {...form}>
@@ -361,7 +398,7 @@ export default function EditRecipeForm<TData, TValue>({
                     name={`ingredients.${i}.unit`}
                     render={({ field }) => (
                         <FormItem className="mb-0 flex items-center">
-                          <Select onValueChange={field.onChange} defaultValue="grams">
+                          <Select onValueChange={field.onChange} defaultValue={fieldArray.unit}>
                             <FormControl>
                             <SelectTrigger className="max-w-[100px]">
                               <SelectValue placeholder="Choose a unit" />
@@ -393,7 +430,7 @@ export default function EditRecipeForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto" type="submit">Create</Button>
+        <Button className="mt-auto" type="submit">Edit</Button>
       </form>
     </Form>
     )

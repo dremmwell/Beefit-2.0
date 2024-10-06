@@ -109,6 +109,35 @@ export async function createRecipe(recipe : Recipe, recipeIngredientArray : Arra
   return
 }
 
+export async function updateRecipe(recipe : Recipe, recipeIngredientArray : Array<RecipeIngredient>) {
+  const { user } = await validateRequest()
+  if(user){
+    recipe.userId = user.id;
+    await db.recipe.update({
+      where : {
+        id: recipe.id
+      },
+      data : {
+        id: recipe.id,
+        name: recipe.name,
+        instructions: recipe.instructions,
+        userId: user.id
+      }
+    })
+    const data = recipeIngredientArray;
+    await db.recipeIngredient.deleteMany({
+      where : {
+        recipeId: recipe.id
+      }
+    });
+    await db.recipeIngredient.createMany({
+      data
+    })
+    revalidatePath('/app/recipe')
+  }
+  return
+}
+
 export async function deleteRecipe(recipeId : string, userId: string) {
   const { user } = await validateRequest()
   if(user){
