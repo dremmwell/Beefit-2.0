@@ -38,11 +38,7 @@ export default function DetailsDialog({
         <DialogHeader>
           <DialogTitle className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-3">{recipe.name}</DialogTitle>
           <DialogDescription className='flex flex-col gap-4'>
-          <Card>
-            <CardHeader>
-              <CardTitle>Ingredients :</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <div className='m-4'>
             {recipe.ingredients.map((ingredient: any) => 
                 <div
                 key={ingredient.ingredient.id}
@@ -64,24 +60,14 @@ export default function DetailsDialog({
                   </div>
                 </div>
             )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Instructions :</CardTitle>
-            </CardHeader>
-            <CardContent className='flex'>
-              {!recipe.instructions ?
-                <>
-                  <span className='text-sm text-muted-foreground'>None</span>
-                </>
-                :
-                <>
-                  {recipe.instructions}
-                </>
-              }
-            </CardContent>
-          </Card>
+          </div>
+          {recipe.instructions !== "" && 
+            <Card>
+              <CardContent className='pt-6'>
+                <p>{recipe.instructions}</p>
+              </CardContent>
+            </Card>
+          }
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
