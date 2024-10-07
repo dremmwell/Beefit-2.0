@@ -1,5 +1,6 @@
 import React from 'react'
 import { Badge } from '../../../components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface TimelineItemProps {
   title: string
@@ -9,7 +10,7 @@ interface TimelineItemProps {
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ title, calories, description }) => (
     <li className="last:mb-0 mb-2">
-      <div className="grid grid-cols-[minmax(60px,20%)_auto_1fr] grid-rows-[20px_auto] gap-3">
+      <div className="grid grid-cols-[minmax(60px,70px)_auto_1fr] grid-rows-[20px_auto] gap-3">
       <div className="ml-auto">
           <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
@@ -30,13 +31,16 @@ interface DayTimelineProps {
 
 export default function DayTimeline({ items }: DayTimelineProps) {
   return (
-    <ol className='mx-2 my-4'>
-      {items.map((item, index) => (
-        <TimelineItem
-          key={index}
-          {...item}
-        />
-      ))}
-    </ol>
+    <>
+      <ol className='mx-2 my-4 mt-2'>
+        {items.map((item, index) => (
+          <TimelineItem
+            key={index}
+            {...item}
+          />
+        ))}
+      </ol>
+    </>
+
   )
 }
