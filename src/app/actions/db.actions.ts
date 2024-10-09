@@ -2,11 +2,12 @@
 
 import db from "@/db/db";
 import { Ingredient, Recipe, RecipeIngredient } from '@prisma/client';
+import { RecipeAndIngredients } from "../types/definitions";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
 
-// Ingredients CRUD operations //
+//----------------------------------------- Ingredients CRUD operations ------------------------------------//
 
 export async function getIngredients(userId: UserId) {
     const data = await db.ingredient.findMany({
@@ -75,7 +76,7 @@ export async function deleteIngredient(ingredient: Ingredient) {
   return
 }
 
-// Recipes CRUD operations //
+//----------------------------------------- Recipes CRUD operations ---------------------------------//
 
 export async function getRecipes(userId: UserId): Promise<Recipe[]> {
   const data = await db.recipe.findMany({
@@ -84,6 +85,23 @@ export async function getRecipes(userId: UserId): Promise<Recipe[]> {
     }
   });
   const recipes = JSON.parse(JSON.stringify(data));
+  return recipes
+}
+
+export async function getRecipesAndIngredients(userId : UserId) {
+  const data = await db.recipe.findMany({
+    where: {
+      userId: userId
+    },
+    include:{
+      ingredients: {
+        include: {
+          ingredient: true
+        }
+      }
+    }
+  });
+  const recipes : Array<RecipeAndIngredients> = JSON.parse(JSON.stringify(data));
   return recipes
 }
 

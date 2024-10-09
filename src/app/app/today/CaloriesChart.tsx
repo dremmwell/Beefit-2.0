@@ -18,6 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
+import { useMediaQuery } from "@/lib/hooks/use-media-query"
 
 export const description = "A radial chart with text"
 
@@ -36,11 +37,13 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export default function CaloriesChart() {
+
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col max-w-64 min-w-[170px]">
       <CardHeader className="items-center pb-0">
         <CardTitle>Calories - Today</CardTitle>
-        <CardDescription>02 October 2024</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -51,15 +54,16 @@ export default function CaloriesChart() {
             data={chartData}
             startAngle={270}
             endAngle={0}
-            innerRadius={80}
-            outerRadius={110}
+            innerRadius={isDesktop ? 80 : 50}
+            outerRadius={isDesktop ? 110 : 80}
+            barSize={isDesktop? 20 : 15}
           >
             <PolarGrid
               gridType="circle"
               radialLines={false}
               stroke="none"
               className="first:fill-muted last:fill-background"
-              polarRadius={[86, 74]}
+              polarRadius={isDesktop ? [86, 74] : [56, 44]}
             />
             <RadialBar dataKey="calories" background cornerRadius={10} />
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
@@ -76,7 +80,7 @@ export default function CaloriesChart() {
                         <tspan
                           x={viewBox.cx}
                           y={viewBox.cy}
-                          className="fill-foreground text-4xl font-bold"
+                          className="fill-foreground md:text-4xl text-2xl font-bold"
                         >
                           {chartData[0].calories.toLocaleString()}
                         </tspan>
@@ -97,9 +101,15 @@ export default function CaloriesChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
+        {isDesktop ? 
         <div className="flex items-center gap-2 font-medium leading-none">
           188 cal remaining today.
         </div>
+        :
+        <div className="flex items-center gap-2 font-medium leading-none">
+        188 cal left
+        </div>
+        }
       </CardFooter>
     </Card>
   )

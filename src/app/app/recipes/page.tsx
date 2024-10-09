@@ -7,27 +7,9 @@ import { RecipeAndIngredients } from "@/app/types/definitions";
 import { User } from "lucia";
 import { AddRecipeDialog } from "./AddRecipeDialog";
 import SearchBar from "./SearchBar";
-import { getIngredients } from "@/app/actions/db.actions";
+import { getIngredients, getRecipesAndIngredients } from "@/app/actions/db.actions";
 import { Toaster } from "@/components/ui/toaster";
 import { Ingredient } from "@prisma/client";
-
-
-async function getRecipesAndIngredients(user : User) {
-  const data = await db.recipe.findMany({
-    where: {
-      userId: user.id
-    },
-    include:{
-      ingredients: {
-        include: {
-          ingredient: true
-        }
-      }
-    }
-  });
-  const recipes : Array<RecipeAndIngredients> = JSON.parse(JSON.stringify(data));
-  return recipes
-}
 
 export default async function Page(
   {
@@ -43,8 +25,8 @@ export default async function Page(
     return redirect("/")
   }
 
-  const recipes :Array<RecipeAndIngredients>= await getRecipesAndIngredients(user);
-  const ingredients :Array<Ingredient> = await getIngredients(user.id)
+  const recipes :Array<RecipeAndIngredients> = await getRecipesAndIngredients(user.id);
+  const ingredients :Array<Ingredient> = await getIngredients(user.id);
 
   // Page prop "searchParams" gets search param in the url //
   const search = typeof searchParams.search === 'string' ? searchParams.search : undefined

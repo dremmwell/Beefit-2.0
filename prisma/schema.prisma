@@ -15,6 +15,7 @@ model User {
   sessions    Session[]
   ingredients Ingredient[]
   recipes     Recipe[]
+  meal        Meal[]
 }
 
 model Session {
@@ -42,6 +43,7 @@ model Ingredient {
   updatedAt DateTime @default(now())
 
   recipeIngredient RecipeIngredient[]
+  meal             Meal[]
 
   user User @relation(references: [id], fields: [userId], onDelete: Cascade)
 }
@@ -57,6 +59,7 @@ model Recipe {
   updatedAt DateTime @default(now())
 
   ingredients RecipeIngredient[]
+  meal        Meal[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
@@ -72,6 +75,21 @@ model RecipeIngredient {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+}
+
+model Meal {
+  id           String @id @default(uuid())
+  ingredientId String
+  recipeId     String
+  quanity      Float
+  unit         String
+  userId       String
+
+  createdAt DateTime @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
 }

@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-// Ingredients form schemas //
+//------------------------------------------ Ingredients form schemas ------------------------------------------//
 
 export const AddIngredientFormSchema = z.object({
     name: z.string().min(2, {
@@ -114,8 +114,7 @@ export const EditIngredientFormSchema = z.object({
 }
 );
 
-
-// Recipe form schemas //
+//--------------------------------------------- Recipe form schemas ----------------------------------------------//
 
 export const AddRecipeFormSchema = z.object({
   recipeName: z.string().min(2, {
@@ -141,4 +140,29 @@ export const AddRecipeFormSchema = z.object({
     rowid: z.string(),
     ingredientUnit: z.string()
   })).nonempty("Select at least one ingredient")
+})
+
+//--------------------------------------------- Meal form schema -------------------------------------------------//
+
+export const MealIngredientSchema = z.object({
+  meal: z.string(),
+  ingredients : z.array(
+    z.object({
+      quantity: 
+      z.union([
+        z.coerce
+            .number()
+            .positive({
+                message: "must be greater than 0",
+            }),
+        z.literal("")
+    ]),
+      unit: z.string(),
+      gramsPerUnit : z.number(),
+      name : z.string(),
+      ingredientid: z.string(),
+      rowid: z.string(),
+      ingredientUnit: z.string()
+    })
+  ).nonempty("Select at least one ingredient")
 })

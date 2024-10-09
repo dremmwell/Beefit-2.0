@@ -27,6 +27,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
@@ -41,81 +42,38 @@ import {
 } from "@/components/ui/form"
 import IconMenu from "@/components/icon-menu"
 import { Trash2 } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
-import { AddRecipeFormSchema } from "@/app/types/form.schema"
+import { MealIngredientSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
-import { createRecipe } from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
+import { Ingredient } from "@prisma/client"
 
 
-interface AddRecipeForm<TData, TValue> {
+interface MealIngredientsForm<TData, TValue> {
   columns: ColumnDef<TData, TValue>[],
   data: TData[],
   onSave: Function
 }
 
 
-export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>){
-
-    const uuid = uuidv4();
-
-    let instructions : string = "";
-    if(values.description == undefined){
-        instructions = "";
-    }
-    else{
-      instructions = values.description
-    }
-
-    const recipe : Recipe = {
-        id : uuid,
-        name: values.recipeName,
-        instructions: instructions,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        userId: "",
-        bookmarked: false,
-        isOriginal: true
-    }
-    return recipe
+export function createNewMealFromIngredients(values : z.infer<typeof MealIngredientSchema>){
+    console.log(values)
 }
 
-export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipeFormSchema>, recipe : Recipe) {
-    const recipeIngredients : Array<RecipeIngredient> = []
-    values.ingredients.forEach(ingredient => {
-        if(ingredient.quantity){
-          const recipeIngredient : RecipeIngredient = {
-            id: uuidv4(),
-            recipeId: recipe.id,
-            ingredientId: ingredient.ingredientid,
-            quantity: ingredient.quantity,
-            unit: ingredient.unit,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }
-          recipeIngredients.push(recipeIngredient);
-        }
-    });
-    return recipeIngredients
-}
-
-
-export default function AddRecipeForm<TData, TValue>({
+export default function MealIngredientsForm<TData, TValue>({
   columns,
   data,
   onSave
-}: AddRecipeForm<TData, TValue>) {
+}: MealIngredientsForm<TData, TValue>) {
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -142,12 +100,11 @@ export default function AddRecipeForm<TData, TValue>({
 
   const { toast } = useToast()
  
-  const form = useForm<z.infer<typeof AddRecipeFormSchema>>({
-    resolver: zodResolver(AddRecipeFormSchema),
+  const form = useForm<z.infer<typeof MealIngredientSchema>>({
+    resolver: zodResolver(MealIngredientSchema),
     mode: "onBlur",
     defaultValues: {
-      recipeName: "",
-      description: "",
+      meal: "Snack",
       ingredients: []
     }
     
@@ -158,15 +115,13 @@ export default function AddRecipeForm<TData, TValue>({
     control: form.control,
   });
 
-  async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
+  async function onSubmit (formValues: z.infer<typeof MealIngredientSchema>) {
 
     //Handles data formatting and db storing //
-    const recipe = createNewRecipe(formValues);
-    const recipeIngredientArray = createNewRecipeIngredientArray(formValues, recipe);
-    await createRecipe(recipe, recipeIngredientArray);
+    const meal = createNewMealFromIngredients(formValues);
     toast({
-      title: `Recipe "${recipe.name}" saved`,
-      description: ` ${recipe.name} have been added to the database.`,
+      title: `Meal saved`,
+      description: ` A new meal have been added to your diary.`,
     });
 
     // Handles form reset and close //
@@ -207,35 +162,26 @@ export default function AddRecipeForm<TData, TValue>({
       <form 
       onSubmit={form.handleSubmit(onSubmit)}
       className="flex flex-col mx-4 my-0 min-h-[500px]">
-        <FormField 
-          name="recipeName"
+        <FormField
           control={form.control}
+          name="meal"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel >
-                Recipe Name
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="Name..." required {...field}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField 
-          name="description" 
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel >
-                Description
-              </FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Recipe intructions..." {...field}
-                  className="w-full max-h-[200px] "
-                /> 
-              </FormControl>
+            <FormItem >
+              <FormLabel>Type of meal :</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue="snack">
+                <FormControl>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder="Choose a type of meal"/>
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="snack">Snack</SelectItem>
+                  <SelectItem value="breakfast">Breakfast</SelectItem>
+                  <SelectItem value="lunch">Lunch</SelectItem>
+                  <SelectItem value="diner">Diner</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -287,7 +233,7 @@ export default function AddRecipeForm<TData, TValue>({
                 {table.getSelectedRowModel().rows.length} ingredient(s) selected. 
               </div>
             </div>
-            <div className="flex flex-col gap-2 grow">
+            <div className="flex flex-col gap-2 grow md:mt-5">
             <ScrollArea className="md:max-h-[400px] mx-2">
             {fields.map((fieldArray, index) => (
                 <div  
