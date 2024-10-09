@@ -28,26 +28,13 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { useState, useEffect } from "react"
 import { Ingredient } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import EditRecipeDialog from "../recipes/EditRecipeDialog"
-import { RecipeAndIngredients } from "@/app/types/definitions"
-import { Dispatch } from "react"
-import { SetStateAction } from "react"
 import { Recipe } from "@prisma/client"
 import MealIngredientsForm from "./MealIngredientsForm"
-import { columns } from "../recipes/columns"
+import { columnsIngredients, columnsRecipes  } from "./columns"
+import MealRecipeForm from "./MealRecipesForm"
 
 
 
@@ -84,10 +71,10 @@ export function AddMealDialog( {
               <TabsTrigger value="recipes">Recipes</TabsTrigger>
             </TabsList>
             <TabsContent value="ingredients">
-              <MealIngredientsForm columns={columns} data={ingredients} onSave={setOpen}/>
+              <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={setOpen}/>
             </TabsContent>
             <TabsContent value="recipes">
-
+              <MealRecipeForm columns={columnsRecipes} data={recipes} onSave={setOpen}/>
             </TabsContent>
           </Tabs>
         </DialogContent>
@@ -114,10 +101,10 @@ export function AddMealDialog( {
                 <TabsTrigger value="recipes">Recipes</TabsTrigger>
               </TabsList>
               <TabsContent value="ingredients">
-                  <MealIngredientsForm columns={columns} data={ingredients} onSave={setOpen}/>
+                  <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={setOpen}/>
               </TabsContent>
               <TabsContent value="recipes">
-
+                <MealRecipeForm columns={columnsRecipes} data={recipes} onSave={setOpen}/>
               </TabsContent>
             </Tabs>
           </ScrollArea>

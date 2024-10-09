@@ -318,7 +318,7 @@ export default function EditRecipeForm<TData, TValue>({
               Select Ingredients :
           </h2>
           <div className="flex md:flex-row flex-col">
-            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0">
+            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 max-w-96">
                 <Input
                   id="filterInput"
                   placeholder="Search ingredients..."

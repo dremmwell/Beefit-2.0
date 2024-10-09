@@ -190,7 +190,7 @@ export default function MealIngredientsForm<TData, TValue>({
               Select Ingredients :
           </h2>
           <div className="flex md:flex-row flex-col">
-            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0">
+            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 max-w-96">
                 <Input
                   id="filterInput"
                   placeholder="Search ingredients..."
@@ -229,76 +229,76 @@ export default function MealIngredientsForm<TData, TValue>({
                   </TableBody>
                   </Table>
               </ScrollArea>
-              <div className="flex-1 text-sm text-muted-foreground py-2">
+              <div className="flex-1 text-sm text-muted-foreground py-2 mb-5">
                 {table.getSelectedRowModel().rows.length} ingredient(s) selected. 
               </div>
             </div>
-            <div className="flex flex-col gap-2 grow md:mt-5">
-            <ScrollArea className="md:max-h-[400px] mx-2">
-            {fields.map((fieldArray, index) => (
-                <div  
-                key={fieldArray.id}
-                className="flex gap-2 p-2 justify-between"      
-                >
-                  <div className="text-sm mt-2 basis-1/3">
-                       {fieldArray.name}
-                  </div>
-                  <FormField 
-                  control={form.control}
-                  name={`ingredients.${index}.quantity`}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center mb-0 gap-2">
-                      <FormControl>
-                        <Input 
-                        {...field} 
-                        className="w-[100px] justify-end"
-                        placeholder="Quantity..."
-                        required
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                  />
-                  {fieldArray.ingredientUnit === "100g" ?
-                  <div className="flex items-center">
-                    <div className="text-sm">grams</div>
-                  </div>
-                   :
+            <div className="flex flex-col flex-1 gap-2 grow md:my-5">
+              <ScrollArea className="md:max-h-[400px] mx-2">
+              {fields.map((fieldArray, index) => (
+                  <div  
+                  key={fieldArray.id}
+                  className="flex gap-2 p-2 justify-between"      
+                  >
+                    <div className="text-sm mt-2 basis-1/3">
+                        {fieldArray.name}
+                    </div>
                     <FormField 
                     control={form.control}
-                    name={`ingredients.${index}.unit`}
+                    name={`ingredients.${index}.quantity`}
                     render={({ field }) => (
-                        <FormItem className="mb-0 flex items-center">
-                          <Select onValueChange={field.onChange} defaultValue="grams">
-                            <FormControl>
-                            <SelectTrigger className="max-w-[100px]">
-                              <SelectValue placeholder="Choose a unit" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="grams">grams</SelectItem>
-                              <SelectItem value={fieldArray.ingredientUnit}>{fieldArray.ingredientUnit}(s)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
+                      <FormItem className="flex items-center mb-0 gap-2">
+                        <FormControl>
+                          <Input 
+                          {...field} 
+                          className="w-[100px] justify-end"
+                          placeholder="Quantity..."
+                          required
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
                     />
-                  }
-                  <div className="flex mt-1">
-                    <button
-                      onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
-                      className="text-primary"
-                    >
-                      <IconMenu
-                        text=""
-                        icon={<Trash2 className="h-5 w-5"/>}
+                    {fieldArray.ingredientUnit === "100g" ?
+                    <div className="flex items-center">
+                      <div className="text-sm">grams</div>
+                    </div>
+                    :
+                      <FormField 
+                      control={form.control}
+                      name={`ingredients.${index}.unit`}
+                      render={({ field }) => (
+                          <FormItem className="mb-0 flex items-center">
+                            <Select onValueChange={field.onChange} defaultValue="grams">
+                              <FormControl>
+                              <SelectTrigger className="max-w-[100px]">
+                                <SelectValue placeholder="Choose a unit" />
+                              </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="grams">grams</SelectItem>
+                                <SelectItem value={fieldArray.ingredientUnit}>{fieldArray.ingredientUnit}(s)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                      )}
                       />
-                    </button>
+                    }
+                    <div className="flex mt-1">
+                      <button
+                        onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
+                        className="text-primary"
+                      >
+                        <IconMenu
+                          text=""
+                          icon={<Trash2 className="h-5 w-5"/>}
+                        />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
-              </ScrollArea>
+                ))}
+                </ScrollArea>
             </div>
           </div>
         </div>

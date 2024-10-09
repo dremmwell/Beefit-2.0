@@ -166,3 +166,26 @@ export const MealIngredientSchema = z.object({
     })
   ).nonempty("Select at least one ingredient")
 })
+
+export const MealRecipeSchema = z.object({
+  meal: z.string(),
+  recipe : z.array(
+    z.object({
+      quantity: 
+      z.union([
+        z.coerce
+            .number()
+            .positive({
+                message: "must be greater than 0",
+            }),
+        z.literal("")
+    ]),
+      unit: z.string(),
+      gramsPerUnit : z.number(),
+      name : z.string(),
+      recipeid: z.string(),
+      rowid: z.string(),
+      recipeUnit: z.string()
+    })
+  ).nonempty("Select at least one recipe")
+})
