@@ -53,11 +53,15 @@ import * as z from "zod";
 import { MealRecipeSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
-import { Recipe, RecipeIngredient } from "@prisma/client"
+import { Ingredient, Recipe, RecipeIngredient } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
+import MealEditRecipeForm from "./MealEditRecipeForm"
+import MealEditRecipeDialog from "./MealEditRecipeDialog"
+import { RecipeAndIngredients } from "@/app/types/definitions"
 
 
 interface MealrecipesForm<TData, TValue> {
+  ingredients: Array<Ingredient>
   columns: ColumnDef<TData, TValue>[],
   data: TData[],
   onSave: Function
@@ -69,6 +73,7 @@ export function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema
 }
 
 export default function MealRecipeForm<TData, TValue>({
+  ingredients,
   columns,
   data,
   onSave
@@ -79,6 +84,8 @@ export default function MealRecipeForm<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
+  const [manualFiltering, setManualFiltering] = useState<Boolean>()
+  const [isFilterDisabled, setIsFilterDisabled]  = useState<Boolean>(false)
   
   const table = useReactTable({
     data,
@@ -90,6 +97,7 @@ export default function MealRecipeForm<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    manualFiltering: false,
     state: {
       sorting,
       columnFilters,
@@ -131,14 +139,18 @@ export default function MealRecipeForm<TData, TValue>({
   };
 
   const [isRowSelected, setIsRowSelected] = useState(false)
+  const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
 
   function handlesRowSelect(row : Row<TData>) {
     // @ts-ignore
-    table.getColumn("name")?.setFilterValue(row.original.name)
+    table.getColumn("name")?.setFilterValue(row.original.name);
+    setIsFilterDisabled(true)
     if(!row.getIsSelected()){
         if(!isRowSelected){
             setIsRowSelected(true) 
             row.toggleSelected(true)
+            // @ts-ignore/
+            setSelectedRecipe(row.original)
             append({
               quantity: "",
                // @ts-ignore
@@ -165,6 +177,7 @@ export default function MealRecipeForm<TData, TValue>({
     remove(index);
     setIsRowSelected(false);
     table.getColumn("name")?.setFilterValue("");
+    setIsFilterDisabled(false)
   }
 
   return (
@@ -200,7 +213,7 @@ export default function MealRecipeForm<TData, TValue>({
               Select a recipe :
           </h2>
           <div className="flex flex-col">
-            <div className="md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 max-w-96">
+            <div className="md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 md:max-w-96">
                 <Input
                   id="filterInput"
                   placeholder="Search recipes..."
@@ -208,6 +221,8 @@ export default function MealRecipeForm<TData, TValue>({
                   onChange={(event) =>
                     table.getColumn("name")?.setFilterValue(event.target.value)
                   }
+                  //@ts-ignore/
+                  disabled={isFilterDisabled} 
                   className="max-w-sm"
                 />
               <ScrollArea className="overflow-y-scroll md:overflow-y-hidden rounded-md border max-h-80 w-full min-w-40 mb-11">
@@ -245,10 +260,25 @@ export default function MealRecipeForm<TData, TValue>({
             {fields.map((fieldArray, index) => (
                 <div  
                 key={fieldArray.id}
-                className="flex gap-2 p-2 justify-between"      
+                className="flex flex-col gap-2 p-2 justify-between"      
                 >
-                  <div className="text-sm mt-2 basis-1/3">
+                  <div className="text-sm mt-2 basis-1/3 flex">
                        {fieldArray.name}
+                    <div className="flex ml-auto gap-4">
+                      {selectedRecipe &&
+                      // @ts-ignore /
+                      <MealEditRecipeDialog ingredients={ingredients} recipe={selectedRecipe} />
+                      }    
+                      <button
+                        onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
+                        className="text-primary"
+                      >
+                        <IconMenu
+                          text=""
+                          icon={<Trash2 className="h-5 w-5"/>}
+                        />
+                      </button>
+                    </div>
                   </div>
                   <FormField 
                   control={form.control}
@@ -292,24 +322,13 @@ export default function MealRecipeForm<TData, TValue>({
                     )}
                     />
                   }
-                  <div className="flex mt-1">
-                    <button
-                      onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
-                      className="text-primary"
-                    >
-                      <IconMenu
-                        text=""
-                        icon={<Trash2 className="h-5 w-5"/>}
-                      />
-                    </button>
-                  </div>
                 </div>
               ))}
               </ScrollArea>
             </div>
           </div>
         </div>
-        <Button className="mt-auto" type="submit">Create</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create</Button>
       </form>
     </Form>
     )

@@ -74,7 +74,7 @@ export function AddMealDialog( {
               <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={setOpen}/>
             </TabsContent>
             <TabsContent value="recipes">
-              <MealRecipeForm columns={columnsRecipes} data={recipes} onSave={setOpen}/>
+              <MealRecipeForm columns={columnsRecipes} data={recipes} recipes={recipes} ingredients={ingredients} onSave={setOpen}/>
             </TabsContent>
           </Tabs>
         </DialogContent>
@@ -96,7 +96,7 @@ export function AddMealDialog( {
         </DrawerHeader>
           <ScrollArea className="overflow-y-scroll no-scrollbar">
             <Tabs defaultValue="ingredients">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid grid-cols-2 mx-4">
                 <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
                 <TabsTrigger value="recipes">Recipes</TabsTrigger>
               </TabsList>
@@ -104,7 +104,7 @@ export function AddMealDialog( {
                   <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={setOpen}/>
               </TabsContent>
               <TabsContent value="recipes">
-                <MealRecipeForm columns={columnsRecipes} data={recipes} onSave={setOpen}/>
+                <MealRecipeForm columns={columnsRecipes} data={recipes} recipes={recipes} ingredients={ingredients} onSave={setOpen}/>
               </TabsContent>
             </Tabs>
           </ScrollArea>

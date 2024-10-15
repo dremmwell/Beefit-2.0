@@ -244,7 +244,7 @@ export default function AddRecipeForm<TData, TValue>({
               Select Ingredients :
           </h2>
           <div className="flex md:flex-row flex-col">
-            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 max-w-96">
+            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 md:max-w-96">
                 <Input
                   id="filterInput"
                   placeholder="Search ingredients..."
@@ -356,7 +356,7 @@ export default function AddRecipeForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto" type="submit">Create</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create</Button>
       </form>
     </Form>
     )

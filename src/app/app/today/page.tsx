@@ -112,7 +112,7 @@ export default async function Page() {
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2 col-span-2">Today</h1>
         <div className="flex md:flex-col gap-4 row-span-2 row-start-2">
           <CaloriesChart />
-          <MacroChart />
+{/*           <MacroChart /> */}
         </div>
         <div className='flex row-start-2 items-center justify-between'>
           <h3 className='font-semibold leading-none tracking-tight pt-2 px-2'>Meal Diary - <span className='text-sm text-muted-foreground font-normal'>02 October 2024</span></h3>

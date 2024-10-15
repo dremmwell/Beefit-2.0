@@ -190,7 +190,7 @@ export default function MealIngredientsForm<TData, TValue>({
               Select Ingredients :
           </h2>
           <div className="flex md:flex-row flex-col">
-            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 max-w-96">
+            <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 md:max-w-96">
                 <Input
                   id="filterInput"
                   placeholder="Search ingredients..."
@@ -233,7 +233,7 @@ export default function MealIngredientsForm<TData, TValue>({
                 {table.getSelectedRowModel().rows.length} ingredient(s) selected. 
               </div>
             </div>
-            <div className="flex flex-col flex-1 gap-2 grow md:my-5">
+            <div className="flex flex-col flex-1 gap-2 grow md:my-5 mb-4">
               <ScrollArea className="md:max-h-[400px] mx-2">
               {fields.map((fieldArray, index) => (
                   <div  
@@ -302,7 +302,7 @@ export default function MealIngredientsForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto" type="submit">Create</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create</Button>
       </form>
     </Form>
     )

@@ -108,7 +108,7 @@ export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipe
   return recipeIngredients
 }
 
-export default function EditRecipeForm<TData, TValue>({
+export default function MealEditRecipeForm<TData, TValue>({
   recipe,
   columns,
   data,
@@ -166,10 +166,10 @@ export default function EditRecipeForm<TData, TValue>({
     // Handles data formatting and db storing //
     const newRecipe = createNewRecipe(formValues,recipe);
     const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
-    await updateRecipe(newRecipe, recipeIngredientArray);
+/*     await updateRecipe(newRecipe, recipeIngredientArray); */
     toast({
       title: `Recipe "${recipe.name}" edited`,
-      description: ` ${newRecipe.name} have been updated on the database.`,
+      description: ` A ${newRecipe.name} recipe variant have been saved on the database.`,
     });
 
     // Handles form reset and close //
