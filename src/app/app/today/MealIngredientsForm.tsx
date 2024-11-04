@@ -130,6 +130,8 @@ export default function MealIngredientsForm<TData, TValue>({
     onSave();
   };
 
+  //--------------------------- Handles Row Selection and display -------------------------//
+
   function handlesRowSelect(row : Row<TData>) {
     if(!row.getIsSelected()){
       row.toggleSelected(true)
@@ -200,7 +202,7 @@ export default function MealIngredientsForm<TData, TValue>({
                   }
                   className="max-w-sm"
                 />
-              <ScrollArea className="overflow-y-scroll md:overflow-y-hidden rounded-md border max-h-80 w-full min-w-40">
+              <ScrollArea className="overflow-y-scroll md:overflow-y-hidden no-scrollbar rounded-md border max-h-80 w-full min-w-40">
                   <Table >
                       <TableBody>
                       { table.getRowModel().rows?.length ? (
@@ -302,7 +304,7 @@ export default function MealIngredientsForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create Meal</Button>
       </form>
     </Form>
     )

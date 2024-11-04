@@ -64,7 +64,7 @@ export default function DetailsDialog({
           {recipe.instructions !== "" && 
             <Card>
               <CardContent className='pt-6'>
-                <p>{recipe.instructions}</p>
+                <div>{recipe.instructions}</div>
               </CardContent>
             </Card>
           }

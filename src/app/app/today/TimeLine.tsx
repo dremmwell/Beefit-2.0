@@ -18,7 +18,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, calories, descriptio
         <Badge>{calories} cal</Badge> 
       </div>
         <div className="col-start-3 row-start-2 mt-1">
-          <p className="text-sm font-medium leading-none text-muted-foreground -translate-y-8">{description}</p>
+          <div className="text-sm font-medium leading-none text-muted-foreground -translate-y-8">{description}</div>
         </div>
          <div className="col-start-2 row-start-2 w-0.5 bg-muted rounded-3xl h-full mx-auto" />
       </div>

@@ -181,11 +181,9 @@ export const MealRecipeSchema = z.object({
         z.literal("")
     ]),
       unit: z.string(),
-      gramsPerUnit : z.number(),
       name : z.string(),
       recipeid: z.string(),
       rowid: z.string(),
-      recipeUnit: z.string()
     })
   ).nonempty("Select at least one recipe")
 })

@@ -30,15 +30,18 @@ import { RecipeAndIngredients } from '@/app/types/definitions';
 export default function MealEditRecipeDialog({
   recipe,
   ingredients,
+  onEdit
 }: {
   recipe : RecipeAndIngredients,
-  ingredients : Array<Ingredient>
+  ingredients : Array<Ingredient>,
+  onEdit : Function
 }) {
 
     const [open, setOpen] = useState(false)
     const isDesktop = useMediaQuery("(min-width: 768px)")
 
-    const handleCloseDialog = () => {
+    const handlesSave = (recipe : RecipeAndIngredients) => {
+        onEdit(recipe)
         setOpen(false)
       }
 
@@ -52,10 +55,10 @@ export default function MealEditRecipeDialog({
           <DialogHeader >
             <DialogTitle>Edit Recipe</DialogTitle>
             <DialogDescription>
-              Edit your recipe for today's meal only !
+              Edit your recipe for today only !
             </DialogDescription>
           </DialogHeader>
-          <MealEditRecipeForm columns={columnsIngredients} data={ingredients} onSave={handleCloseDialog} recipe={recipe}/>
+          <MealEditRecipeForm columns={columnsIngredients} data={ingredients} onSave={handlesSave} recipe={recipe}/>
         </DialogContent>
       </Dialog>
     )
@@ -69,11 +72,11 @@ export default function MealEditRecipeDialog({
         <DialogHeader >
           <DialogTitle>Edit Recipe</DialogTitle>
           <DialogDescription>
-            Edit your recipe for today's meal only !
+            Edit your recipe for today only !
           </DialogDescription>
         </DialogHeader>
         <div className='overflow-scroll'>
-        <MealEditRecipeForm columns={columnsIngredients} data={ingredients} onSave={handleCloseDialog} recipe={recipe}/>
+        <MealEditRecipeForm columns={columnsIngredients} data={ingredients} onSave={handlesSave} recipe={recipe}/>
         </div>
       </DialogContent>
     </Dialog>

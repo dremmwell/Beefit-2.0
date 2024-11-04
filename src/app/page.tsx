@@ -27,9 +27,9 @@ export default async function Home() {
                   When counting counts
               </h2>
           </div>
-          <p className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
+          <div className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
             Effortlessly monitor your daily caloric intake, adjust your macros, create personalized recipes and track your progress. 
-          </p>
+          </div>
 
           <div className="w-fullspace-y-4 md:space-y-0 md:space-x-4 space-y-4 px-5 sm:px-0">
             <Link  className={`w-full md:w-1/3 ${buttonVariants({variant: "default"})}`} href="/login">Log in</Link>

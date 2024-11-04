@@ -1,6 +1,8 @@
-import { RecipeData, RecipeValues } from "@/app/types/definitions";
+//@ts-nocheck
 
-export function getRecipeValues(recipe: RecipeData) {
+import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions";
+
+export function getRecipeValues(recipe: RecipeAndIngredients) {
 
     // Sums the nutritional values of each ingredient normalized to 100g //
 

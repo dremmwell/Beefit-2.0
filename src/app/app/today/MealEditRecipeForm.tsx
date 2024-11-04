@@ -57,6 +57,7 @@ import { Recipe, RecipeIngredient } from "@prisma/client"
 import { updateRecipe } from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
+import { isEqual } from "lodash"
 
 
 interface EditRecipeForm<TData, TValue> {
@@ -166,6 +167,17 @@ export default function MealEditRecipeForm<TData, TValue>({
     // Handles data formatting and db storing //
     const newRecipe = createNewRecipe(formValues,recipe);
     const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
+    const newRecipeAndIngredients : RecipeAndIngredients = {
+       id : newRecipe.id,
+       name: newRecipe.name,
+       bookmarked: newRecipe.bookmarked,
+       instructions : newRecipe.instructions,
+       createdAt: newRecipe.createdAt,
+       updatedAt: newRecipe.updatedAt,
+       userId: newRecipe.userId,
+       isOriginal: false,
+       ingredients : recipeIngredientArray
+    } 
 /*     await updateRecipe(newRecipe, recipeIngredientArray); */
     toast({
       title: `Recipe "${recipe.name}" edited`,
@@ -175,7 +187,7 @@ export default function MealEditRecipeForm<TData, TValue>({
     // Handles form reset and close //
     remove();
     form.reset();
-    onSave();
+    onSave(newRecipeAndIngredients);
   };
 
 //--------------------------------------Handles displaying the recipe ingredients in the form to be edited ---------------------------------------//
@@ -245,7 +257,7 @@ export default function MealEditRecipeForm<TData, TValue>({
 
   //-------------------------------------------------- Handles the add recipe form  ------------------------------------------------//
 
-  // Handles adding ingredients to the recipe form and slecting it on the table //
+  // Handles adding ingredients to the recipe form and selecting it on the table //
 
   function handlesRowSelect(row : Row<TData>) {
     if(!row.getIsSelected()){

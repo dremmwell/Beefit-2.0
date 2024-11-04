@@ -40,6 +40,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { useEffect } from "react"
 import IconMenu from "@/components/icon-menu"
 import { Trash2 } from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
@@ -57,7 +58,9 @@ import { Ingredient, Recipe, RecipeIngredient } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import MealEditRecipeForm from "./MealEditRecipeForm"
 import MealEditRecipeDialog from "./MealEditRecipeDialog"
-import { RecipeAndIngredients } from "@/app/types/definitions"
+import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions"
+import { getRecipeValues } from "@/lib/recipe_utils"
+import { isEqual } from "lodash"
 
 
 interface MealrecipesForm<TData, TValue> {
@@ -67,11 +70,6 @@ interface MealrecipesForm<TData, TValue> {
   onSave: Function
 }
 
-
-export function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema>){
-    console.log(values)
-}
-
 export default function MealRecipeForm<TData, TValue>({
   ingredients,
   columns,
@@ -79,12 +77,14 @@ export default function MealRecipeForm<TData, TValue>({
   onSave
 }: MealrecipesForm<TData, TValue>) {
 
+  const { toast } = useToast()
+
+  //---------------------------------- Table Properties -------------------------------------//
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-  const [manualFiltering, setManualFiltering] = useState<Boolean>()
   const [isFilterDisabled, setIsFilterDisabled]  = useState<Boolean>(false)
   
   const table = useReactTable({
@@ -106,7 +106,7 @@ export default function MealRecipeForm<TData, TValue>({
     },
   })
 
-  const { toast } = useToast()
+  //------------------------------------ Form Validation -------------------------------------//
  
   const form = useForm<z.infer<typeof MealRecipeSchema>>({
     resolver: zodResolver(MealRecipeSchema),
@@ -123,7 +123,13 @@ export default function MealRecipeForm<TData, TValue>({
     control: form.control,
   });
 
+  function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema>){
+    console.log(values)
+  }
+
   async function onSubmit (formValues: z.infer<typeof MealRecipeSchema>) {
+
+    console.log(selectedRecipe,formValues)
 
     //Handles data formatting and db storing //
     const meal = createNewMealFromRecipe(formValues);
@@ -138,8 +144,11 @@ export default function MealRecipeForm<TData, TValue>({
     onSave();
   };
 
+//----------------------------------- Recipe Selection and display ------------------------------//
+
   const [isRowSelected, setIsRowSelected] = useState(false)
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
+  const [isRecipeEdited, setIsRecipeEdited] = useState<Boolean>(false)
 
   function handlesRowSelect(row : Row<TData>) {
     // @ts-ignore
@@ -160,16 +169,10 @@ export default function MealRecipeForm<TData, TValue>({
               // @ts-ignore
               recipeid: row.original.id,
               rowid: row.id, 
-              // @ts-ignore
-              gramsPerUnit: row.original.gramsPerUnit,
-              // @ts-ignore
-              recipeUnit: row.original.unit
             })
-
         }
     }
   }
-
 
   function handlesDelete(index: number, id: string){
     const row = table.getRow(id);
@@ -178,7 +181,15 @@ export default function MealRecipeForm<TData, TValue>({
     setIsRowSelected(false);
     table.getColumn("name")?.setFilterValue("");
     setIsFilterDisabled(false)
+    setIsRecipeEdited(false)
   }
+
+  function onEditRecipe(recipe : RecipeAndIngredients){
+    setSelectedRecipe(recipe)
+    setIsRecipeEdited(true)
+  }
+
+  //---------------------------------- Component Layout ----------------------------//
 
   return (
     <Form {...form}>
@@ -189,7 +200,7 @@ export default function MealRecipeForm<TData, TValue>({
           control={form.control}
           name="meal"
           render={({ field }) => (
-            <FormItem >
+            <FormItem>
               <FormLabel>Type of meal :</FormLabel>
               <Select onValueChange={field.onChange} defaultValue="snack">
                 <FormControl>
@@ -225,7 +236,7 @@ export default function MealRecipeForm<TData, TValue>({
                   disabled={isFilterDisabled} 
                   className="max-w-sm"
                 />
-              <ScrollArea className="overflow-y-scroll md:overflow-y-hidden rounded-md border max-h-80 w-full min-w-40 mb-11">
+              <ScrollArea className="overflow-y-scroll no-scrollbar rounded-md border max-h-80 w-full min-w-40 mb-11">
                   <Table >
                       <TableBody>
                       { table.getRowModel().rows?.length ? (
@@ -256,18 +267,26 @@ export default function MealRecipeForm<TData, TValue>({
               </ScrollArea>
             </div>
             <div className="flex flex-col gap-2 grow md:mt-5">
-            <ScrollArea className="md:max-h-[400px] mx-2">
+            <ScrollArea className="md:max-h-[400px]">
             {fields.map((fieldArray, index) => (
                 <div  
                 key={fieldArray.id}
-                className="flex flex-col gap-2 p-2 justify-between"      
+                className="flex flex-col gap-8 p-2 justify-between"      
                 >
                   <div className="text-sm mt-2 basis-1/3 flex">
-                       {fieldArray.name}
+                    {isRecipeEdited ? 
+                        <div className="my-auto">
+                        {selectedRecipe?.name} <span className="text-muted-foreground"> - Edited</span>
+                      </div>
+                    :
+                    <div className="my-auto">
+                      {selectedRecipe?.name}
+                    </div>
+                    }
                     <div className="flex ml-auto gap-4">
                       {selectedRecipe &&
                       // @ts-ignore /
-                      <MealEditRecipeDialog ingredients={ingredients} recipe={selectedRecipe} />
+                      <MealEditRecipeDialog ingredients={ingredients} recipe={selectedRecipe} onEdit={onEditRecipe}/>
                       }    
                       <button
                         onMouseDownCapture={() => handlesDelete(index, fieldArray.rowid)}
@@ -280,55 +299,67 @@ export default function MealRecipeForm<TData, TValue>({
                       </button>
                     </div>
                   </div>
-                  <FormField 
-                  control={form.control}
-                  name={`recipe.${index}.quantity`}
-                  render={({ field }) => (
-                    <FormItem className="flex items-center mb-0 gap-2">
-                      <FormControl>
-                        <Input 
-                        {...field} 
-                        className="w-[100px] justify-end"
-                        placeholder="Quantity..."
-                        required
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                  />
-                  {fieldArray.recipeUnit === "100g" ?
-                  <div className="flex items-center">
-                    <div className="text-sm">grams</div>
-                  </div>
-                   :
+                  <div className="flex gap-4">
+                    <div className="my-auto text-sm">
+                    Portion :
+                    </div>
                     <FormField 
                     control={form.control}
-                    name={`recipe.${index}.unit`}
+                    name={`recipe.${index}.quantity`}
                     render={({ field }) => (
-                        <FormItem className="mb-0 flex items-center">
-                          <Select onValueChange={field.onChange} defaultValue="grams">
-                            <FormControl>
-                            <SelectTrigger className="max-w-[100px]">
-                              <SelectValue placeholder="Choose a unit" />
-                            </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="grams">grams</SelectItem>
-                              <SelectItem value={fieldArray.recipeUnit}>{fieldArray.recipeUnit}(s)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormItem>
+                      <FormItem className="flex items-center mb-0 gap-2">
+                        <FormControl>
+                          <Input 
+                          {...field} 
+                          className="max-w-[110px]"
+                          placeholder="Quantity (1)"
+                          required
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
                     )}
                     />
-                  }
+                      <FormField 
+                      control={form.control}
+                      name={`recipe.${index}.unit`}
+                      render={({ field }) => (
+                          <FormItem className="mb-0 flex items-center">
+                            <Select onValueChange={field.onChange} defaultValue="grams">
+                              <FormControl>
+                              <SelectTrigger className="max-w-[200px]">
+                                <SelectValue placeholder="Choose a unit" />
+                              </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="grams">grams</SelectItem>
+                                <SelectItem value="1">whole recipe(s)</SelectItem>
+                                <SelectItem value="1/2">1/2</SelectItem>
+                                <SelectItem value="1/3">1/3</SelectItem>
+                                <SelectItem value="1/4">1/4</SelectItem>
+                                <SelectItem value="1/5">1/5</SelectItem>
+                                <SelectItem value="1/6">1/6</SelectItem>
+                                <SelectItem value="1/8">1/8</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {(field.value === "grams" || field.value === "1") ?
+                              <></>
+                              :
+                              <div className="text-sm min-w-[100px] my-auto ml-2 pb-2">
+                                of recipe
+                              </div>
+                            }
+                          </FormItem>
+                      )}
+                      />
+                  </div>
                 </div>
               ))}
               </ScrollArea>
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create Meal</Button>
       </form>
     </Form>
     )
