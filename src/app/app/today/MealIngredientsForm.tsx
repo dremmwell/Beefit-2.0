@@ -303,7 +303,7 @@ export default function MealIngredientsForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="button" onClick={form.handleSubmit(onSubmit)}>Create Meal</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create Meal</Button>
       </form>
     </Form>
     )

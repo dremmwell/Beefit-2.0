@@ -48,6 +48,10 @@ export function AddMealDialog( {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -67,10 +71,10 @@ export function AddMealDialog( {
               <TabsTrigger value="recipes">Recipes</TabsTrigger>
             </TabsList>
             <TabsContent value="ingredients">
-              <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={setOpen}/>
+              <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
             </TabsContent>
             <TabsContent value="recipes">
-              <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={setOpen}/>
+              <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
             </TabsContent>
           </Tabs>
         </DialogContent>

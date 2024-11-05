@@ -124,7 +124,7 @@ export default function MealRecipeForm<TData, TValue>({
   });
 
   function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema>){
-
+    console.log(values)
   }
 
   async function onSubmit (formValues: z.infer<typeof MealRecipeSchema>) {
@@ -357,7 +357,7 @@ export default function MealRecipeForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="button" onClick={form.handleSubmit(onSubmit)}>Create Meal</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create Meal</Button>
       </form>
     </Form>
     )
