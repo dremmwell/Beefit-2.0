@@ -64,11 +64,6 @@ interface MealIngredientsForm<TData, TValue> {
   onSave: Function
 }
 
-
-export function createNewMealFromIngredients(values : z.infer<typeof MealIngredientSchema>){
-    console.log(values)
-}
-
 export default function MealIngredientsForm<TData, TValue>({
   columns,
   data,
@@ -114,6 +109,10 @@ export default function MealIngredientsForm<TData, TValue>({
     name: "ingredients",
     control: form.control,
   });
+
+  function createNewMealFromIngredients(values : z.infer<typeof MealIngredientSchema>){
+    console.log(values)
+  }
 
   async function onSubmit (formValues: z.infer<typeof MealIngredientSchema>) {
 
@@ -304,7 +303,7 @@ export default function MealIngredientsForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create Meal</Button>
+        <Button className="mt-auto mb-4 md:mb-0" type="button" onClick={form.handleSubmit(onSubmit)}>Create Meal</Button>
       </form>
     </Form>
     )
