@@ -186,7 +186,7 @@ export default function MealIngredientsForm<TData, TValue>({
             </FormItem>
           )}
         />
-        <div className="flex flex-col">
+        <div className="flex flex-col gap-4">
           <h2 className="scroll-m-20 border-b pb-2 text-sm font-medium tracking-tight first:mt-0">
               Select Ingredients :
           </h2>

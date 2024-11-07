@@ -58,7 +58,7 @@ export function AddMealDialog( {
         <DialogTrigger asChild>
           <Button >Add Meal</Button>
         </DialogTrigger>
-        <DialogContent className="min-w-fit min-h-[620px] flex-1">
+        <DialogContent className="min-w-fit flex-1">
         <DialogHeader >
             <DialogTitle>New Meal</DialogTitle>
             <DialogDescription>
