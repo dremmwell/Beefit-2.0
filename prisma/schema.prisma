@@ -59,6 +59,7 @@ model Recipe {
   updatedAt DateTime @default(now())
 
   ingredients RecipeIngredient[]
+  meal        MealRecipe[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
@@ -83,7 +84,7 @@ model MealIngredient {
   ingredientId String
   mealId       String
   quantity     Float
-  unit         String @default("grams")
+  unit         String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -92,11 +93,26 @@ model MealIngredient {
   meal       Meal       @relation(fields: [mealId], references: [id], onDelete: Cascade)
 }
 
+model MealRecipe {
+  id       String @id @default(uuid())
+  recipeId String
+  mealId   String
+  quantity Float
+  unit     String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  meal   Meal   @relation(fields: [mealId], references: [id], onDelete: Cascade)
+}
+
 model Meal {
   id       String @id @default(uuid())
   mealType String
 
   ingredients MealIngredient[]
+  recipe      MealRecipe[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

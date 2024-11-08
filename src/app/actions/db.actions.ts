@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/db/db";
-import { Ingredient, Recipe, RecipeIngredient, MealIngredient, Meal } from '@prisma/client';
+import { Ingredient, Recipe, RecipeIngredient, MealIngredient, Meal, MealRecipe } from '@prisma/client';
 import { RecipeAndIngredients } from "../types/definitions";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
@@ -201,6 +201,27 @@ export async function createMealFromIngredients (meal : Meal, ingredients : Arra
     })
     const data = ingredients;
     await db.mealIngredient.createMany({
+      data
+    })
+    revalidatePath('/app/today')
+  }
+  return
+}
+
+export async function createMealFromRecipe(meal: Meal, mealRecipe : Array<MealRecipe>) {
+  const { user } = await validateRequest()
+  if(user){
+    await db.meal.create({
+      data : {
+        id : meal.id,
+        mealType : meal.mealType,
+        userId : user.id,
+        createdAt : meal.createdAt,
+        updatedAt : meal.updatedAt,
+      }
+    })
+    const data = mealRecipe;
+    await db.mealRecipe.createMany({
       data
     })
     revalidatePath('/app/today')

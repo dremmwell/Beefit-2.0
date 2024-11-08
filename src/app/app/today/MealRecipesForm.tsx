@@ -54,10 +54,11 @@ import * as z from "zod";
 import { MealRecipeSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
-import { Ingredient, MealFromRecipe } from "@prisma/client"
+import { Ingredient, Meal, MealRecipe } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import MealEditRecipeDialog from "./MealEditRecipeDialog"
 import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions"
+import { createMealFromRecipe } from "@/app/actions/db.actions"
 
 interface MealrecipesForm<TData, TValue> {
   ingredients: Array<Ingredient>
@@ -119,21 +120,48 @@ export default function MealRecipeForm<TData, TValue>({
     control: form.control,
   });
 
-  function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema>, recipe : RecipeAndIngredients){
 
-    const uuid = uuidv4();
-    const meal: MealFromRecipe = {
-      id: uuid,
-      recipeId: recipe.id,
+  //------------------------------------ Data Formatting and Storing -------------------------------------//
+
+  function createNewMeal(values : z.infer<typeof MealRecipeSchema>){
+    const meal : Meal = {
+      id: uuidv4(),
+      mealType : values.meal,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      userId: "",
     }
+    return meal
+  }
+
+  function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema>, recipe : RecipeAndIngredients, meal : Meal){
+    const mealRecipes : Array<MealRecipe> = []
+    values.recipe.forEach((recipeData) => {
+      if(recipeData.quantity){
+        const mealRecipe : MealRecipe = {
+          id: uuidv4(),
+          recipeId: recipe.id,
+          mealId: meal.id,
+          quantity: recipeData.quantity,
+          unit: recipeData.unit,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+        mealRecipes.push(mealRecipe)
+      }
+    })
+    return mealRecipes
   }
 
   async function onSubmit (formValues: z.infer<typeof MealRecipeSchema>) {
 
     //Handles data formatting and db storing //
     if(selectedRecipe){
-      const meal = createNewMealFromRecipe(formValues, selectedRecipe);
+      const meal = createNewMeal(formValues);
+      const mealRecipes = createNewMealFromRecipe(formValues, selectedRecipe, meal);
+      await createMealFromRecipe(meal, mealRecipes)
     }
+    
     toast({
       title: `Meal saved`,
       description: ` A new meal have been added to your diary.`,

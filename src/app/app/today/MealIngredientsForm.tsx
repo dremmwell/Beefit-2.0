@@ -70,6 +70,10 @@ export default function MealIngredientsForm<TData, TValue>({
   onSave
 }: MealIngredientsForm<TData, TValue>) {
 
+  const { toast } = useToast()
+
+  //---------------------------------- Table Properties -------------------------------------//
+
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -93,7 +97,7 @@ export default function MealIngredientsForm<TData, TValue>({
     },
   })
 
-  const { toast } = useToast()
+  //------------------------------------ Form Validation -------------------------------------//
  
   const form = useForm<z.infer<typeof MealIngredientSchema>>({
     resolver: zodResolver(MealIngredientSchema),
@@ -109,6 +113,8 @@ export default function MealIngredientsForm<TData, TValue>({
     name: "ingredients",
     control: form.control,
   });
+
+    //------------------------------------ Data Formatting and Storing -------------------------------------//
 
   function createNewMeal(values : z.infer<typeof MealIngredientSchema>){
       const meal : Meal = {
@@ -186,6 +192,8 @@ export default function MealIngredientsForm<TData, TValue>({
     row.toggleSelected(false)
     remove(index);
   }
+
+  //---------------------------------- Component Layout ----------------------------//
 
   return (
     <Form {...form}>
