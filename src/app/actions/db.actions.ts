@@ -187,6 +187,25 @@ export async function getRecipeIngredients(recipe: Recipe) {
 
 //----------------------------------------- Meal CRUD operations -----------------------------------------//
 
+export async function getMealsByDate(userId: UserId, date : Date) {
+
+  const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+
+  const data = await db.meal.findMany({
+    where: {
+      userId: userId,
+      createdAt: {
+        gte: startDate.toISOString(),
+        lt: endDate.toISOString()
+      }
+    },
+    orderBy: { createdAt: 'desc' } 
+  })
+  const meals = JSON.parse(JSON.stringify(data));
+  return meals
+}
+
 export async function createMealFromIngredients (meal : Meal, ingredients : Array<MealIngredient>){
   const { user } = await validateRequest()
   if(user){
@@ -203,7 +222,7 @@ export async function createMealFromIngredients (meal : Meal, ingredients : Arra
     await db.mealIngredient.createMany({
       data
     })
-    revalidatePath('/app/today')
+    revalidatePath('/app/date')
   }
   return
 }
@@ -224,7 +243,7 @@ export async function createMealFromRecipe(meal: Meal, mealRecipe : Array<MealRe
     await db.mealRecipe.createMany({
       data
     })
-    revalidatePath('/app/today')
+    revalidatePath('/app/date')
   }
   return
 }

@@ -7,8 +7,8 @@ import CaloriesChart from "./CaloriesChart";
 import { Button } from "@/components/ui/button";
 import { AddMealDialog } from "./AddMealDialog";
 import { RecipeAndIngredients } from "@/app/types/definitions";
-import { Ingredient } from "@prisma/client";
-import { getRecipesAndIngredients, getIngredients } from "@/app/actions/db.actions";
+import { Ingredient, Meal } from "@prisma/client";
+import { getRecipesAndIngredients, getIngredients, getMealsByDate} from "@/app/actions/db.actions";
 
 export default async function Page() { 
 
@@ -19,7 +19,12 @@ export default async function Page() {
   }
 
   const recipes :Array<RecipeAndIngredients>= await getRecipesAndIngredients(user.id);
-  const ingredients :Array<Ingredient> = await getIngredients(user.id)
+  const ingredients :Array<Ingredient> = await getIngredients(user.id);
+  const today = new Date();
+  const todaysMeals : Array<Meal> = await getMealsByDate(user.id,today);
+
+  console.log(todaysMeals)
+
 
   const timelineItems = [
     {
