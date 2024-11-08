@@ -54,14 +54,10 @@ import * as z from "zod";
 import { MealRecipeSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
-import { Ingredient, Recipe, RecipeIngredient } from "@prisma/client"
+import { Ingredient, MealFromRecipe } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
-import MealEditRecipeForm from "./MealEditRecipeForm"
 import MealEditRecipeDialog from "./MealEditRecipeDialog"
 import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions"
-import { getRecipeValues } from "@/lib/recipe_utils"
-import { isEqual } from "lodash"
-
 
 interface MealrecipesForm<TData, TValue> {
   ingredients: Array<Ingredient>
@@ -123,14 +119,21 @@ export default function MealRecipeForm<TData, TValue>({
     control: form.control,
   });
 
-  function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema>){
-    console.log(values)
+  function createNewMealFromRecipe(values : z.infer<typeof MealRecipeSchema>, recipe : RecipeAndIngredients){
+
+    const uuid = uuidv4();
+    const meal: MealFromRecipe = {
+      id: uuid,
+      recipeId: recipe.id,
+    }
   }
 
   async function onSubmit (formValues: z.infer<typeof MealRecipeSchema>) {
 
     //Handles data formatting and db storing //
-    const meal = createNewMealFromRecipe(formValues);
+    if(selectedRecipe){
+      const meal = createNewMealFromRecipe(formValues, selectedRecipe);
+    }
     toast({
       title: `Meal saved`,
       description: ` A new meal have been added to your diary.`,
@@ -144,13 +147,10 @@ export default function MealRecipeForm<TData, TValue>({
 
 //----------------------------------- Recipe Selection and display ------------------------------//
 
-  const [isRowSelected, setIsRowSelected] = useState(false)
-  const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
+const [isRowSelected, setIsRowSelected] = useState(false)
+const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
 
   function handlesRowSelect(row : Row<TData>) {
-    // @ts-ignore
-    table.getColumn("name")?.setFilterValue(row.original.name);
-    setIsFilterDisabled(true)
     if(!row.getIsSelected()){
         if(!isRowSelected){
             setIsRowSelected(true) 
@@ -176,8 +176,6 @@ export default function MealRecipeForm<TData, TValue>({
     row.toggleSelected(false)
     remove(index);
     setIsRowSelected(false);
-    table.getColumn("name")?.setFilterValue("");
-    setIsFilterDisabled(false)
   }
 
   function onEditRecipe(recipe : RecipeAndIngredients){

@@ -1,4 +1,4 @@
-import { Ingredient, Recipe, RecipeIngredient } from "@prisma/client";
+import { Ingredient, Recipe, RecipeIngredient, MealIngredient } from "@prisma/client";
 
 export type RecipeValues = {
     recipeId: string;

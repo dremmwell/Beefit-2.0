@@ -54,10 +54,10 @@ import { AddRecipeFormSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
-import { updateRecipe } from "@/app/actions/db.actions"
+import { createRecipe} from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
-import { isEqual } from "lodash"
+import { getCurrentDate } from "@/lib/utils"
 
 
 interface EditRecipeForm<TData, TValue> {
@@ -67,7 +67,11 @@ interface EditRecipeForm<TData, TValue> {
   onSave: Function
 }
 
-export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>, recipe : Recipe){
+//---------------------------------- Create Recipe Object with form values ----------------------------------------//
+
+export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>){
+
+  const uuid = uuidv4();
 
   let instructions : string = "";
   if(values.description == undefined){
@@ -77,15 +81,18 @@ export function createNewRecipe(values : z.infer<typeof AddRecipeFormSchema>, re
     instructions = values.description
   }
 
+  const currentDate : string = getCurrentDate();
+  let name : string = values.recipeName + ` (Edited on ${currentDate})`;
+
   const newRecipe : Recipe = {
-      id : recipe.id,
-      name: values.recipeName,
+      id: uuid,
+      name: name,
       instructions: instructions,
-      createdAt: recipe.createdAt,
+      createdAt: new Date(),
       updatedAt: new Date(),
-      userId: recipe.userId,
-      bookmarked: recipe.bookmarked,
-      isOriginal: recipe.isOriginal
+      userId: "",
+      bookmarked: false,
+      isOriginal: false,
   }
   return newRecipe
 }
@@ -109,6 +116,8 @@ export function createNewRecipeIngredientArray(values : z.infer<typeof AddRecipe
   return recipeIngredients
 }
 
+//----------------------------------- Component ------------------------------------------//
+
 export default function MealEditRecipeForm<TData, TValue>({
   recipe,
   columns,
@@ -116,7 +125,7 @@ export default function MealEditRecipeForm<TData, TValue>({
   onSave
 }: EditRecipeForm<TData, TValue>) {
 
-// Handles table display, filtering and selection //  
+//------------------ Handles table display, filtering and selection ------------------//  
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -141,7 +150,7 @@ export default function MealEditRecipeForm<TData, TValue>({
     },
   })
 
-// Handles form dynamic validation //
+//-------------------- Handles form dynamic validation ---------------------//
  
   const form = useForm<z.infer<typeof AddRecipeFormSchema>>({
     resolver: zodResolver(AddRecipeFormSchema),
@@ -158,14 +167,14 @@ export default function MealEditRecipeForm<TData, TValue>({
     control: form.control,
   });
 
-// Handles form submit and dialog close //  
+//--------------------- Handles form submit, db action and dialog close ---------------------//  
 
   const { toast } = useToast()
 
   async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
 
     // Handles data formatting and db storing //
-    const newRecipe = createNewRecipe(formValues,recipe);
+    const newRecipe = createNewRecipe(formValues);
     const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
     const newRecipeAndIngredients : RecipeAndIngredients = {
        id : newRecipe.id,
@@ -175,12 +184,12 @@ export default function MealEditRecipeForm<TData, TValue>({
        createdAt: newRecipe.createdAt,
        updatedAt: newRecipe.updatedAt,
        userId: newRecipe.userId,
-       isOriginal: false,
+       isOriginal: newRecipe.isOriginal,
        ingredients : recipeIngredientArray
-    } 
-/*     await updateRecipe(newRecipe, recipeIngredientArray); */
+    }
+    await createRecipe(newRecipe, recipeIngredientArray);
     toast({
-      title: `Recipe "${recipe.name}" edited`,
+      title: `Recipe "${recipe.name}" edited for today's meal`,
       description: ` A ${newRecipe.name} recipe variant have been saved on the database.`,
     });
 
@@ -289,8 +298,10 @@ export default function MealEditRecipeForm<TData, TValue>({
 
 
   return (
+    <>
     <Form {...form}>
       <form 
+      id="editRecipeForm"
       onSubmit={form.handleSubmit(onSubmit)}
       className="flex flex-col mx-4 my-0 min-h-[500px]">
         <FormField 
@@ -445,6 +456,7 @@ export default function MealEditRecipeForm<TData, TValue>({
         <Button className="mt-auto mb-4 md:mb-0" type="button" onClick={form.handleSubmit(onSubmit)}>Edit</Button>
       </form>
     </Form>
+    </>
     )
 }
 

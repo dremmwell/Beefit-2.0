@@ -42,7 +42,6 @@ import {
 } from "@/components/ui/form"
 import IconMenu from "@/components/icon-menu"
 import { Trash2 } from "lucide-react"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
@@ -53,9 +52,10 @@ import * as z from "zod";
 import { MealIngredientSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
-import { Recipe, RecipeIngredient } from "@prisma/client"
+import { MealIngredient, Recipe, RecipeIngredient } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
-import { Ingredient } from "@prisma/client"
+import { Meal } from "@prisma/client"
+import { createMealFromIngredients } from "@/app/actions/db.actions"
 
 
 interface MealIngredientsForm<TData, TValue> {
@@ -110,14 +110,43 @@ export default function MealIngredientsForm<TData, TValue>({
     control: form.control,
   });
 
-  function createNewMealFromIngredients(values : z.infer<typeof MealIngredientSchema>){
-    console.log(values)
+  function createNewMeal(values : z.infer<typeof MealIngredientSchema>){
+      const meal : Meal = {
+        id: uuidv4(),
+        mealType : values.meal,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        userId: "",
+      }
+      return meal
+  }
+
+  function createIngredientArray(values : z.infer<typeof MealIngredientSchema>, meal : Meal){
+    const mealIngredients : Array<MealIngredient> = []
+      values.ingredients.forEach((ingredient) => {
+        if(ingredient.quantity){
+          const mealIngredient : MealIngredient = {
+              id: uuidv4(),
+              ingredientId: ingredient.ingredientid,
+              mealId: meal.id,
+              quantity: ingredient.quantity,
+              unit: ingredient.unit,
+              createdAt: new Date(),
+              updatedAt: new Date(),
+          }
+          mealIngredients.push(mealIngredient)
+        }
+      });
+      return mealIngredients
   }
 
   async function onSubmit (formValues: z.infer<typeof MealIngredientSchema>) {
 
     //Handles data formatting and db storing //
-    const meal = createNewMealFromIngredients(formValues);
+    const meal = createNewMeal(formValues);
+    const mealIngredientArray = createIngredientArray(formValues, meal);
+    await createMealFromIngredients(meal, mealIngredientArray);
+    
     toast({
       title: `Meal saved`,
       description: ` A new meal have been added to your diary.`,

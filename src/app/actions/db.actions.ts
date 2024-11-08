@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/db/db";
-import { Ingredient, Recipe, RecipeIngredient } from '@prisma/client';
+import { Ingredient, Recipe, RecipeIngredient, MealIngredient, Meal } from '@prisma/client';
 import { RecipeAndIngredients } from "../types/definitions";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
@@ -115,7 +115,9 @@ export async function createRecipe(recipe : Recipe, recipeIngredientArray : Arra
         id: recipe.id,
         name: recipe.name,
         instructions: recipe.instructions,
-        userId: user.id
+        userId: user.id,
+        bookmarked: recipe.bookmarked,
+        isOriginal: recipe.isOriginal,
       }
     })
     const data = recipeIngredientArray;
@@ -181,4 +183,27 @@ export async function getRecipeIngredients(recipe: Recipe) {
   });
   const recipeIngredient = JSON.parse(JSON.stringify(data));
   return recipeIngredient
+}
+
+//----------------------------------------- Meal CRUD operations -----------------------------------------//
+
+export async function createMealFromIngredients (meal : Meal, ingredients : Array<MealIngredient>){
+  const { user } = await validateRequest()
+  if(user){
+    await db.meal.create({
+      data : {
+        id : meal.id,
+        mealType : meal.mealType,
+        userId : user.id,
+        createdAt : meal.createdAt,
+        updatedAt: meal.updatedAt,
+      }
+    })
+    const data = ingredients;
+    await db.mealIngredient.createMany({
+      data
+    })
+    revalidatePath('/app/today')
+  }
+  return
 }

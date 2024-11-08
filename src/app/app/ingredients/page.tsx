@@ -4,7 +4,14 @@ import { redirect } from "next/navigation";
 import Table from "./Table"
 import { columns } from "./columns";
 
-import { getIngredients } from "../../actions/db.actions";
+import { getIngredients, createIngredient } from "../../actions/db.actions";
+
+
+/* import { placeholderIngredients } from '../../../lib/placeholder-data'
+placeholderIngredients.forEach(ingredient => {
+  createIngredient(ingredient)
+}) */
+
 
 export default async function Page() { 
 
@@ -13,7 +20,6 @@ export default async function Page() {
   if(!user) {
     return redirect("/")
   }
-
 
 const ingredients = await getIngredients(user.id);
 
