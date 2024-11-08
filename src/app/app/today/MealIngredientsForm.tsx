@@ -103,7 +103,7 @@ export default function MealIngredientsForm<TData, TValue>({
     resolver: zodResolver(MealIngredientSchema),
     mode: "onBlur",
     defaultValues: {
-      meal: "Snack",
+      meal: "snack",
       ingredients: []
     }
     

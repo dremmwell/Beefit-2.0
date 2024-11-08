@@ -24,7 +24,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
 import { useState, useEffect } from "react"
-import { AddFormDialog } from "./AddFormDialog"
 import { AddIngredientDialog } from "./AddIngredientDialog"
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 

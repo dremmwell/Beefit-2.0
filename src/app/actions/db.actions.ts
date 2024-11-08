@@ -78,20 +78,39 @@ export async function deleteIngredient(ingredient: Ingredient) {
 
 //----------------------------------------- Recipes CRUD operations ---------------------------------//
 
-export async function getRecipes(userId: UserId): Promise<Recipe[]> {
+export async function getRecipesAndIngredients(userId : UserId) {
+
   const data = await db.recipe.findMany({
     where: {
-      userId: userId
+      userId: userId,
+      isOriginal: true
+    },
+    include:{
+      ingredients: {
+        include: {
+          ingredient: true
+        }
+      }
     }
   });
-  const recipes = JSON.parse(JSON.stringify(data));
+  const recipes : Array<RecipeAndIngredients> = JSON.parse(JSON.stringify(data));
   return recipes
 }
 
-export async function getRecipesAndIngredients(userId : UserId) {
+export async function getVariantRecipesAndIngredients(userId : UserId) {
+
+  const date = new Date();
+  const startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate()+1)
+
   const data = await db.recipe.findMany({
     where: {
-      userId: userId
+      userId: userId,
+      isOriginal: false,
+      createdAt: {
+        gte: startDate.toISOString(),
+        lt: endDate.toISOString()
+      }
     },
     include:{
       ingredients: {
