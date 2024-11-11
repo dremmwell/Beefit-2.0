@@ -5,87 +5,43 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import Timeline from "./TimeLine";
 import { Ingredient, Meal } from '@prisma/client';
 import { AddMealDialog } from "./AddMealDialog";
-import { RecipeAndIngredients } from '@/app/types/definitions';
+import { RecipeAndIngredients, MealData, MealValues, TimeLineMeal } from '@/app/types/definitions';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
-
+import { getMealValues } from '@/lib/recipe_utils';
 
 function Diary({ 
     meals,
     recipes,
     ingredients
 } : {
-    meals : Array<Meal>,
+    meals : Array<MealData>,
     recipes : Array<RecipeAndIngredients>,
     ingredients : Array<Ingredient>
 }) {
 
     const [isGrouped, setIsGrouped] = useState(false);
 
+    const mealValues : Array<MealValues> = getMealValues(meals);
+    const timeLineItems : Array<TimeLineMeal>= []
 
-    const timelineItems = [
-            {
-                title: "Snack",
-                calories: "300",
-                description: "QuInteger eu lorem pretium, sollicitudin nisi et, luctus magna.",
-            },
 
-            {
-                title: "Diner",
-                calories: "1050",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pretium neque nec facilisis faucibus. Cras non lobortis enim, sit amet sollicitudin purus. Suspendisse metus turpis, eleifend eget augue vitae, consectetur placerat enim. Maecenas ornare mi nec orci blandit, at sagittis nibh ultricies. In ultrices tellus leo, sit amet sodales sem dignissim sit amet.",
-            },
-            {
-                title: "Snack",
-                calories: "410",
-                description: "Suspendisse interdum lectus maximus, ullamcorper felis feugiat, mollis tortor.",
-            },
-            {
-                title: "Lunch",
-                calories: "850",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pretium neque nec facilisis faucibus. Cras non lobortis enim, sit amet sollicitudin purus. Suspendisse metus turpis, eleifend eget augue vitae,",
-            },
-            {
-                title: "Snack",
-                calories: "300",
-                description: "QuInteger eu lorem pretium, sollicitudin nisi et, luctus magna.",
-            },
-            {
-                title: "Breakfast",
-                calories: "1205",
-                description: "Nulla gravida maximus nunc mollis luctus. Donec eu enim purus. Quisque tempor, lacus sit amet feugiat maximus, ante ex scelerisque elit, et lacinia ipsum dolor vitae ligula.",
-            },
-            {
-                title: "Snack",
-                calories: "300",
-                description: "QuInteger eu lorem pretium, sollicitudin nisi et, luctus magna.",
-            },
+    mealValues.forEach((meal) => {
+        const timeLineItem : TimeLineMeal = {
+            title: "",
+            calories: 0,
+            description: "",
+            mealId: ""
+        };
+        timeLineItem.title = meal.mealType;
+        timeLineItem.calories = meal.calories;
+        timeLineItem.mealId = meal.mealId;
+        timeLineItem.description = meal.description;
+        timeLineItems.push(timeLineItem);
+    })
 
-            {
-                title: "Diner",
-                calories: "1050",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pretium neque nec facilisis faucibus. Cras non lobortis enim, sit amet sollicitudin purus. Suspendisse metus turpis, eleifend eget augue vitae, consectetur placerat enim. Maecenas ornare mi nec orci blandit, at sagittis nibh ultricies. In ultrices tellus leo, sit amet sodales sem dignissim sit amet.",
-            },
-            {
-                title: "Snack",
-                calories: "410",
-                description: "Suspendisse interdum lectus maximus, ullamcorper felis feugiat, mollis tortor.",
-            },
-            {
-                title: "Lunch",
-                calories: "850",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pretium neque nec facilisis faucibus. Cras non lobortis enim, sit amet sollicitudin purus. Suspendisse metus turpis, eleifend eget augue vitae,",
-            },
-    ]
-
-    const timelineItemsGrouped = [
-        {
-            title: "Diner",
-            calories: "1050",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam pretium neque nec facilisis faucibus. Cras non lobortis enim, sit amet sollicitudin purus. Suspendisse metus turpis, eleifend eget augue vitae, consectetur placerat enim. Maecenas ornare mi nec orci blandit, at sagittis nibh ultricies. In ultrices tellus leo, sit amet sodales sem dignissim sit amet.",
-        },
-    ]
+    console.log(timeLineItems)
     
   return (
     <div className='flex flex-col h-4/6 lg:h-full'>
@@ -101,9 +57,9 @@ function Diary({
         </div>
         <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-4">
             {isGrouped?
-                <Timeline items={timelineItemsGrouped}/>
+                <Timeline items={timeLineItems}/>
             :
-                <Timeline items={timelineItems}/>
+                <Timeline items={timeLineItems}/>
             }
         </ScrollArea>
     </div>

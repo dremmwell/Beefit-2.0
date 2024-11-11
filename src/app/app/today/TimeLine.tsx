@@ -4,8 +4,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 
 interface TimelineItemProps {
   title: string
-  calories: string
+  calories: number
   description: string
+  mealId: string
 }
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ title, calories, description }) => (
@@ -18,7 +19,9 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, calories, descriptio
         <Badge>{calories} cal</Badge> 
       </div>
         <div className="col-start-3 row-start-2 mt-1">
-          <div className="text-sm font-medium leading-none text-muted-foreground -translate-y-8">{description}</div>
+          {description.split('\n').map((line, index) => (
+                      <div key={index} className="text-sm font-medium leading-none text-muted-foreground -translate-y-8">{line}</div>
+          ))}
         </div>
          <div className="col-start-2 row-start-2 w-0.5 bg-muted rounded-3xl h-full mx-auto" />
       </div>
@@ -26,16 +29,16 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, calories, descriptio
   )
 
 interface DayTimelineProps {
-  items: Array<Omit<TimelineItemProps, 'isLast'>>
+  items: Array<TimelineItemProps>
 }
 
 export default function DayTimeline({ items }: DayTimelineProps) {
   return (
     <>
       <ol className='mx-2 my-4 mt-2'>
-        {items.map((item, index) => (
+        {items.map((item) => (
           <TimelineItem
-            key={index}
+            key={item.mealId}
             {...item}
           />
         ))}

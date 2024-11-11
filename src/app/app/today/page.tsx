@@ -5,7 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import Timeline from "./TimeLine";
 import CaloriesChart from "./CaloriesChart";
 import { AddMealDialog } from "./AddMealDialog";
-import { RecipeAndIngredients } from "@/app/types/definitions";
+import { RecipeAndIngredients, MealData } from "@/app/types/definitions";
 import { Ingredient, Meal, Recipe, RecipeIngredient } from "@prisma/client";
 import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients} from "@/app/actions/db.actions";
 import Diary from "./Diary";
@@ -21,11 +21,11 @@ export default async function Page() {
   const originalRecipes : Array<RecipeAndIngredients> = await getRecipesAndIngredients(user.id);
   const variantRecipes : Array<RecipeAndIngredients> = await getVariantRecipesAndIngredients(user.id);
   const recipes : Array<RecipeAndIngredients> = originalRecipes.concat(variantRecipes);
-  
+
   const ingredients :Array<Ingredient> = await getIngredients(user.id);
 
   const today = new Date();
-  const todaysMeals : Array<Meal> = await getMealsByDate(user.id,today);
+  const todaysMeals : Array<MealData> = await getMealsByDate(user.id,today);
   
   return (
     <div className="container sm:my-10 my-5 flex flex-col min-h-0 px-3 sm:px-10">

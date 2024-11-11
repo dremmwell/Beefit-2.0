@@ -1,4 +1,4 @@
-const { db } = require('@vercel/postgres');
+/* const { db } = require('@vercel/postgres');
 const {
     ingredients,
   } = require('../src/lib/placeholder-data.js');
@@ -67,4 +67,4 @@ async function seedIngredients(client) {
       'An error occurred while attempting to seed the database:',
       err,
     );
-  });
+  }); */
