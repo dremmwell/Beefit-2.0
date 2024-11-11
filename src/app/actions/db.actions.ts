@@ -219,6 +219,26 @@ export async function getMealsByDate(userId: UserId, date : Date) {
         lt: endDate.toISOString()
       }
     },
+    include: {
+      recipe : {
+        include : {
+          recipe: {
+            include : {
+              ingredients : {
+                include : {
+                  ingredient :true
+                }
+              }
+            }
+          }
+        }
+      },
+      ingredients: {
+        include : {
+          ingredient : true
+        }
+      }
+    },
     orderBy: { createdAt: 'desc' } 
   })
   const meals = JSON.parse(JSON.stringify(data));
