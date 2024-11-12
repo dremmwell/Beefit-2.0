@@ -19,7 +19,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, calories, descriptio
         <Badge>{calories} cal</Badge> 
       </div>
         <div className="col-start-3 row-start-2 mt-1">
-          {description.split('\n').map((line, index) => (
+          {description?.split('\n').map((line, index) => (
                       <div key={index} className="text-sm font-medium leading-none text-muted-foreground -translate-y-8">{line}</div>
           ))}
         </div>

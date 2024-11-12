@@ -109,7 +109,7 @@ export default function MealRecipeForm<TData, TValue>({
     resolver: zodResolver(MealRecipeSchema),
     mode: "onBlur",
     defaultValues: {
-      meal: "snack",
+      meal: "Snack",
       recipe: []
     }
     
@@ -224,17 +224,17 @@ const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
           render={({ field }) => (
             <FormItem>
               <FormLabel>Type of meal :</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue="snack">
+              <Select onValueChange={field.onChange} defaultValue="Snack">
                 <FormControl>
                   <SelectTrigger className="w-[200px]">
                     <SelectValue placeholder="Choose a type of meal"/>
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="snack">Snack</SelectItem>
-                  <SelectItem value="breakfast">Breakfast</SelectItem>
-                  <SelectItem value="lunch">Lunch</SelectItem>
-                  <SelectItem value="diner">Diner</SelectItem>
+                  <SelectItem value="Snack">Snack</SelectItem>
+                  <SelectItem value="Breakfast">Breakfast</SelectItem>
+                  <SelectItem value="Lunch">Lunch</SelectItem>
+                  <SelectItem value="Diner">Diner</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />

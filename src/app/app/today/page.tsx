@@ -26,7 +26,7 @@ export default async function Page() {
 
   const today = new Date();
   const todaysMeals : Array<MealData> = await getMealsByDate(user.id,today);
-  
+
   return (
     <div className="container sm:my-10 my-5 flex flex-col min-h-0 px-3 sm:px-10">
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2 col-span-2">Today</h1>

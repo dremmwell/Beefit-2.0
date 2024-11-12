@@ -26,7 +26,6 @@ function Diary({
     const mealValues : Array<MealValues> = getMealValues(meals);
     const timeLineItems : Array<TimeLineMeal>= []
 
-
     mealValues.forEach((meal) => {
         const timeLineItem : TimeLineMeal = {
             title: "",
@@ -40,8 +39,6 @@ function Diary({
         timeLineItem.description = meal.description;
         timeLineItems.push(timeLineItem);
     })
-
-    console.log(timeLineItems)
     
   return (
     <div className='flex flex-col h-4/6 lg:h-full'>
