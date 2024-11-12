@@ -15,15 +15,15 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ title, calories, descriptio
       <div className="ml-auto">
           <h3 className="text-sm font-semibold text-foreground">{title}</h3>
       </div>
-      <div className='flex justify-center max-h-5'>
+      <div className='flex justify-center max-h-5 w-20'>
         <Badge>{calories} cal</Badge> 
       </div>
         <div className="col-start-3 row-start-2 mt-1">
           {description?.split('\n').map((line, index) => (
-                      <div key={index} className="text-sm font-medium leading-none text-muted-foreground -translate-y-8">{line}</div>
+            <div key={index} className="text-sm font-medium text-muted-foreground leading-relaxed -translate-y-[36px]">{line}</div>
           ))}
         </div>
-         <div className="col-start-2 row-start-2 w-0.5 bg-muted rounded-3xl h-full mx-auto" />
+         <div className="col-start-2 row-start-2 w-0.5 bg-muted rounded-3xl mx-auto" />
       </div>
     </li>
   )

@@ -104,7 +104,7 @@ export function getMealValues(meals : Array<MealData>){
                 mealValues.proteins = recipeValues.proteins.toFixed(1);
                 mealValues.carbs = recipeValues.carbs.toFixed(1);
                 mealValues.fats = recipeValues.fats.toFixed(1);
-                mealValues.description = `${meal.recipe[index].quantity} portion(s) of ${meal.recipe[index].unit} recipe(s) of ${meal.recipe[index].recipe.name}`
+                mealValues.description = `${meal.recipe[index].quantity} portion(s) of ${meal.recipe[index].unit} recipe of ${meal.recipe[index].recipe.name}`
             }
         }
         for (let index = 0; index < meal.ingredients.length; index++) {

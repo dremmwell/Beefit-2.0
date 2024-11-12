@@ -367,7 +367,7 @@ const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
                           {(field.value === "grams" || field.value === "1") ?
                             <></>
                             :
-                            <div className="text-sm min-w-[100px] my-auto ml-2 pb-2">
+                            <div className="text-sm min-w-[60px] my-auto ml-2 pb-2">
                               of recipe
                             </div>
                           }
