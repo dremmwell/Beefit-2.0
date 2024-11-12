@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Timeline from "./TimeLine";
 import { Ingredient, Meal } from '@prisma/client';
@@ -64,14 +64,16 @@ function Diary({
         return [timeLineItems, timelineItemsGrouped]
     }
 
- const timelineItems = getTimeLineItems(mealValues)[0];
- const timelineItemsGrouped = getTimeLineItems(mealValues)[1];
+    const today = new Date();
+
+    const timelineItems = getTimeLineItems(mealValues)[0];
+    const timelineItemsGrouped = getTimeLineItems(mealValues)[1];
 
   return (
     <div className='flex flex-col h-4/6 lg:h-full'>
         <div className='flex items-center justify-between mb-4'>
           <div className='ml-4 pr-4 flex flex-col lg:flex-row gap-1 lg:gap-2'>
-            <h3 className='font-semibold leading-none tracking-tight pt-2 px-2'>Meal Diary - <span className='text-sm text-muted-foreground font-normal'>02 October 2024</span></h3>
+            <h3 className='font-semibold leading-none tracking-tight pt-2 px-2'>Meal Diary - <span className='text-sm text-muted-foreground font-normal'>{today.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</span></h3>
             <div className='text-sm text-muted-foreground flex items-center'>
                 <Switch checked={isGrouped} onCheckedChange={setIsGrouped} className='mt-2'/>
                 <Label htmlFor="converted"className="ml-2 mt-2">group meals</Label>
