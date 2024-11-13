@@ -286,3 +286,16 @@ export async function createMealFromRecipe(meal: Meal, mealRecipe : Array<MealRe
   }
   return
 }
+
+export async function deleteMeal(mealId : string) {
+  const { user } = await validateRequest()
+  if(user){
+      await db.meal.delete({
+        where: {
+          id: mealId
+        }
+      })
+    revalidatePath('/app/today')
+  }
+  return
+}
