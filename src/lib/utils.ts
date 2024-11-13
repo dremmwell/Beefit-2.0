@@ -15,6 +15,6 @@ export function getCurrentDate(){
   let hour = date.getHours();
   let minutes = date.getMinutes();
 
-  let currentDate = `${day}-${month}-${year} at ${hour}:${minutes}`;
+  let currentDate = `${day}-${month}-${year}`;
   return currentDate
 }

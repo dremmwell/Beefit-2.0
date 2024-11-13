@@ -14,15 +14,15 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-import { deleteRecipe } from '@/app/actions/db.actions';
-import { Recipe } from '@prisma/client';
+import { deleteMeal } from '@/app/actions/db.actions';
+import { Meal } from '@prisma/client';
 
 export default function DeleteDialog({
-  recipe,
+  meal,
   isOpen,
   setIsOpen
 }: {
-  recipe: Recipe;
+  meal: Meal;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
@@ -31,10 +31,10 @@ export default function DeleteDialog({
 
   const onDelete = async () => {
     try {
-      await deleteRecipe(recipe.id, recipe.userId)
+/*       await deleteMeal(meal.id, meal.userId) */
       toast({
-        title: `Recipe "${recipe.name}" deleted`,
-        description: ` ${recipe.name} have been removed to the database.`,
+        title: `Meal "${meal.name}" deleted`,
+        description: ` ${meal.name} have been removed to the database.`,
       });
       setIsOpen(false)
     }
@@ -47,7 +47,7 @@ export default function DeleteDialog({
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
         <AlertDialogContent>
         <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure to delete your recipe of {recipe.name}?</AlertDialogTitle>
+            <AlertDialogTitle>Are you absolutely sure to delete your Meal of {meal.name}?</AlertDialogTitle>
             <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your ingredient and remove it from the database.
             </AlertDialogDescription>
