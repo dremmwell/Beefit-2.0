@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 
 import {
   AlertDialog,
@@ -14,6 +14,7 @@ import {
 import { deleteIngredient } from "../../actions/db.actions" 
 import { Ingredient } from '@prisma/client';
 import { useToast } from '@/components/ui/use-toast';
+import { Loader2 } from 'lucide-react';
 
 export default function DeleteDialog({
   ingredient,
@@ -26,8 +27,10 @@ export default function DeleteDialog({
 }) {
 
   const { toast } = useToast()
+  const [loading, setLoading] = useState(false);
 
   const onDelete = async () => {
+    setLoading(true)
     try {
       await deleteIngredient(ingredient)
       toast({
@@ -38,6 +41,9 @@ export default function DeleteDialog({
     }
     catch (error) {
       console.log(error)
+    }
+    finally {
+    setLoading(false)
     }
   }
 
@@ -52,7 +58,12 @@ export default function DeleteDialog({
           </AlertDialogHeader>
           <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={onDelete}>Delete</AlertDialogAction>
+              <AlertDialogAction disabled={loading} onClick={onDelete}>
+              {loading && (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              )}
+                Delete
+              </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
     </AlertDialog>

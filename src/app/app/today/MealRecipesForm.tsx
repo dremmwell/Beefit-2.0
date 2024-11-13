@@ -59,6 +59,7 @@ import { useToast } from "@/components/ui/use-toast"
 import MealEditRecipeDialog from "./MealEditRecipeDialog"
 import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions"
 import { createMealFromRecipe } from "@/app/actions/db.actions"
+import { Loader2 } from "lucide-react"
 
 interface MealrecipesForm<TData, TValue> {
   ingredients: Array<Ingredient>
@@ -103,7 +104,7 @@ export default function MealRecipeForm<TData, TValue>({
     },
   })
 
-  //------------------------------------ Form Validation -------------------------------------//
+  //------------------------------------ Form Control -------------------------------------//
  
   const form = useForm<z.infer<typeof MealRecipeSchema>>({
     resolver: zodResolver(MealRecipeSchema),
@@ -112,7 +113,6 @@ export default function MealRecipeForm<TData, TValue>({
       meal: "Snack",
       recipe: []
     }
-    
   })
 
   const { fields, append, remove } = useFieldArray({
@@ -120,6 +120,7 @@ export default function MealRecipeForm<TData, TValue>({
     control: form.control,
   });
 
+  let isSubmitting = form.formState.isSubmitting;
 
   //------------------------------------ Data Formatting and Storing -------------------------------------//
 
@@ -381,7 +382,12 @@ const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
             </div>
         }
             </div>
-        <Button className="mb-4 md:mb-0 mt-12" type="submit" form="mealRecipeForm">Create Meal</Button>
+        <Button  disabled={isSubmitting} className="mb-4 md:mb-0 mt-12" type="submit" form="mealRecipeForm">
+          {isSubmitting && (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          )}
+          Create Meal
+        </Button>
       </form>
     </Form>
     )

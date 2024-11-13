@@ -57,6 +57,7 @@ import { Recipe, RecipeIngredient } from "@prisma/client"
 import { updateRecipe } from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
+import { Loader2 } from "lucide-react"
 
 
 interface EditRecipeForm<TData, TValue> {
@@ -156,6 +157,8 @@ export default function EditRecipeForm<TData, TValue>({
     name: "ingredients",
     control: form.control,
   });
+
+  let isSubmitting : boolean = form.formState.isSubmitting;
 
 // Handles form submit and dialog close //  
 
@@ -430,7 +433,12 @@ export default function EditRecipeForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="submit">Edit</Button>
+        <Button disabled={isSubmitting} className="mt-auto mb-4 md:mb-0" type="submit">
+          {isSubmitting && (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          )}
+          Edit
+          </Button>
       </form>
     </Form>
     )

@@ -57,6 +57,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
 import { createRecipe } from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
+import { Loader2 } from "lucide-react"
 
 
 interface AddRecipeForm<TData, TValue> {
@@ -158,6 +159,8 @@ export default function AddRecipeForm<TData, TValue>({
     control: form.control,
   });
 
+  let isSubmitting : boolean = form.formState.isSubmitting;
+ 
   async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
 
     //Handles data formatting and db storing //
@@ -356,7 +359,12 @@ export default function AddRecipeForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create</Button>
+        <Button disabled={isSubmitting} className="mt-auto mb-4 md:mb-0" type="submit">
+          {isSubmitting && (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          )}
+          Create
+        </Button>
       </form>
     </Form>
     )

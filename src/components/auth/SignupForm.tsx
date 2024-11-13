@@ -17,13 +17,13 @@ import { Input } from "@/components/ui/input"
 import { SignUpSchema } from "@/app/types/auth.schema"
 import { signUp } from "@/app/actions/auth.actions"
 import { toast } from "../ui/use-toast"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react"
 
 export function SignupForm() {
 
   const router = useRouter() 
   
-      // 1. Define your form.
   const form = useForm<z.infer<typeof SignUpSchema>>({
     resolver: zodResolver(SignUpSchema),
     defaultValues: {
@@ -32,8 +32,8 @@ export function SignupForm() {
       confirmPassword: "",
     },
   })
- 
-  // 2. Define a submit handler.
+  const isSubmitting = form.formState.isSubmitting;
+
   async function onSubmit(values: z.infer<typeof SignUpSchema>) {
     const res = await signUp(values);
     if(res.error){
@@ -92,7 +92,12 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Sign up</Button>
+        <Button disabled={isSubmitting} type="submit">
+          {isSubmitting && (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          )}
+          Sign up
+          </Button>
       </form>
     </Form>
   )

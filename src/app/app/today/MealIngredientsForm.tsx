@@ -56,6 +56,7 @@ import { MealIngredient, Recipe, RecipeIngredient } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import { Meal } from "@prisma/client"
 import { createMealFromIngredients } from "@/app/actions/db.actions"
+import { Loader2 } from "lucide-react"
 
 
 interface MealIngredientsForm<TData, TValue> {
@@ -113,6 +114,8 @@ export default function MealIngredientsForm<TData, TValue>({
     name: "ingredients",
     control: form.control,
   });
+
+  let isSubmitting : boolean = form.formState.isSubmitting;
 
     //------------------------------------ Data Formatting and Storing -------------------------------------//
 
@@ -340,7 +343,12 @@ export default function MealIngredientsForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="submit">Create Meal</Button>
+        <Button disabled={isSubmitting} className="mt-auto mb-4 md:mb-0" type="submit">
+        {isSubmitting && (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          )}
+          Create Meal
+        </Button>
       </form>
     </Form>
     )

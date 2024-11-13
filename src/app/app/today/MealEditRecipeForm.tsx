@@ -58,6 +58,7 @@ import { createRecipe} from "@/app/actions/db.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
 import { getCurrentDate } from "@/lib/utils"
+import { Loader2 } from "lucide-react"
 
 
 interface EditRecipeForm<TData, TValue> {
@@ -166,6 +167,8 @@ export default function MealEditRecipeForm<TData, TValue>({
     name: "ingredients",
     control: form.control,
   });
+
+  let isSubmitting : boolean = form.formState.isSubmitting;
 
 //--------------------- Handles form submit, db action and dialog close ---------------------//  
 
@@ -453,7 +456,12 @@ export default function MealEditRecipeForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button className="mt-auto mb-4 md:mb-0" type="button" onClick={form.handleSubmit(onSubmit)}>Edit</Button>
+        <Button disabled={isSubmitting} className="mt-auto mb-4 md:mb-0" type="button" onClick={form.handleSubmit(onSubmit)}>
+          {isSubmitting && (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          )}
+          Edit
+        </Button>
       </form>
     </Form>
     </>

@@ -19,6 +19,7 @@ import { LogInSchema } from "@/app/types/auth.schema"
 import { toast } from "../ui/use-toast"
 import { useRouter } from "next/navigation"
 import { logIn } from "@/app/actions/auth.actions"
+import { Loader2 } from "lucide-react"
 
 export function LoginForm() {
 
@@ -32,6 +33,8 @@ export function LoginForm() {
       password: "",
     },
   })
+
+  const isSubmitting = form.formState.isSubmitting;
  
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof LogInSchema>) {
@@ -79,7 +82,11 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Log in</Button>
+        <Button disabled={isSubmitting} type="submit">
+        {isSubmitting && (
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+          )}
+          Log in</Button>
       </form>
     </Form>
   )

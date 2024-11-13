@@ -30,6 +30,7 @@ import { Ingredient } from "@prisma/client"
 import { EditIngredientFormSchema } from "@/app/types/form.schema"
 import React, { Dispatch, SetStateAction } from 'react';
 import { useToast } from "@/components/ui/use-toast"
+import { Loader2 } from "lucide-react"
 
 
 // Edit the selected ingredient through the edit form
@@ -89,6 +90,8 @@ export function EditIngredientForm ( {
         fats: ingredient.fats,
       }
     });
+
+    let isSubmitting : boolean = form.formState.isSubmitting;
 
     let measureType = initialMeasureType;
     measureType = form.watch("measureType");
@@ -276,7 +279,12 @@ export function EditIngredientForm ( {
                     )}
                   />
                   </div>
-                <Button className="mt-auto w-full" type="submit">Edit</Button>
+                <Button disabled={isSubmitting} className="mt-auto w-full" type="submit">
+                  {isSubmitting && (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  )}
+                  Edit
+                </Button>
               </form>
             </Form>
     )

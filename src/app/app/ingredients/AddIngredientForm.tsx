@@ -35,9 +35,9 @@ import { AddIngredientFormSchema } from "@/app/types/form.schema"
 import { Ingredient } from 'prisma/prisma-client'
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from "@/components/ui/use-toast"
+import { Loader2 } from "lucide-react"
 
-// Create a new ingredient object from the add ingredient form
-
+// Creates a new ingredient object from the add ingredient form
 export function createNewIngredient(data: any,) {
     
   const uuid = uuidv4();
@@ -85,8 +85,11 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
       }
     });
 
+    let isSubmitting : boolean = form.formState.isSubmitting;
+    
     const { toast } = useToast()
     const measureType = form.watch("measureType");
+
    
     // Handles submit and data save
     async function onSubmit(values: z.infer<typeof AddIngredientFormSchema>) {
@@ -267,7 +270,12 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
                 )}
                 />
                 </div>
-                <Button className="mt-auto w-full" type="submit">Add</Button>
+                <Button disabled={isSubmitting} className="mt-auto w-full" type="submit">
+                {isSubmitting && (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                )}
+                Add
+                </Button>
             </form>
         </Form>
     )
