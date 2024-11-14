@@ -21,7 +21,6 @@ function TimelineItem( {meal} : {meal : TimeLineMeal} ) {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-
   return (
       <>
         <DeleteMealDialog 
@@ -34,6 +33,7 @@ function TimelineItem( {meal} : {meal : TimeLineMeal} ) {
             isOpen={isDetailsOpen}
             setIsOpen={setIsDetailsOpen}
         />
+        
         <li key={meal.mealId} className="last:mb-0 mb-2">
             <div className="grid grid-cols-[minmax(60px,70px)_auto_1fr_auto] grid-rows-[20px_auto] gap-3">
             <div className="ml-auto">

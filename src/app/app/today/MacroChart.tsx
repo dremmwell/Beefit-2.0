@@ -11,77 +11,114 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart"
-import { useMediaQuery } from "@/lib/hooks/use-media-query"
-
-export const description = "A bar chart with a label"
-
-const chartData = [
-  { label: "Prot.", macro: 115},
-  { label: "Carb.", macro: 358},
-  { label: "Fats", macro: 126},
-]
-
-const chartConfig = {
-  macro: {
-    label: "macro",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig
 
 export default function MacroChart() {
 
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-
   return (
-    <Card className="min-w-[250px] h-52">
+    <Card >
       <CardHeader>
         <CardTitle>Macronutriments :</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              top: 20,
-              right: isDesktop ? 20 : 0,
-              left: isDesktop ? 20 : 0,
-              bottom: 0,
-            }}
-            width={isDesktop ? 350 : 280}
-            height={isDesktop ? 250 : 200}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="label"
-              tickLine={false}
-              tickMargin={isDesktop ? 10 : 5}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 6)}
-              tick={{ fontSize: isDesktop ? 12 : 10}}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
-            <Bar dataKey="macro" fill="var(--color-macro)" radius={6} width={isDesktop ? 60 : 30}>
-              <LabelList
-                position="top"
-                offset={isDesktop? 12 : 8}
-                className="fill-foreground font-bold pt-1"
-                fontSize={isDesktop ? 12 : 10}
-              />
-            </Bar>
-          </BarChart>
-        </ChartContainer>
       </CardContent>
     </Card>
   )
 }
 
+/* export default function CaloriesChart() {
+
+  const radius = 80;
+  let percent = 80;
+  let percentSegment= 100;
+
+  const strokeWidth = radius * 0.2;
+  const innerRadius = radius - ( strokeWidth / 2 );
+
+  const circumference = innerRadius * 2 * Math.PI;
+  const arc = circumference * (210 / 360);
+  const rotation = 135;
+
+  const dashArray = `${arc} ${circumference}`;
+  const transform = `rotate(${rotation}, ${radius}, ${radius})`;
+
+  const arcSegment = circumference * (40 / 360);
+  const rotationSegment = 230+rotation;
+  const dashArraySegment = `${arcSegment} ${circumference}`;
+  const transformSegment = `rotate(${rotationSegment}, ${radius}, ${radius})`;
+
+
+  const percentNormalized = Math.min(Math.max(percent, 0), 100);
+  const offset = arc - (percentNormalized / 100) * arc;
+
+  const percentNormalizedSegment = Math.min(Math.max(percentSegment, 0), 100);
+  const offsetSegment = arcSegment - (percentNormalizedSegment / 100) * arc;
+
+  return (
+    <Card >
+      <CardHeader >
+        <CardTitle>Calories: </CardTitle>
+      </CardHeader>
+      <CardContent >
+    <svg
+      height={radius * 2}
+      width={radius * 2}
+    >
+     <circle
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="gray"
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        strokeDasharray={dashArray}
+        transform={transform}
+     />
+     <circle 
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="green"
+        strokeDasharray={dashArray}
+        strokeDashoffset={offset}
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        style={{
+          transition: "stroke-dashoffset 1s",
+        }}
+        transform={transform}
+     />
+     <circle
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="gray"
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        strokeDasharray={dashArraySegment}
+        strokeDashoffset={offsetSegment}
+        transform={transformSegment}
+     />
+      <circle
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="red"
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        strokeDasharray={dashArraySegment}
+        style={{
+          transition: "stroke-dashoffset 1s",
+        }}
+        transform={transformSegment}
+     />
+    </svg>
+      </CardContent>
+      <CardFooter >
+      </CardFooter>
+    </Card>
+  )
+} */

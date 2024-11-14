@@ -38,6 +38,7 @@ export default function DeleteMealDialog({
       await deleteMeal(meal.mealId)
       toast({
         title: `Meal deleted`,
+        description: ` Your new meal have been removed from your diary.`,
       });
       setIsOpen(false)
     }

@@ -1,14 +1,5 @@
 "use client"
 
-import { TrendingUp } from "lucide-react"
-import {
-  Label,
-  PolarGrid,
-  PolarRadiusAxis,
-  RadialBar,
-  RadialBarChart,
-} from "recharts"
-
 import {
   Card,
   CardContent,
@@ -17,100 +8,99 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { ChartConfig, ChartContainer } from "@/components/ui/chart"
-import { useMediaQuery } from "@/lib/hooks/use-media-query"
-
-export const description = "A radial chart with text"
-
-const chartData = [
-  { data: "calories", calories: 2212, fill: "var(--color-calories)" },
-]
-
-const chartConfig = {
-  totalCalories: {
-    label: "Taday",
-  },
-  calories: {
-    label: "calories",
-    color: "hsl(var(--primary))",
-  },
-} satisfies ChartConfig
 
 export default function CaloriesChart() {
 
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  
+  const radius = 90;
+  const percent = 100;
+  const percentSegment = 10;
+
+  const strokeWidth = radius * 0.16;
+  const innerRadius = radius - ( strokeWidth / 2 );
+
+  const circumference = innerRadius * 2 * Math.PI;
+  const arc = circumference * (200 / 360);
+  const dashArray = `${arc} ${circumference}`;
+  const transform = `rotate(150, ${radius}, ${radius})`;
+
+  const percentNormalized = Math.min(Math.max(percent, 0), 100);
+  const offset = arc - (percentNormalized / 100) * arc;
+
+  const arcSegment = circumference * (23 / 360);
+  const dashArraySegment = `${arcSegment} ${circumference}`;
+  const transformSegment = `rotate(7, ${radius}, ${radius})`;
+
+  const percentNormalizedSegment = Math.min(Math.max(percentSegment, 0), 100);
+  const offsetSegment = arcSegment - (percentNormalizedSegment / 100) * arcSegment;
+
   return (
-    <Card className="flex flex-col max-w-64 min-w-[170px]">
-      <CardHeader className="items-center pb-0">
-        <CardTitle>Calories - Today</CardTitle>
+    <Card >
+      <CardHeader >
+        <CardTitle>Calories :</CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square "
-        >
-          <RadialBarChart
-            data={chartData}
-            startAngle={270}
-            endAngle={0}
-            innerRadius={isDesktop ? 80 : 50}
-            outerRadius={isDesktop ? 110 : 80}
-            barSize={isDesktop? 20 : 15}
-          >
-            <PolarGrid
-              gridType="circle"
-              radialLines={false}
-              stroke="none"
-              className="first:fill-muted last:fill-background"
-              polarRadius={isDesktop ? [86, 74] : [56, 44]}
-            />
-            <RadialBar dataKey="calories" background cornerRadius={10} />
-            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground md:text-4xl text-2xl font-bold"
-                        >
-                          {chartData[0].calories.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        >
-                          Calories
-                        </tspan>
-                      </text>
-                    )
-                  }
-                }}
-              />
-            </PolarRadiusAxis>
-          </RadialBarChart>
-        </ChartContainer>
+      <CardContent >
+    <svg
+      height={radius * 2}
+      width={radius * 2}
+    >
+     <circle
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="hsl(var(--muted))"
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        strokeDasharray={dashArray}
+        transform={transform}
+     />
+     <circle 
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="#65a30d"
+        strokeDasharray={dashArray}
+        strokeDashoffset={offset}
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        style={{
+          transition: "stroke-dashoffset 1s",
+        }}
+        transform={transform}
+     />
+      <circle
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="hsl(var(--muted))"
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        strokeDasharray={dashArraySegment}
+        transform={transformSegment}
+     />
+     <circle 
+        cx={radius}
+        cy={radius}
+        fill="transparent"
+        r={innerRadius}
+        stroke="#991b1b"
+        strokeDasharray={dashArraySegment}
+        strokeDashoffset={offsetSegment}
+        strokeLinecap="round"
+        strokeWidth={strokeWidth}
+        style={{
+          transition: "stroke-dashoffset 1s",
+        }}
+        transform={transformSegment}
+     />
+    </svg>
+      <div className="-translate-y-[20px] text-center flex flex-col">
+        <span>of 2200 cal</span>
+        <span>(200 cal left)</span>
+      </div>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        {isDesktop ? 
-        <div className="flex items-center gap-2 font-medium leading-none">
-          188 cal remaining today.
-        </div>
-        :
-        <div className="flex items-center gap-2 font-medium leading-none">
-        188 cal left
-        </div>
-        }
-      </CardFooter>
     </Card>
   )
 }
