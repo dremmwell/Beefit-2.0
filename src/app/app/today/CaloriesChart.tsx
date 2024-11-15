@@ -1,5 +1,6 @@
 "use client"
 
+import { MealData, MealValues, Objective } from "@/app/types/definitions";
 import {
   Card,
   CardContent,
@@ -8,13 +9,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { getMealValues } from "@/lib/recipe_utils";
+import { useState } from "react";
 
-export default function CaloriesChart({  }) {
+export default function CaloriesChart({ values, objective } : { values : MealValues, objective : Objective}) {
 
+  const percent = values.calories / objective.calories *100;
+  const percentSegment = (values.calories - objective.calories) / (objective.calories/2) *100;
+  
   const radius = 90;
-  const percent = 100;
-  const percentSegment = 100;
-
   const strokeWidth = radius * 0.13;
   const innerRadius = radius - ( strokeWidth / 2 );
 
@@ -80,7 +83,8 @@ export default function CaloriesChart({  }) {
         strokeDasharray={dashArraySegment}
         transform={transformSegment}
      />
-     <circle 
+     {values.calories > objective.calories &&
+      <circle 
         cx={radius}
         cy={radius}
         fill="transparent"
@@ -94,11 +98,13 @@ export default function CaloriesChart({  }) {
           transition: "stroke-dashoffset 1s",
         }}
         transform={transformSegment}
-     />
+      />
+     }
+
     </svg>
     <div className="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
       <p className="fill-foreground text-4xl font-bold">
-          1800
+          {values.calories}
       </p>
       <p className="fill-muted-foreground">
           calories
@@ -107,11 +113,17 @@ export default function CaloriesChart({  }) {
       </CardContent>
         <CardFooter className="flex-col gap-2 text-sm">
           <div className="flex items-center gap-2 font-medium leading-none">
-            of 2200 cal
+            of {objective.calories} cal
           </div>
+          {values.calories < objective.calories ?
           <div className="leading-none text-muted-foreground">
-            (200 cal left)
+            ({objective.calories - values.calories} cal. left)
           </div>
+          :
+          <div className="leading-none text-muted-foreground">
+            ({values.calories - objective.calories} cal. over)
+          </div>
+          }
         </CardFooter>
     </Card>
   )

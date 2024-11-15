@@ -130,7 +130,27 @@ export function getMealValues(meals : Array<MealData>){
     return mealsValues
 }
 
-export function getTimelineMealsGrouped(meals : Array<Meal>) {
+export function sumMealValues(mealArray: MealValues[]) {
+    let totalMeal : MealValues = {
+        mealId: "",
+        mealType: "",    
+        weight: 0,
+        calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0,   
+        description: ""
+    }
+
+    mealArray.forEach(meal => {
+        totalMeal.weight += meal.weight;
+        totalMeal.calories += meal.calories;
+        totalMeal.proteins += meal.proteins;
+        totalMeal.carbs += meal.carbs;
+        totalMeal.fats += meal.fats;
+    });
+
+    return totalMeal;
 }
 
 export function convertTo100g(recipeValues: RecipeValues){
