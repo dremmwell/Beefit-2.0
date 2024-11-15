@@ -100,10 +100,10 @@ export function getMealValues(meals : Array<MealData>){
                 const ratio : number = meal.recipe[index].quantity * fractionToDecimal(meal.recipe[index].unit);
                 const recipeValues : RecipeValues = convertRecipeFraction(getRecipeValues(meal.recipe[index].recipe), ratio);
                 mealValues.weight = recipeValues.weight;
-                mealValues.calories = recipeValues.calories.toFixed(0);
-                mealValues.proteins = recipeValues.proteins.toFixed(1);
-                mealValues.carbs = recipeValues.carbs.toFixed(1);
-                mealValues.fats = recipeValues.fats.toFixed(1);
+                mealValues.calories = recipeValues.calories;
+                mealValues.proteins = recipeValues.proteins;
+                mealValues.carbs = recipeValues.carbs;
+                mealValues.fats = recipeValues.fats;
                 mealValues.description = `${meal.recipe[index].quantity} portion(s) of ${meal.recipe[index].unit} recipe of ${meal.recipe[index].recipe.name}`
             }
         }

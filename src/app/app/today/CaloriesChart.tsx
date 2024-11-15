@@ -15,7 +15,7 @@ import { useState } from "react";
 export default function CaloriesChart({ values, objective } : { values : MealValues, objective : Objective}) {
 
   const percent = values.calories / objective.calories *100;
-  const percentSegment = (values.calories - objective.calories) / (objective.calories/2) *100;
+  const percentSegment = (values.calories - objective.calories) / (objective.calories/3) *100;
   
   const radius = 90;
   const strokeWidth = radius * 0.13;
@@ -89,7 +89,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
         cy={radius}
         fill="transparent"
         r={innerRadius}
-        stroke="#991b1b"
+        stroke="hsl(var(--primary))"
         strokeDasharray={dashArraySegment}
         strokeDashoffset={offsetSegment}
         strokeLinecap="round"
@@ -103,25 +103,38 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
 
     </svg>
     <div className="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-      <p className="fill-foreground text-4xl font-bold">
-          {values.calories}
+    {values.calories <= objective.calories ?
+    <>
+      <p className="fill-foreground text-4xl font-bold text-lime-600">
+      {values.calories.toFixed(0)}
       </p>
       <p className="fill-muted-foreground">
-          calories
+      calories
       </p>
+    </>
+      :
+      <>
+      <p className="fill-foreground text-4xl font-bold text-primary">
+      {values.calories.toFixed(0)}
+      </p>
+      <p className="fill-muted-foreground">
+      calories
+      </p>
+      </>
+    }
     </div>
       </CardContent>
         <CardFooter className="flex-col gap-2 text-sm">
           <div className="flex items-center gap-2 font-medium leading-none">
-            of {objective.calories} cal
+            of {objective.calories.toFixed(0)} cal
           </div>
-          {values.calories < objective.calories ?
-          <div className="leading-none text-muted-foreground">
-            ({objective.calories - values.calories} cal. left)
+          {values.calories <= objective.calories ?
+          <div className="leading-none text-lime-600">
+            ({(objective.calories - values.calories).toFixed(0)} cal. left)
           </div>
           :
-          <div className="leading-none text-muted-foreground">
-            ({values.calories - objective.calories} cal. over)
+          <div className="leading-none text-primary">
+            ({(values.calories - objective.calories).toFixed(0)} cal. over)
           </div>
           }
         </CardFooter>

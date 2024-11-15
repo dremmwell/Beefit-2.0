@@ -40,7 +40,7 @@ function TimelineItem( {meal} : {meal : TimeLineMeal} ) {
                 <h3 className="text-sm font-semibold text-foreground">{meal.title}</h3>
             </div>
             <div className='flex justify-center max-h-5 w-20'>
-            <Badge>{meal.calories} cal</Badge> 
+            <Badge>{meal.calories.toFixed(0)} cal</Badge> 
             </div>
             <div className="col-start-3 row-start-2 mt-1">
                 {meal.description?.split('\n').map((line, index) => (

@@ -25,8 +25,10 @@ function Diary({
     const mealValues : Array<MealValues> = getMealValues(meals);
     const today = new Date();
 
+    console.log(mealValues)
+
     return (
-    <div className='flex flex-col h-4/6 lg:mx-12'>
+    <div className='flex flex-col h-3/6 lg:mx-12'>
         <div className='flex items-center justify-between mb-4'>
           <div className='ml-4 pr-4 flex flex-col lg:flex-row gap-1 lg:gap-2'>
             <h3 className='font-semibold leading-none tracking-tight pt-2 px-2'>Meal Diary - <span className='text-sm text-muted-foreground font-normal'>{today.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</span></h3>
