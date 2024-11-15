@@ -41,7 +41,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
       <CardHeader>
         <CardTitle className="text-center">Calories</CardTitle>
       </CardHeader>
-      <CardContent className="translate-y-2 pb-2" >
+      <CardContent className="translate-y-2 pb-2 flex flex-col items-center" >
     <svg
       height={radius * 2}
       width={radius * 2}

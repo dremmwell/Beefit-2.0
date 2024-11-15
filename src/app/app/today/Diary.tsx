@@ -25,8 +25,6 @@ function Diary({
     const mealValues : Array<MealValues> = getMealValues(meals);
     const today = new Date();
 
-    console.log(mealValues)
-
     return (
     <div className='flex flex-col h-3/6 lg:mx-12'>
         <div className='flex items-center justify-between mb-4'>
