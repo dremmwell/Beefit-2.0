@@ -3,8 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { cn } from "@/lib/utils"
-import { useState, useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -16,17 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import { createIngredient } from "../../actions/db.actions"
@@ -52,6 +40,7 @@ export function createNewIngredient(data: any,) {
       fats: data.fats,
       userId: "",
       bookmarked: false,
+      customMeal: false,
       createdAt: new Date(),
       updatedAt: new Date(),
   }
@@ -180,7 +169,7 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
                     name="calories"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Calories (g)</FormLabel>
+                        <FormLabel>Calories (cal)</FormLabel>
                         <FormControl>
                         <Input required {...field} />
                         </FormControl>

@@ -38,6 +38,7 @@ model Ingredient {
   userId       String
 
   bookmarked Boolean @default(false)
+  customMeal Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())

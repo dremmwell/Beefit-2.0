@@ -35,6 +35,7 @@ import { Recipe } from "@prisma/client"
 import MealIngredientsForm from "./MealIngredientsForm"
 import { columnsIngredients, columnsRecipes  } from "./columns"
 import MealRecipeForm from "./MealRecipesForm"
+import CustomMealForm from "./CustomMealForm"
 
 
 
@@ -66,15 +67,19 @@ export function AddMealDialog( {
             </DialogDescription>
           </DialogHeader>
           <Tabs defaultValue="ingredients">
-            <TabsList className="grid w-full grid-cols-2 mb-5">
+            <TabsList className="grid w-full grid-cols-3 mb-5">
               <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
               <TabsTrigger value="recipes">Recipes</TabsTrigger>
+              <TabsTrigger value="custom">Custom</TabsTrigger>
             </TabsList>
             <TabsContent value="ingredients">
               <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
             </TabsContent>
             <TabsContent value="recipes">
               <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
+            </TabsContent>
+            <TabsContent value="custom">
+              <CustomMealForm onSave={handleClose}/>
             </TabsContent>
           </Tabs>
         </DialogContent>
@@ -96,15 +101,19 @@ export function AddMealDialog( {
         </DrawerHeader>
           <ScrollArea className="overflow-y-scroll no-scrollbar">
             <Tabs defaultValue="ingredients">
-              <TabsList className="grid grid-cols-2 mx-4">
+              <TabsList className="grid w-full grid-cols-3 mb-5">
                 <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
                 <TabsTrigger value="recipes">Recipes</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
               </TabsList>
               <TabsContent value="ingredients">
-                  <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={setOpen}/>
+                <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
               </TabsContent>
               <TabsContent value="recipes">
-                <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={setOpen}/>
+                <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
+              </TabsContent>
+              <TabsContent value="custom">
+                <CustomMealForm onSave={handleClose}/>
               </TabsContent>
             </Tabs>
           </ScrollArea>

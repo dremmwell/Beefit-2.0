@@ -187,3 +187,40 @@ export const MealRecipeSchema = z.object({
     })
   ).nonempty("Select at least one recipe")
 })
+
+export const CustomMealSchema = z.object({
+  mealType: z.string(),
+  description: z.string().optional(),
+  calories: z.union([
+    z.coerce
+        .number()
+        .positive({
+            message: "must be positive",
+        }),
+    z.literal("")
+]),
+proteins: z.union([
+    z.coerce
+        .number()
+        .positive({
+            message: "must be positive",
+        }),
+    z.literal("")
+]),
+carbs: z.union([
+    z.coerce
+        .number()
+        .positive({
+            message: "must be positive",
+        }),
+    z.literal("")
+]),
+fats: z.union([
+    z.coerce
+        .number()
+        .positive({
+            message: "must be positive",
+        }),
+    z.literal("")
+]),
+})

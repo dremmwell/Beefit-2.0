@@ -12,7 +12,8 @@ import { revalidatePath } from 'next/cache'
 export async function getIngredients(userId: UserId) {
     const data = await db.ingredient.findMany({
       where: {
-        userId: userId
+        userId: userId,
+        customMeal: false,
       }
     });
     const ingredients = JSON.parse(JSON.stringify(data));
