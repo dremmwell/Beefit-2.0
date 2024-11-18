@@ -38,10 +38,10 @@ export default async function Page() {
   }
 
   return (
-    <div className="container sm:my-10 my-5 flex flex-col min-h-0 px-3 sm:px-10">
-      <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2 col-span-2">Today</h1>
+    <div className="container sm:my-10 my-2 flex flex-col min-h-0 px-3 sm:px-10">
+      <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Today</h1>
       <div className="flex flex-col xl:flex-row  gap-4 max-h-fit min-h-0 my-4 lg:mx-12">
-          <div className="flex flex-col md:flex-row xl:flex-col gap-4">
+          <div className="flex flex-col md:flex-row xl:flex-col md:gap-4 gap-2">
             <CaloriesChart values={todaysValues} objective={objective}/>
             <MacroChart values={todaysValues} objective={objective}/>
           </div>

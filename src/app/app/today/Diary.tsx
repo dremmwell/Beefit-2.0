@@ -37,7 +37,7 @@ function Diary({
           </div>
           <AddMealDialog recipes={recipes} ingredients={ingredients}/>
         </div>
-        <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-4">
+        <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-2 md:p-4">
             <Timeline meals={mealValues} isGrouped={isGrouped}/>
         </ScrollArea>
     </div>

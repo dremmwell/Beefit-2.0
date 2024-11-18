@@ -24,7 +24,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
  useEffect(() => {
    if (typeof width !== 'undefined') {
      if (width <= shortWidth) {
-       setSize(0.8);
+       setSize(0.7);
        setIsShorted(true)
      }
      else {
@@ -163,7 +163,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
       </>
       :
       <>
-      <CardContent className="translate-y-2 pb-0 pt-2 flex justify-evenly gap-2 items-center" >
+      <CardContent className="translate-y-3 pb-0 flex justify-evenly gap-2 items-center" >
       <div className="relative">
         <svg
           height={radius * 2}

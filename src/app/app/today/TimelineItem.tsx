@@ -35,7 +35,7 @@ function TimelineItem( {meal} : {meal : TimeLineMeal} ) {
         />
         
         <li key={meal.mealId} className="last:mb-0 mb-2">
-            <div className="grid grid-cols-[minmax(60px,70px)_auto_1fr_auto] grid-rows-[20px_auto] gap-3">
+            <div className="grid grid-cols-[minmax(60px,70px)_auto_1fr_auto] grid-rows-[20px_auto] md:gap-3 gap-1">
             <div className="ml-auto">
                 <h3 className="text-sm font-semibold text-foreground">{meal.title}</h3>
             </div>
@@ -44,7 +44,7 @@ function TimelineItem( {meal} : {meal : TimeLineMeal} ) {
             </div>
             <div className="col-start-3 row-start-2 mt-1">
                 {meal.description?.split('\n').map((line, index) => (
-                <div key={index} className="text-sm font-medium text-muted-foreground leading-relaxed -translate-y-[36px]">{line}</div>
+                <div key={index} className="text-sm font-medium text-muted-foreground leading-relaxed -translate-y-[36px] pt-2">{line}</div>
                 ))}
             </div>
             <div className="ml-auto col-start-4 row-start-1 row-span-2">
