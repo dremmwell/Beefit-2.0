@@ -9,8 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { getMealValues } from "@/lib/recipe_utils";
-import { useState } from "react";
 
 export default function CaloriesChart({ values, objective } : { values : MealValues, objective : Objective}) {
 
