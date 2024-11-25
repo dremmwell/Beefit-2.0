@@ -18,7 +18,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
 
   // Get windows dimensions, card dimensions and set isShorted true/false
   const { height, width } = useWindowDimensions(); 
-  const [cardWidth, setCardWidth ] = useState();
+  const [cardWidth, setCardWidth ] = useState(100);
   const [isShorted , setIsShorted] = useState(false);
   const [size ,setSize] = useState(1);
   const shortwidth = 768;
@@ -39,22 +39,26 @@ export default function MacroChart({ values, objective } : { values : MealValues
         }
       }
     }
-  }, [width]);
-
-  const percentCarbs = values.carbs / objective.carbs * 100;
-  const carbsNormalized = Math.min(Math.max(percentCarbs, 0), 100);
-
-  const percentProt = values.proteins / objective.proteins * 100;
-  const proteinsNormalized = Math.min(Math.max(percentProt, 0), 100);
-
-  const percentFats = values.fats / objective.fats * 100;
-  const fatsNormalized = Math.min(Math.max(percentFats, 0), 100);
-
-  const ratio = 0.85;
+  }, [width, cardRef]);
 
   const chartHeight = 8;
   //@ts-ignore
-  const chartWidth = ratio * cardWidth;
+  const chartWidth = 0.85 * cardWidth;
+
+  const ratio =  chartWidth /100;
+
+  const percentCarbs = values.carbs / objective.carbs * 100;
+  const carbsNormalized = Math.min(Math.max(percentCarbs, 0), 100);
+  const carbsWidth = carbsNormalized * ratio;
+
+  const percentProt = values.proteins / objective.proteins * 100;
+  const proteinsNormalized = Math.min(Math.max(percentProt, 0), 100);
+  const protWidth = proteinsNormalized * ratio;
+
+  const percentFats = values.fats / objective.fats * 100;
+  const fatsNormalized = Math.min(Math.max(percentFats, 0), 100);
+  const fatsWidth = fatsNormalized * ratio;
+
   const limit = chartWidth*0.8;
 
   return (
@@ -81,7 +85,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
                   />
                   <rect 
                     height={chartHeight} 
-                    width={ratio*carbsNormalized} 
+                    width={carbsWidth} 
                     rx="5" 
                     ry="5" 
                     fill="hsl(var(--primary))"
@@ -117,7 +121,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
                   />
                   <rect 
                     height={chartHeight} 
-                    width={ratio*proteinsNormalized} 
+                    width={protWidth} 
                     rx="5" 
                     ry="5" 
                     fill="hsl(var(--primary))"
@@ -153,7 +157,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
                   />
                   <rect 
                     height={chartHeight} 
-                    width={ratio*fatsNormalized} 
+                    width={fatsWidth} 
                     rx="5" 
                     ry="5" 
                     fill="hsl(var(--primary))"
@@ -255,7 +259,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
             </div>
             <div className="flex flex-col">
               <div className="flex gap-1 text-sm">
-              <p className="text-sm font-semibold text-foreground mb-1">Fats</p>
+              <p className="text-sm font-semibold text-foreground mb-1">Fats : </p>
                 <p className="font-semibold">{(values.fats).toFixed(0)}g</p>
                 {values.fats > objective.fats ?
                 <p className="text-primary ">(over {(values.fats - objective.fats).toFixed(0)}g)</p>

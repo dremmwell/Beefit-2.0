@@ -29,7 +29,7 @@ export default function DetailsDialog({
           <DialogTitle className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-3">{meal.title}</DialogTitle>
           <DialogDescription className='flex flex-col gap-4'>
             {meal.description?.split('\n').map((line, index) => (
-              <div key={index} className="text-sm">{line}</div>
+              <span key={index} className="text-sm">{line}</span>
             ))}
           </DialogDescription>
         </DialogHeader>

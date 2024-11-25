@@ -246,6 +246,42 @@ export async function getMealsByDate(userId: UserId, date : Date) {
   return meals
 }
 
+export async function getMealsByPeriod(userId: UserId, startDate : Date, endDate : Date) {
+
+  const data = await db.meal.findMany({
+    where: {
+      userId: userId,
+      createdAt: {
+        gte: startDate.toISOString(),
+        lt: endDate.toISOString()
+      }
+    },
+    include: {
+      recipe : {
+        include : {
+          recipe: {
+            include : {
+              ingredients : {
+                include : {
+                  ingredient :true
+                }
+              }
+            }
+          }
+        }
+      },
+      ingredients: {
+        include : {
+          ingredient : true
+        }
+      }
+    },
+    orderBy: { createdAt: 'desc' } 
+  })
+  const meals = JSON.parse(JSON.stringify(data));
+  return meals
+}
+
 export async function createMealFromIngredients (meal : Meal, ingredients : Array<MealIngredient>){
   const { user } = await validateRequest()
   if(user){

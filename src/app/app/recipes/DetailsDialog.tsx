@@ -46,7 +46,7 @@ export default function DetailsDialog({
               >
                   <span className="flex h-2 w-2 translate-y-1 rounded-full bg-primary" />
                   <div className="space-y-1">
-                    <div className="text-sm font-medium leading-none">
+                    <span className="text-sm font-medium leading-none">
                       {ingredient.unit === "grams" ?
                       <>
                         {ingredient.quantity} grams of {ingredient.ingredient.name}
@@ -56,7 +56,7 @@ export default function DetailsDialog({
                       {ingredient.quantity} {ingredient.ingredient.unit}(s) of {ingredient.ingredient.name} ({ingredient.quantity*ingredient.ingredient.gramsPerUnit}g)
                       </>
                       }
-                    </div>
+                    </span>
                   </div>
                 </div>
             )}
@@ -64,7 +64,7 @@ export default function DetailsDialog({
           {recipe.instructions !== "" && 
             <Card>
               <CardContent className='pt-6'>
-                <div>{recipe.instructions}</div>
+                <span>{recipe.instructions}</span>
               </CardContent>
             </Card>
           }

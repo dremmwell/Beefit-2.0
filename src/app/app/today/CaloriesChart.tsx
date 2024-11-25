@@ -84,7 +84,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
           cy={radius}
           fill="transparent"
           r={innerRadius}
-          stroke="#65a30d"
+          stroke="hsl(var(--success))"
           strokeDasharray={dashArray}
           strokeDashoffset={offset}
           strokeLinecap="round"
@@ -127,7 +127,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
       <div className="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
       {values.calories <= objective.calories ?
       <>
-        <p className="fill-foreground text-4xl font-bold text-lime-600">
+        <p className="fill-foreground text-4xl font-bold text-success">
         {values.calories.toFixed(0)}
         </p>
         <p className="fill-muted-foreground">
@@ -151,7 +151,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
               of {objective.calories.toFixed(0)} cal
             </div>
             {values.calories <= objective.calories ?
-            <div className="leading-none text-lime-600">
+            <div className="leading-none text-success">
               ({(objective.calories - values.calories).toFixed(0)} cal. left)
             </div>
             :
@@ -185,7 +185,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
             cy={radius}
             fill="transparent"
             r={innerRadius}
-            stroke="#65a30d"
+            stroke="hsl(var(--success))"
             strokeDasharray={dashArray}
             strokeDashoffset={offset}
             strokeLinecap="round"
@@ -227,7 +227,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
         <div className="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
           {values.calories <= objective.calories ?
           <>
-            <p className="fill-foreground text-2xl font-bold text-lime-600">
+            <p className="fill-foreground text-2xl font-bold text-success">
             {values.calories.toFixed(0)}
             </p>
             <p className="fill-muted-foreground">
@@ -251,7 +251,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
           of {objective.calories.toFixed(0)} cal
         </div>
         {values.calories <= objective.calories ?
-        <div className="leading-none text-lime-600">
+        <div className="leading-none text-success">
           ({(objective.calories - values.calories).toFixed(0)} cal. left)
         </div>
         :

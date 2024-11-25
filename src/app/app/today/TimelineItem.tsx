@@ -44,7 +44,7 @@ function TimelineItem( {meal} : {meal : TimeLineMeal} ) {
             </div>
             <div className="col-start-3 row-start-2 mt-1">
                 {meal.description?.split('\n').map((line, index) => (
-                <div key={index} className="text-sm font-medium text-muted-foreground leading-relaxed -translate-y-[36px] pt-2">{line}</div>
+                <div key={index} className="text-sm font-medium text-muted-foreground leading-relaxed -translate-y-[36px] md:-translate-y-[44px] pt-2">{line}</div>
                 ))}
             </div>
             <div className="ml-auto col-start-4 row-start-1 row-span-2">

@@ -162,7 +162,7 @@ export default function CustomMealForm<TData, TValue>({
             </FormItem>
           )}
         />
-        <div className="flex gap-2 justify-between">
+        <div className="flex gap-4 justify-between">
         <FormField
           control={form.control}
           name="calories"
@@ -196,7 +196,7 @@ export default function CustomMealForm<TData, TValue>({
           )}
         />
         </div>
-        <div className="flex gap-2 justify-between">
+        <div className="flex gap-4 justify-between">
         <FormField
           control={form.control}
           name="carbs"
