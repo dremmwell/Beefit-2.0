@@ -21,19 +21,20 @@ function groupByCreationDay(objects : any) {
 
 function Weekly({ weeklyMeals }: {weeklyMeals : Array<MealData>}) {
 
-    const [selectedDay, setSelectedDay] = useState<Date | null>(null);
-    const handleDaySelect = (date: Date) => {
-        setSelectedDay(date);
-    };
-
-/*     const mealsByDay = groupByCreationDay(weeklyMeals);
+/*  const mealsByDay = groupByCreationDay(weeklyMeals);
  */
-    const today : Date = new Date()
+    const today : Date = new Date();
+    const yesterday : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
     const dates: Date[] = [];
     for (let i = 0; i < 8; i++) {
         const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (8-i));
         dates.push(day);
     }
+
+    const [selectedDay, setSelectedDay] = useState<Date | null>(yesterday);
+    const handleDaySelect = (date: Date) => {
+        setSelectedDay(date);
+    };
 
     return (
         <>
