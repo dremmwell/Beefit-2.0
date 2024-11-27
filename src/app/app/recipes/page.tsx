@@ -48,11 +48,11 @@ export default async function Page(
           <AddRecipeDialog ingredients={ingredients}/> 
         </div>
       </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 overflow-scroll no-scrollbar">
-          {filteredRecipes.map((recipe: RecipeAndIngredients) => (
-              <RecipeCard key={recipe.id} recipe={recipe} ingredients={ingredients}/>
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 overflow-scroll no-scrollbar">
+        {filteredRecipes.map((recipe: RecipeAndIngredients) => (
+            <RecipeCard key={recipe.id} recipe={recipe} ingredients={ingredients}/>
+        ))}
+      </div>
         <Toaster />
     </div>
   )

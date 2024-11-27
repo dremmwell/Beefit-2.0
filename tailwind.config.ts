@@ -57,6 +57,14 @@ const config = {
           DEFAULT: "hsl(var(--success))",
           foreground: "hsl(var(--success))",
         },
+        below: {
+          DEFAULT: "hsl(var(--below))",
+          foreground: "hsl(var(--below))",
+        },
+        cyan: {
+          DEFAULT: "hsl(var(--cyan))",
+          foreground: "hsl(var(--cyan))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

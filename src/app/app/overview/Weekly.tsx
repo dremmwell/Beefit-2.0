@@ -21,13 +21,13 @@ function groupByCreationDay(objects : any) {
 
 function Weekly({ weeklyMeals }: {weeklyMeals : Array<MealData>}) {
 
-/*  const mealsByDay = groupByCreationDay(weeklyMeals);
- */
+    /*  const mealsByDay = groupByCreationDay(weeklyMeals);*/
+
     const today : Date = new Date();
     const yesterday : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
     const dates: Date[] = [];
-    for (let i = 0; i < 8; i++) {
-        const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (8-i));
+    for (let i = 0; i < 7; i++) {
+        const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (7-i));
         dates.push(day);
     }
 
@@ -36,12 +36,14 @@ function Weekly({ weeklyMeals }: {weeklyMeals : Array<MealData>}) {
         setSelectedDay(date);
     };
 
+    const color = "success";
+
     return (
         <>
-            <div className='w-full flex flex-wrap justify-evenly md:px-4'>
+            <div className='w-full flex flex-wrap justify-evenly md:px-4 py-2 md:py-4'>
             {dates.map((day, index) => (
                 <div key={index} onClick={() => handleDaySelect(day)}>
-                    <DayCard date={day} dotColor='success' isSelected={selectedDay && selectedDay.getTime() === day.getTime()}/> 
+                    <DayCard date={day} color={color} isSelected={selectedDay && selectedDay.getTime() === day.getTime()}/> 
                 </div>
             ))}
             </div>

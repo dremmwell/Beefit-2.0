@@ -16,6 +16,7 @@ model User {
   ingredients Ingredient[]
   recipes     Recipe[]
   meal        Meal[]
+  objectives  Objective[]
 }
 
 model Session {
@@ -117,6 +118,19 @@ model Meal {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+model Objective {
+  id       String @id @default(uuid())
+  calories Int
+  proteins Float
+  carbs    Float
+  fats     Float
+
+  createdAt DateTime @default(now())
 
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
