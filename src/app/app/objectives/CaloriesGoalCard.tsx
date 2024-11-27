@@ -1,7 +1,6 @@
 "use client"
 
-import * as React from "react"
-import { useState } from "react"
+import React, { useState, useRef } from "react";
 import { Minus, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,7 +17,18 @@ export default function CaloriesGoalCard( {savedGoal} : {savedGoal : number}) {
   const [goal, setGoal] = useState(savedGoal)
 
   function onClick(adjustment: number) {
-    setGoal(Math.max(0, goal + adjustment));
+    setGoal(prev => prev + adjustment);
+  }
+
+  // Handles mouse hold //
+  const timer = useRef(0);
+  function onMouseHold(adjustment: number) {
+    // @ts-ignore
+    timer.current = setInterval(() => setGoal(prev => prev + adjustment), 200);
+  };
+
+  function timeoutClear() {
+    clearInterval(timer.current);
   }
 
   return (
@@ -33,6 +43,9 @@ export default function CaloriesGoalCard( {savedGoal} : {savedGoal : number}) {
             variant="outline"
             size="icon"
             className="h-8 w-8 shrink-0 rounded-full"
+            onMouseLeave={timeoutClear}
+            onMouseUp={timeoutClear}
+            onMouseDown={() => onMouseHold(-10)}
             onClick={() => onClick(-10)}
             disabled={goal <= 0}
           >
@@ -49,6 +62,9 @@ export default function CaloriesGoalCard( {savedGoal} : {savedGoal : number}) {
             variant="outline"
             size="icon"
             className="h-8 w-8 shrink-0 rounded-full"
+            onMouseLeave={timeoutClear}
+            onMouseUp={timeoutClear}
+            onMouseDown={() => onMouseHold(10)}
             onClick={() => onClick(10)}
           >
             <Plus />

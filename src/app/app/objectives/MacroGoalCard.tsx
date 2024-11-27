@@ -1,7 +1,6 @@
 "use client"
 
-import * as React from "react"
-import { useState } from "react"
+import React, { useState, useRef } from "react";
 import { Minus, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,16 +22,47 @@ function MacroGoalCard(
     const [carbsGoal, setCarbsGoal] = useState(savedCarbsGoal)
     const [fatsGoal, setFatsGoal] = useState(savedFatsGoal)
 
-    function onClickProteins(adjustment: number) {
-    setProteinsGoal(Math.max(0, proteinsGoal + adjustment));
-    }
+    function onClick(adjustment: number,macro : string) {
+        if(macro === "proteins"){
+            // @ts-ignore
+            setProteinsGoal(Math.max(0, proteinsGoal + adjustment));
+        }
+        if(macro === "carbs"){
+            // @ts-ignore
+            setCarbsGoal(Math.max(0, carbsGoal + adjustment));
+        }
+        if(macro === "fats"){
+            // @ts-ignore
+            setFatsGoal(Math.max(0, fatsGoal + adjustment));
+        }
+        else{
+            return
+        }
+      };
 
-    function onClickCarbs(adjustment: number) {
-    setCarbsGoal(Math.max(0, carbsGoal + adjustment));
-    }
+    //Handles mouse hold, using a "timer" as Ref with useRef hook to keep track of the count accross renders//
+    const timer = useRef(0);
 
-    function onClickFats(adjustment: number) {
-    setFatsGoal(Math.max(0, fatsGoal + adjustment));
+    function onMouseHold(adjustment: number,macro : string) {
+        if(macro === "proteins"){
+            // @ts-ignore
+            timer.current = setInterval(() => setProteinsGoal(prev => prev + adjustment), 200);
+        }
+        if(macro === "carbs"){
+            // @ts-ignore
+            timer.current = setInterval(() => setCarbsGoal(prev => prev + adjustment), 200);
+        }
+        if(macro === "fats"){
+            // @ts-ignore
+            timer.current = setInterval(() => setFatsGoal(prev => prev + adjustment), 200);
+        }
+        else{
+            return
+        }
+      };
+
+    function timeoutClear() {
+        clearInterval(timer.current);
     }
 
   return (
@@ -41,14 +71,17 @@ function MacroGoalCard(
         <CardTitle className="text-base text-center md:text-left">Macronutriments Goal</CardTitle>
         <CardDescription className="hidden md:block">Set your daily macronutriments goal.</CardDescription>
       </CardHeader>
-      <CardContent className="md:py-4 pb-4 flex flex-col md:flex-row md:justify-evenly gap-4">
+      <CardContent className="md:py-4 pb-4 flex flex-col md:flex-row md:justify-evenly gap-4 md:min-w-">
         <div className="flex flex-col gap-2">
             <div className="flex items-center justify-center space-x-2">
             <Button
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClickProteins(-10)}
+                onMouseLeave={timeoutClear}
+                onMouseUp={timeoutClear}
+                onMouseDown={() => onMouseHold(-2,"proteins")}
+                onClick={() => onClick(-2, "proteins")}
                 disabled={proteinsGoal <= 0}
             >
                 <Minus />
@@ -64,7 +97,10 @@ function MacroGoalCard(
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClickProteins(10)}
+                onMouseLeave={timeoutClear}
+                onMouseUp={timeoutClear}
+                onMouseDown={() => onMouseHold(2,"proteins")}
+                onClick={() => onClick(2, "proteins")}
             >
                 <Plus />
                 <span className="sr-only">Increase</span>
@@ -77,7 +113,10 @@ function MacroGoalCard(
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClickCarbs(-10)}
+                onMouseLeave={timeoutClear}
+                onMouseUp={timeoutClear}
+                onMouseDown={() => onMouseHold(-5,"carbs")}
+                onClick={() => onClick(-5, "carbs")}
                 disabled={carbsGoal <= 0}
             >
                 <Minus />
@@ -93,7 +132,10 @@ function MacroGoalCard(
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClickCarbs(10)}
+                onMouseLeave={timeoutClear}
+                onMouseUp={timeoutClear}
+                onMouseDown={() => onMouseHold(5,"carbs")}
+                onClick={() => onClick(5, "carbs")}
             >
                 <Plus />
                 <span className="sr-only">Increase</span>
@@ -106,7 +148,10 @@ function MacroGoalCard(
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClickFats(-10)}
+                onMouseLeave={timeoutClear}
+                onMouseUp={timeoutClear}
+                onMouseDown={() => onMouseHold(-2,"fats")}
+                onClick={() => onClick(-2, "fats")}
                 disabled={fatsGoal <= 0}
             >
                 <Minus />
@@ -122,7 +167,10 @@ function MacroGoalCard(
                 variant="outline"
                 size="icon"
                 className="h-8 w-8 shrink-0 rounded-full"
-                onClick={() => onClickFats(10)}
+                onMouseLeave={timeoutClear}
+                onMouseUp={timeoutClear}
+                onMouseDown={() => onMouseHold(2,"fats")}
+                onClick={() => onClick(2,"fats")}
             >
                 <Plus />
                 <span className="sr-only">Increase</span>
