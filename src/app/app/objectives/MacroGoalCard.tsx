@@ -89,7 +89,7 @@ function MacroGoalCard(
             </Button>
             <div className="flex-1 text-center px-4">
                 <div className="text-3xl md:text-5xl font-bold tracking-tighter">{proteinsGoal}</div>
-                <div className="text-[0.70rem] uppercase text-muted-foreground">
+                <div className="text-[0.70rem] uppercase text-muted-foreground sm:mx-4">
                 Proteins/day
                 </div>
             </div>
@@ -124,7 +124,7 @@ function MacroGoalCard(
             </Button>
             <div className="flex-1 text-center px-4">
                 <div className="text-3xl md:text-5xl font-bold tracking-tighter">{carbsGoal}</div>
-                <div className="text-[0.70rem] uppercase text-muted-foreground">
+                <div className="text-[0.70rem] uppercase text-muted-foreground sm:mx-4">
                 Carbs/day
                 </div>
             </div>
@@ -159,7 +159,7 @@ function MacroGoalCard(
             </Button>
             <div className="flex-1 text-center px-4">
                 <div className="text-3xl md:text-5xl font-bold tracking-tighter">{fatsGoal}</div>
-                <div className="text-[0.70rem] uppercase text-muted-foreground">
+                <div className="text-[0.70rem] uppercase text-muted-foreground sm:mx-4">
                 Fats/day
                 </div>
             </div>
