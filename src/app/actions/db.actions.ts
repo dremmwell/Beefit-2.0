@@ -339,3 +339,10 @@ export async function deleteMeal(mealId : string) {
   }
   return
 }
+
+//----------------------------------------- Objectives CRUD operations ---------------------------------//
+
+export async function setObjective(goal : number){
+  console.log(goal);
+  return
+}

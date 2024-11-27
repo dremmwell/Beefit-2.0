@@ -24,8 +24,8 @@ export default async function Page() {
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2">Objectives</h1>
       <div className="flex gap-2 overflow-scroll no-scrollbar">
         <div className="flex flex-col gap-2 flex-1">
-          <CaloriesGoalCard savedGoal={savedObjectives.calories} />
-          <MacroGoalCard savedProteinsGoal={savedObjectives.proteins} savedCarbsGoal={savedObjectives.carbs} savedFatsGoal={savedObjectives.fats} />
+          <CaloriesGoalCard objective={savedObjectives} />
+          <MacroGoalCard objective={savedObjectives} />
         </div>
       </div>
         <Toaster />

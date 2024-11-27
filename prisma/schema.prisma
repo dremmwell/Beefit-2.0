@@ -125,10 +125,10 @@ model Meal {
 
 model Objective {
   id       String @id @default(uuid())
-  calories Int
-  proteins Float
-  carbs    Float
-  fats     Float
+  calories Int    @default(1600)
+  proteins Float  @default(120)
+  carbs    Float  @default(300)
+  fats     Float  @default(80)
 
   createdAt DateTime @default(now())
 

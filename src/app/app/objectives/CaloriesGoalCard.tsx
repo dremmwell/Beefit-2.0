@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import { Minus, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useToast } from '@/components/ui/use-toast';
 import {
   Card,
   CardContent,
@@ -11,13 +12,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { setObjective } from "@/app/actions/db.actions";
+import { Loader2 } from "lucide-react";
 
-export default function CaloriesGoalCard( {savedGoal} : {savedGoal : number}) {
+export default function CaloriesGoalCard( {objective} : {objective : any}) {
 
-  const [goal, setGoal] = useState(savedGoal)
+  const [goal, setGoal] = useState(objective.calories)
 
   function onClick(adjustment: number) {
-    setGoal(prev => prev + adjustment);
+    setGoal((prev : any) => prev + adjustment);
   }
 
   // Handles mouse hold //
@@ -29,6 +32,30 @@ export default function CaloriesGoalCard( {savedGoal} : {savedGoal : number}) {
 
   function timeoutClear() {
     clearInterval(timer.current);
+  }
+
+  // --------------- Saving Objective to DB ----------------//
+
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast()
+
+  async function onSave() {
+    setLoading(true)
+    objective.calories = goal;
+    try {
+      await setObjective(objective);
+      toast({
+        title: `New Caloric Objective set!`,
+        description: `Your new objective is ${objective.calories} calories a day.`,
+      });
+
+    }
+    catch (error) {
+      console.log(error)
+    }
+    finally {
+      setLoading(false)
+      }
   }
 
   return (
@@ -73,7 +100,12 @@ export default function CaloriesGoalCard( {savedGoal} : {savedGoal : number}) {
         </div>
       </CardContent>
       <CardFooter className="md:pt-2">
-        <Button className="mx-auto w-5/6 md:w-4/6">Set Calories Goal</Button>
+        <Button disabled={loading} onClick={onSave} className="mx-auto w-5/6 md:w-4/6">
+        {loading && (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+        )}
+        Set Calories Goal
+        </Button>
       </CardFooter>
     </Card>
   )

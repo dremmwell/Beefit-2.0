@@ -11,16 +11,15 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { setObjective } from "@/app/actions/db.actions";
+import { useToast } from '@/components/ui/use-toast';
+import { Loader2 } from "lucide-react";
 
-function MacroGoalCard(
-{savedProteinsGoal, savedCarbsGoal, savedFatsGoal} 
-:
-{savedProteinsGoal : number, savedCarbsGoal : number, savedFatsGoal : number}) 
-{
+function MacroGoalCard({objective} : {objective : any}) {
 
-    const [proteinsGoal, setProteinsGoal] = useState(savedProteinsGoal)
-    const [carbsGoal, setCarbsGoal] = useState(savedCarbsGoal)
-    const [fatsGoal, setFatsGoal] = useState(savedFatsGoal)
+    const [proteinsGoal, setProteinsGoal] = useState(objective.proteins)
+    const [carbsGoal, setCarbsGoal] = useState(objective.carbs)
+    const [fatsGoal, setFatsGoal] = useState(objective.fats)
 
     function onClick(adjustment: number,macro : string) {
         if(macro === "proteins"){
@@ -63,6 +62,32 @@ function MacroGoalCard(
 
     function timeoutClear() {
         clearInterval(timer.current);
+    }
+
+    // --------------- Saving Objective to DB ----------------//
+
+   const [loading, setLoading] = useState(false);
+   const { toast } = useToast()
+
+    async function onSave() {
+        setLoading(true)
+        objective.proteins = proteinsGoal;
+        objective.carbs = carbsGoal;
+        objective.fats = fatsGoal;
+        try {
+            await         setObjective(objective)
+            toast({
+                title: `New Macronutriments objectives set!`,
+                description: `Your new objectives are ${objective.proteins} grams of proteins, ${objective.carbs} grams of carbs and ${objective.fats} grams of fats a day.`,
+            }); 
+        
+            }
+            catch (error) {
+            console.log(error)
+            }
+            finally {
+            setLoading(false)
+            }
     }
 
   return (
@@ -179,7 +204,12 @@ function MacroGoalCard(
         </div>
       </CardContent>
       <CardFooter className="md:pt-4">
-        <Button className="mx-auto w-full md:w-5/6">Set Macronutriments Goals</Button>  
+        <Button disabled={loading} onClick={onSave} className="mx-auto w-full md:w-5/6">
+        {loading && (
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+        )}
+        Set Macronutriments Goals
+        </Button>  
       </CardFooter>
     </Card>
   )
