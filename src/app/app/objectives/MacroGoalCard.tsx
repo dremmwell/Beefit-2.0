@@ -75,7 +75,7 @@ function MacroGoalCard({objective} : {objective : any}) {
         objective.carbs = carbsGoal;
         objective.fats = fatsGoal;
         try {
-            await         setObjective(objective)
+            await setObjective(objective)
             toast({
                 title: `New Macronutriments objectives set!`,
                 description: `Your new objectives are ${objective.proteins} grams of proteins, ${objective.carbs} grams of carbs and ${objective.fats} grams of fats a day.`,
@@ -113,7 +113,7 @@ function MacroGoalCard({objective} : {objective : any}) {
                 <span className="sr-only">Decrease</span>
             </Button>
             <div className="flex-1 text-center px-4">
-                <div className="text-3xl md:text-5xl font-bold tracking-tighter">{proteinsGoal}</div>
+                <div className="text-3xl md:text-4xl font-bold tracking-tighter">{proteinsGoal}</div>
                 <div className="text-[0.70rem] uppercase text-muted-foreground sm:mx-4">
                 Proteins/day
                 </div>
@@ -148,7 +148,7 @@ function MacroGoalCard({objective} : {objective : any}) {
                 <span className="sr-only">Decrease</span>
             </Button>
             <div className="flex-1 text-center px-4">
-                <div className="text-3xl md:text-5xl font-bold tracking-tighter">{carbsGoal}</div>
+                <div className="text-3xl md:text-4xl font-bold tracking-tighter">{carbsGoal}</div>
                 <div className="text-[0.70rem] uppercase text-muted-foreground sm:mx-4">
                 Carbs/day
                 </div>
@@ -183,7 +183,7 @@ function MacroGoalCard({objective} : {objective : any}) {
                 <span className="sr-only">Decrease</span>
             </Button>
             <div className="flex-1 text-center px-4">
-                <div className="text-3xl md:text-5xl font-bold tracking-tighter">{fatsGoal}</div>
+                <div className="text-3xl md:text-4xl font-bold tracking-tighter">{fatsGoal}</div>
                 <div className="text-[0.70rem] uppercase text-muted-foreground sm:mx-4">
                 Fats/day
                 </div>

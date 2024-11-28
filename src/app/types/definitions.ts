@@ -59,10 +59,3 @@ export type MealValues = {
     fats: number;   
     description: string ;
 }
-
-export type Objective = {
-    calories : number,
-    proteins : number,
-    carbs : number,
-    fats : number,
-}

@@ -1,0 +1,15 @@
+-- CreateTable
+CREATE TABLE "Objective" (
+    "id" TEXT NOT NULL,
+    "calories" INTEGER NOT NULL DEFAULT 1600,
+    "proteins" DOUBLE PRECISION NOT NULL DEFAULT 120,
+    "carbs" DOUBLE PRECISION NOT NULL DEFAULT 300,
+    "fats" DOUBLE PRECISION NOT NULL DEFAULT 80,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "Objective_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "Objective" ADD CONSTRAINT "Objective_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

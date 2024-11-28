@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { setObjective } from "@/app/actions/db.actions";
+import { seedDB, setObjective } from "@/app/actions/db.actions";
 import { Loader2 } from "lucide-react";
 
 export default function CaloriesGoalCard( {objective} : {objective : any}) {
@@ -80,7 +80,7 @@ export default function CaloriesGoalCard( {objective} : {objective : any}) {
             <span className="sr-only">Decrease</span>
           </Button>
           <div className="flex-1 text-center">
-            <div className="text-3xl md:text-5xl font-bold tracking-tighter">{goal}</div>
+            <div className="text-3xl md:text-4xl font-bold tracking-tighter">{goal}</div>
             <div className="text-[0.70rem] uppercase text-muted-foreground">
               Calories/day
             </div>

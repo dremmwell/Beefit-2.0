@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import CaloriesGoalCard from "./CaloriesGoalCard";
 import { Toaster } from "@/components/ui/toaster";
 import MacroGoalCard from "./MacroGoalCard";
+import { getLatestObjective } from "@/app/actions/db.actions";
 
 export default async function Page() { 
 
@@ -12,20 +13,16 @@ export default async function Page() {
     return redirect("/")
   }
 
-  const savedObjectives = {
-    calories : 2200,
-    proteins : 150,
-    carbs: 350,
-    fats: 80
-  }
-  
+  const objectives = await getLatestObjective(user.id);
+  const objective = objectives[0];
+ 
   return (
     <div className="container sm:my-10 my-2 flex flex-col max-h-fit min-h-0 px-3 sm:px-10">
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2">Objectives</h1>
       <div className="flex gap-2 overflow-scroll no-scrollbar">
         <div className="flex flex-col gap-2 flex-1">
-          <CaloriesGoalCard objective={savedObjectives} />
-          <MacroGoalCard objective={savedObjectives} />
+          <CaloriesGoalCard objective={objective} />
+          <MacroGoalCard objective={objective} />
         </div>
       </div>
         <Toaster />

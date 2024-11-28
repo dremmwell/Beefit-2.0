@@ -48,6 +48,7 @@ export function editIngredient(data: any, ingredient: Ingredient) {
       fats: data.fats,
       userId: ingredient.userId,
       bookmarked: ingredient.bookmarked,
+      customMeal: ingredient.customMeal,
       createdAt: ingredient.createdAt,
       updatedAt: new Date()
   }

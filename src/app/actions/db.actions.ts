@@ -1,11 +1,22 @@
 "use server"
 
 import db from "@/db/db";
-import { Ingredient, Recipe, RecipeIngredient, MealIngredient, Meal, MealRecipe } from '@prisma/client';
+import { Ingredient, Recipe, RecipeIngredient, MealIngredient, Meal, MealRecipe, Objective } from '@prisma/client';
 import { RecipeAndIngredients } from "../types/definitions";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
+import { boolean } from "zod";
+
+//----------------------------------------- Seeding Database ------------------------------------//
+
+export async function seedDB(userId : UserId){
+  await db.objective.create({
+    data : {
+      userId : userId
+    }
+  })
+}
 
 //----------------------------------------- Ingredients CRUD operations ------------------------------------//
 
@@ -342,7 +353,21 @@ export async function deleteMeal(mealId : string) {
 
 //----------------------------------------- Objectives CRUD operations ---------------------------------//
 
-export async function setObjective(goal : number){
-  console.log(goal);
+export async function getLatestObjective(userId : UserId){
+  const data = await db.objective.findMany({
+    where: {
+      userId: userId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 1,
+  })
+  const objective = JSON.parse(JSON.stringify(data));
+  return objective
+}
+
+export async function setObjective(objective : Objective){
+  console.log(objective);
   return
 }

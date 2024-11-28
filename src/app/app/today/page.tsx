@@ -1,13 +1,10 @@
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import MacroChart from "./MacroChart";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Timeline from "./TimeLine";
 import CaloriesChart from "./CaloriesChart";
-import { AddMealDialog } from "./AddMealDialog";
-import { RecipeAndIngredients, MealData, MealValues, Objective } from "@/app/types/definitions";
-import { Ingredient, Meal, Recipe, RecipeIngredient } from "@prisma/client";
-import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients} from "@/app/actions/db.actions";
+import { RecipeAndIngredients, MealData, MealValues } from "@/app/types/definitions";
+import { Ingredient, Objective } from "@prisma/client";
+import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients, getLatestObjective} from "@/app/actions/db.actions";
 import Diary from "./Diary";
 import { getMealValues, sumMealValues } from "@/lib/recipe_utils";
 
@@ -30,12 +27,8 @@ export default async function Page() {
 
   const todaysValues : MealValues = sumMealValues(getMealValues(todaysMeals));
 
-  const objective : Objective = {
-    calories : 2200,
-    proteins : 150,
-    carbs : 350,
-    fats : 75,
-  }
+  const objectives : Objective[] = await getLatestObjective(user.id);
+  const objective : Objective = objectives[0];
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col min-h-0 px-3 sm:px-10">

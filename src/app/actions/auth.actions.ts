@@ -7,6 +7,7 @@ import { generateId } from "lucia";
 import db from "@/db/db";
 import { lucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
+import { seedDB } from "./db.actions";
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   
@@ -21,15 +22,16 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
                 password_hash: hashedPassword
             },
           })
-        
-      const session = await lucia.createSession(userId, {})
-      const sessionCookie = lucia.createSessionCookie(session.id)
+      
+      const session = await lucia.createSession(userId, {});
+      const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
         sessionCookie.name,
         sessionCookie.value,
         sessionCookie.attributes
-      )
-  
+      );
+      await seedDB(userId);
+
       return {
         success: true,
         data: {
