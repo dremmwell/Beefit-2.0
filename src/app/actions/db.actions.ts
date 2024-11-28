@@ -6,7 +6,6 @@ import { RecipeAndIngredients } from "../types/definitions";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
-import { boolean } from "zod";
 
 //----------------------------------------- Seeding Database ------------------------------------//
 
@@ -367,7 +366,50 @@ export async function getLatestObjective(userId : UserId){
   return objective
 }
 
-export async function setObjective(objective : Objective){
-  console.log(objective);
-  return
+export async function updateOrCreateObjective(objective : Objective) {
+  const { user } = await validateRequest()
+
+  const today = new Date();
+  const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
+  
+  // Find the record for today's date
+  if(user){
+    const existingRecord = await db.objective.findMany({
+      where: {
+        userId: user?.id,
+        createdAt: {
+          gte: startDate.toISOString(),
+          lt: endDate.toISOString()
+        }
+      },
+      orderBy: { createdAt: 'desc' } 
+    });
+    console.log(existingRecord)
+    if (existingRecord[0]) {
+      // Update the record if it exists
+      await db.objective.update({
+        where: { id: existingRecord[0].id },
+        data: {
+          calories: objective.calories,
+          proteins: objective.proteins,
+          carbs: objective.carbs,
+          fats: objective.fats,
+          userId: user.id,
+        },
+      });
+    } else {
+      // Create a new record if no existing one is found
+      await db.objective.create({
+        data: {
+          calories: objective.calories,
+          proteins: objective.proteins,
+          carbs: objective.carbs,
+          fats: objective.fats,
+          userId: user.id,
+        },
+      });
+    }
+    revalidatePath('/app/objectives')
+  }
 }

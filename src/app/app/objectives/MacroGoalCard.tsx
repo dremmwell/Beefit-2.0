@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { setObjective } from "@/app/actions/db.actions";
+import { updateOrCreateObjective } from "@/app/actions/db.actions";
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from "lucide-react";
 
@@ -75,7 +75,7 @@ function MacroGoalCard({objective} : {objective : any}) {
         objective.carbs = carbsGoal;
         objective.fats = fatsGoal;
         try {
-            await setObjective(objective)
+            await updateOrCreateObjective(objective)
             toast({
                 title: `New Macronutriments objectives set!`,
                 description: `Your new objectives are ${objective.proteins} grams of proteins, ${objective.carbs} grams of carbs and ${objective.fats} grams of fats a day.`,

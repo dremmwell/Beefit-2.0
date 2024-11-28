@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { seedDB, setObjective } from "@/app/actions/db.actions";
+import { seedDB, updateOrCreateObjective } from "@/app/actions/db.actions";
 import { Loader2 } from "lucide-react";
 
 export default function CaloriesGoalCard( {objective} : {objective : any}) {
@@ -37,13 +37,13 @@ export default function CaloriesGoalCard( {objective} : {objective : any}) {
   // --------------- Saving Objective to DB ----------------//
 
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   async function onSave() {
     setLoading(true)
     objective.calories = goal;
     try {
-      await setObjective(objective);
+      await updateOrCreateObjective(objective);
       toast({
         title: `New Caloric Objective set!`,
         description: `Your new objective is ${objective.calories} calories a day.`,
