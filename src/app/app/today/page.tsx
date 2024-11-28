@@ -6,7 +6,7 @@ import { RecipeAndIngredients, MealData, MealValues } from "@/app/types/definiti
 import { Ingredient, Objective } from "@prisma/client";
 import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients, getLatestObjective} from "@/app/actions/db.actions";
 import Diary from "./Diary";
-import { getMealValues, sumMealValues } from "@/lib/recipe_utils";
+import { getMealValues, sumMealValues } from "@/lib/meal_utils";
 
 export default async function Page() { 
 

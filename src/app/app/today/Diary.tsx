@@ -9,7 +9,7 @@ import { RecipeAndIngredients, MealData, MealValues, TimeLineMeal } from '@/app/
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
-import { getMealValues } from '@/lib/recipe_utils';
+import { getMealValues } from '@/lib/meal_utils';
 
 function Diary({ 
     meals,

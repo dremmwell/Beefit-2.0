@@ -36,7 +36,8 @@ export type TimeLineMeal = {
     title: string,
     calories: number,
     description: string,
-    mealId: string
+    mealId: string,
+    userId: string,
 }
 
 export type MealData = {
@@ -58,4 +59,5 @@ export type MealValues = {
     carbs: number;
     fats: number;   
     description: string ;
+    userId : string
 }

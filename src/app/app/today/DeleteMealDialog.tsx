@@ -1,8 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 
-import { Button } from '@/components/ui/button';
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -35,7 +33,7 @@ export default function DeleteMealDialog({
   const onDelete = async () => {
     setLoading(true)
     try {
-      await deleteMeal(meal.mealId)
+      await deleteMeal(meal.mealId, meal.userId)
       toast({
         title: `Meal deleted`,
         description: ` Your new meal have been removed from your diary.`,

@@ -334,18 +334,20 @@ export async function createMealFromRecipe(meal: Meal, mealRecipe : Array<MealRe
   return
 }
 
-export async function deleteMeal(mealId : string) {
+export async function deleteMeal(mealId : string, userId: string) {
   const { user } = await validateRequest()
   if(user){
-    const mealIdArray : Array<string> = mealId.split('/') 
-      await db.meal.deleteMany({
-        where: {
-          id: {
-              in: mealIdArray
+    if(user.id === userId){
+      const mealIdArray : Array<string> = mealId.split('/') 
+        await db.meal.deleteMany({
+          where: {
+            id: {
+                in: mealIdArray
+            }
           }
-        }
-      })
-    revalidatePath('/app/today')
+        })
+      revalidatePath('/app/today')
+    }
   }
   return
 }

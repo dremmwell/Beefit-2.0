@@ -15,12 +15,14 @@ export default function Timeline({ meals, isGrouped }:{ meals : Array<MealValues
         title: "",
         calories: 0,
         description: "",
-        mealId: ""
+        mealId: "",
+        userId:""
     };
     timeLineItem.title = meal.mealType;
     timeLineItem.calories = meal.calories;
     timeLineItem.mealId = meal.mealId;
     timeLineItem.description = meal.description;
+    timeLineItem.userId = meal.userId;
     timeLineItems.push(timeLineItem);
     })
 
@@ -34,7 +36,8 @@ export default function Timeline({ meals, isGrouped }:{ meals : Array<MealValues
         }
         groupedItems[item.title].calories += +item.calories;
         groupedItems[item.title].mealId += item.mealId + "/";
-        groupedItems[item.title].description += item.description + "\n"
+        groupedItems[item.title].description += item.description + "\n";
+        groupedItems[item.title].userId = item.userId;
         return acc;
     }, {});
     // Create a timeline array from the sorted object //
@@ -42,7 +45,8 @@ export default function Timeline({ meals, isGrouped }:{ meals : Array<MealValues
         title: item.title,
         mealId: item.mealId,
         calories: item.calories,
-        description: item.description
+        description: item.description,
+        userId: item.userId,
     }));
     return [timeLineItems, timelineItemsGrouped]
   }
