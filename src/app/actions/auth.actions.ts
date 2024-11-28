@@ -47,47 +47,51 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
 
 export const logIn = async (value: z.infer<typeof LogInSchema>) => {
 
-  const existingUser = await db.user.findUnique({
-    where: {
-      username: value.username,
-    },
-  });
-
-  if (!existingUser) {
+  try{
+    const existingUser = await db.user.findUnique({
+      where: {
+        username: value.username,
+      },
+    });
+  
+    if (!existingUser) {
+      return {
+        error: "User not found",
+      };
+    }
+  
+    if(!existingUser.password_hash){
+      return {
+        error: "User not found",
+      };
+    }
+  
+    const validPassword = await argon2.verify(
+      existingUser.password_hash,
+      value.password
+    )
+  
+    if(!validPassword) {
+      return {
+        error: "Incorrect username or password"
+      }
+    }
+  
+    const session = await lucia.createSession(existingUser.id, {})
+    const sessionCookie = lucia.createSessionCookie(session.id)
+    cookies().set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    )
+  
     return {
-      error: "User not found",
-    };
-  }
-
-  if(!existingUser.password_hash){
-    return {
-      error: "User not found",
-    };
-  }
-
-  const validPassword = await argon2.verify(
-    existingUser.password_hash,
-    value.password
-  )
-
-  if(!validPassword) {
-    return {
-      error: "Incorrect username or password"
+      success: "Logged in sucessfully",
     }
   }
-
-  const session = await lucia.createSession(existingUser.id, {})
-  const sessionCookie = lucia.createSessionCookie(session.id)
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes
-  )
-
-  return {
-    success: "Logged in sucessfully",
+  catch(error){
+    console.log(error)
   }
-
 }
 
 export const signOut = async () => {
