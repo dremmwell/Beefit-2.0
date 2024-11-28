@@ -387,7 +387,6 @@ export async function updateOrCreateObjective(objective : Objective) {
       },
       orderBy: { createdAt: 'desc' } 
     });
-    console.log(existingRecord)
     if (existingRecord[0]) {
       // Update the record if it exists
       await db.objective.update({

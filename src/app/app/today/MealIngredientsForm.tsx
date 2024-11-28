@@ -151,20 +151,25 @@ export default function MealIngredientsForm<TData, TValue>({
 
   async function onSubmit (formValues: z.infer<typeof MealIngredientSchema>) {
 
-    //Handles data formatting and db storing //
-    const meal = createNewMeal(formValues);
-    const mealIngredientArray = createIngredientArray(formValues, meal);
-    await createMealFromIngredients(meal, mealIngredientArray);
-    
-    toast({
-      title: `Meal saved`,
-      description: ` A new meal have been added to your diary.`,
-    });
+    try{
+      //Handles data formatting and db storing //
+      const meal = createNewMeal(formValues);
+      const mealIngredientArray = createIngredientArray(formValues, meal);
+      await createMealFromIngredients(meal, mealIngredientArray);
+      
+      toast({
+        title: `Meal saved`,
+        description: ` A new meal have been added to your diary.`,
+      });
 
-    // Handles form reset and close //
-    remove();
-    form.reset();
-    onSave();
+      // Handles form reset and close //
+      remove();
+      form.reset();
+      onSave();
+    }
+    catch(error){
+      console.log(error)
+    }
   };
 
   //--------------------------- Handles Row Selection and display -------------------------//

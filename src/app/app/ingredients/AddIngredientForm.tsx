@@ -82,15 +82,20 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
    
     // Handles submit and data save
     async function onSubmit(values: z.infer<typeof AddIngredientFormSchema>) {
-      const newIngredient = createNewIngredient(values);
-      form.reset();
-      await createIngredient(newIngredient);
-      toast({
-        title: `Ingredient "${newIngredient.name}" saved`,
-        description: `${newIngredient.name} have been added to the database.`,
-    });
-      onSave();
-    }
+        try{
+            const newIngredient = createNewIngredient(values);
+            form.reset();
+            await createIngredient(newIngredient);
+            toast({
+              title: `Ingredient "${newIngredient.name}" saved`,
+              description: `${newIngredient.name} have been added to the database.`,
+          });
+            onSave();
+        }
+        catch(error){
+            console.log(error)
+        }
+    }  
 
     return (
         <Form {...form}>

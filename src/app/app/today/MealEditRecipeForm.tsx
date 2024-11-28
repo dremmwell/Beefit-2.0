@@ -176,30 +176,35 @@ export default function MealEditRecipeForm<TData, TValue>({
 
   async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
 
-    // Handles data formatting and db storing //
-    const newRecipe = createNewRecipe(formValues);
-    const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
-    const newRecipeAndIngredients : RecipeAndIngredients = {
-       id : newRecipe.id,
-       name: newRecipe.name,
-       bookmarked: newRecipe.bookmarked,
-       instructions : newRecipe.instructions,
-       createdAt: newRecipe.createdAt,
-       updatedAt: newRecipe.updatedAt,
-       userId: newRecipe.userId,
-       isOriginal: newRecipe.isOriginal,
-       ingredients : recipeIngredientArray
-    }
-    await createRecipe(newRecipe, recipeIngredientArray);
-    toast({
-      title: `Recipe "${recipe.name}" edited for today's meal`,
-      description: ` A ${newRecipe.name} recipe variant have been saved on the database.`,
-    });
+    try{
+      // Handles data formatting and db storing //
+      const newRecipe = createNewRecipe(formValues);
+      const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
+      const newRecipeAndIngredients : RecipeAndIngredients = {
+        id : newRecipe.id,
+        name: newRecipe.name,
+        bookmarked: newRecipe.bookmarked,
+        instructions : newRecipe.instructions,
+        createdAt: newRecipe.createdAt,
+        updatedAt: newRecipe.updatedAt,
+        userId: newRecipe.userId,
+        isOriginal: newRecipe.isOriginal,
+        ingredients : recipeIngredientArray
+      }
+      await createRecipe(newRecipe, recipeIngredientArray);
+      toast({
+        title: `Recipe "${recipe.name}" edited for today's meal`,
+        description: ` A ${newRecipe.name} recipe variant have been saved on the database.`,
+      });
 
-    // Handles form reset and close //
-    remove();
-    form.reset();
-    onSave(newRecipeAndIngredients);
+      // Handles form reset and close //
+      remove();
+      form.reset();
+      onSave(newRecipeAndIngredients);
+    }
+    catch(error){
+      console.log(error)
+    }
   };
 
 //--------------------------------------Handles displaying the recipe ingredients in the form to be edited ---------------------------------------//

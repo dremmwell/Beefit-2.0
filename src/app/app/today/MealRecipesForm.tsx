@@ -156,22 +156,26 @@ export default function MealRecipeForm<TData, TValue>({
 
   async function onSubmit (formValues: z.infer<typeof MealRecipeSchema>) {
 
-    //Handles data formatting and db storing //
-    if(selectedRecipe){
-      const meal = createNewMeal(formValues);
-      const mealRecipes = createNewMealFromRecipe(formValues, selectedRecipe, meal);
-      await createMealFromRecipe(meal, mealRecipes)
-    }
-    
-    toast({
-      title: `Meal saved`,
-      description: ` A new meal have been added to your diary.`,
-    });
+    try{
+      //Handles data formatting and db storing //
+      if(selectedRecipe){
+        const meal = createNewMeal(formValues);
+        const mealRecipes = createNewMealFromRecipe(formValues, selectedRecipe, meal);
+        await createMealFromRecipe(meal, mealRecipes)
+      }
+      toast({
+        title: `Meal saved`,
+        description: ` A new meal have been added to your diary.`,
+      });
 
-    // Handles form reset and close //
-    remove();
-    form.reset();
-    onSave();
+      // Handles form reset and close //
+      remove();
+      form.reset();
+      onSave();
+    }
+    catch(error){
+      console.log(error)
+    }
   };
 
 //----------------------------------- Recipe Selection and display ------------------------------//

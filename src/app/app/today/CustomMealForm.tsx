@@ -1,29 +1,6 @@
 "use client"
 
 import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getSortedRowModel,
-  SortingState,
-  ColumnFiltersState,
-  getFilteredRowModel,
-  VisibilityState,
-  RowSelectionState,
-  CoreRow,
-  Row
-} from "@tanstack/react-table"
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -40,25 +17,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { useEffect } from "react"
-import IconMenu from "@/components/icon-menu"
-import { Trash2 } from "lucide-react"
-import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
-import { useState } from "react"
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { CustomMealSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
 import { Ingredient, Meal, MealRecipe } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
-import MealEditRecipeDialog from "./MealEditRecipeDialog"
-import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions"
-import { createMealFromRecipe } from "@/app/actions/db.actions"
 import { Loader2 } from "lucide-react"
 
 interface CustomMealForm<TData, TValue> {
@@ -102,17 +70,21 @@ export default function CustomMealForm<TData, TValue>({
 
   async function onSubmit (formValues: z.infer<typeof CustomMealSchema>) {
 
-    //Handles data formatting and db storing //
-
-    
-    toast({
+    try{
+      //Handles data formatting and db storing //
+     toast({
       title: `Meal saved`,
       description: ` A new meal have been added to your diary.`,
-    });
+      });
 
-    // Handles form reset and close //
-    form.reset();
-    onSave();
+      // Handles form reset and close //
+      form.reset();
+      onSave();
+    }
+    catch(error){
+      console.log(error)
+    }
+
   };
 
   //---------------------------------- Component Layout ----------------------------//

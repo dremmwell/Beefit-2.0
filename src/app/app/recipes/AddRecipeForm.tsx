@@ -162,20 +162,24 @@ export default function AddRecipeForm<TData, TValue>({
   let isSubmitting : boolean = form.formState.isSubmitting;
  
   async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
+    try{
+        //Handles data formatting and db storing //
+        const recipe = createNewRecipe(formValues);
+        const recipeIngredientArray = createNewRecipeIngredientArray(formValues, recipe);
+        await createRecipe(recipe, recipeIngredientArray);
+        toast({
+          title: `Recipe "${recipe.name}" saved`,
+          description: ` ${recipe.name} have been added to the database.`,
+        });
 
-    //Handles data formatting and db storing //
-    const recipe = createNewRecipe(formValues);
-    const recipeIngredientArray = createNewRecipeIngredientArray(formValues, recipe);
-    await createRecipe(recipe, recipeIngredientArray);
-    toast({
-      title: `Recipe "${recipe.name}" saved`,
-      description: ` ${recipe.name} have been added to the database.`,
-    });
-
-    // Handles form reset and close //
-    remove();
-    form.reset();
-    onSave();
+        // Handles form reset and close //
+        remove();
+        form.reset();
+        onSave();
+    }
+    catch(error){
+      console.log(error)
+    }
   };
 
   function handlesRowSelect(row : Row<TData>) {

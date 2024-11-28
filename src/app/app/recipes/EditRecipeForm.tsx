@@ -165,20 +165,25 @@ export default function EditRecipeForm<TData, TValue>({
   const { toast } = useToast()
 
   async function onSubmit (formValues: z.infer<typeof AddRecipeFormSchema>) {
+    
+    try{
+      // Handles data formatting and db storing //
+      const newRecipe = createNewRecipe(formValues,recipe);
+      const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
+      await updateRecipe(newRecipe, recipeIngredientArray);
+      toast({
+        title: `Recipe "${recipe.name}" edited`,
+        description: ` ${newRecipe.name} have been updated on the database.`,
+      });
 
-    // Handles data formatting and db storing //
-    const newRecipe = createNewRecipe(formValues,recipe);
-    const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
-    await updateRecipe(newRecipe, recipeIngredientArray);
-    toast({
-      title: `Recipe "${recipe.name}" edited`,
-      description: ` ${newRecipe.name} have been updated on the database.`,
-    });
-
-    // Handles form reset and close //
-    remove();
-    form.reset();
-    onSave();
+      // Handles form reset and close //
+      remove();
+      form.reset();
+      onSave();
+    }
+    catch(error){
+      console.log(error)
+    }
   };
 
 //--------------------------------------Handles displaying the recipe ingredients in the form to be edited ---------------------------------------//

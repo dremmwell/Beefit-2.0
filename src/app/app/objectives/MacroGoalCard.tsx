@@ -23,15 +23,12 @@ function MacroGoalCard({objective} : {objective : any}) {
 
     function onClick(adjustment: number,macro : string) {
         if(macro === "proteins"){
-            // @ts-ignore
             setProteinsGoal(Math.max(0, proteinsGoal + adjustment));
         }
         if(macro === "carbs"){
-            // @ts-ignore
             setCarbsGoal(Math.max(0, carbsGoal + adjustment));
         }
         if(macro === "fats"){
-            // @ts-ignore
             setFatsGoal(Math.max(0, fatsGoal + adjustment));
         }
         else{
