@@ -84,8 +84,8 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
     async function onSubmit(values: z.infer<typeof AddIngredientFormSchema>) {
         try{
             const newIngredient = createNewIngredient(values);
-            form.reset();
             await createIngredient(newIngredient);
+
             toast({
               title: `Ingredient "${newIngredient.name}" saved`,
               description: `${newIngredient.name} have been added to the database.`,
@@ -95,6 +95,7 @@ export function AddIngredientForm ({ onSave } : AddRecipeFormProps ) {
         catch(error){
             console.log(error)
         }
+        form.reset();
     }  
 
     return (

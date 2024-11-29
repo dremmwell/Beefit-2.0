@@ -189,38 +189,14 @@ export const MealRecipeSchema = z.object({
 })
 
 export const CustomMealSchema = z.object({
-  mealType: z.string(),
-  description: z.string().optional(),
-  calories: z.union([
-    z.coerce
-        .number()
-        .positive({
-            message: "must be positive",
-        }),
-    z.literal("")
-]),
-proteins: z.union([
-    z.coerce
-        .number()
-        .positive({
-            message: "must be positive",
-        }),
-    z.literal("")
-]),
-carbs: z.union([
-    z.coerce
-        .number()
-        .positive({
-            message: "must be positive",
-        }),
-    z.literal("")
-]),
-fats: z.union([
-    z.coerce
-        .number()
-        .positive({
-            message: "must be positive",
-        }),
-    z.literal("")
-]),
+  mealType: z.string().min(2, {
+    message: "Meal name must be at least 2 characters.",
+  }).max(40,{
+    message: "Meal name must be at most 40 characters."
+  }),
+  description: z.string(),
+  calories:  z.coerce.number().positive({message: "must be positive"}),
+  proteins: z.coerce.number().positive({message: "must be positive"}),
+  carbs: z.coerce.number().positive({message: "must be positive"}),
+  fats:  z.coerce.number().positive({message: "must be positive"})
 })

@@ -107,7 +107,6 @@ export default function MealIngredientsForm<TData, TValue>({
       meal: "Snack",
       ingredients: []
     }
-    
   })
 
   const { fields, append, remove } = useFieldArray({
@@ -298,6 +297,7 @@ export default function MealIngredientsForm<TData, TValue>({
                           <Input 
                           {...field} 
                           className="w-[100px] justify-end"
+                          type="number"
                           placeholder="Quantity..."
                           required
                           />
