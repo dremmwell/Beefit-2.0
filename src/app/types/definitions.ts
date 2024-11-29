@@ -53,7 +53,6 @@ export type MealData = {
 export type MealValues = {
     mealId: string,
     mealType: string,    
-    weight: number;
     calories: number;
     proteins: number;
     carbs: number;

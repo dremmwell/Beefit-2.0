@@ -17,6 +17,9 @@ model User {
   recipes     Recipe[]
   meal        Meal[]
   objectives  Objective[]
+
+  archivedMeal   ArchivedMeal[]
+  archivedRecipe ArchivedRecipe[]
 }
 
 model Session {
@@ -129,6 +132,37 @@ model Objective {
   proteins Float  @default(120)
   carbs    Float  @default(300)
   fats     Float  @default(80)
+
+  createdAt DateTime @default(now())
+
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+//--------------- Archived Data Models ----------------//
+
+model ArchivedMeal {
+  id          String @id @default(uuid())
+  description String
+  mealType    String
+
+  calories Float
+  proteins Float
+  carbs    Float
+  fats     Float
+
+  createdAt DateTime @default(now())
+
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+}
+
+model ArchivedRecipe {
+  id       String @id @default(uuid())
+  calories Float
+  proteins Float
+  carbs    Float
+  fats     Float
 
   createdAt DateTime @default(now())
 

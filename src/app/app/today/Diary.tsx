@@ -3,26 +3,33 @@
 import React, { useEffect } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Timeline from "./TimeLine";
-import { Ingredient, Meal } from '@prisma/client';
+import { ArchivedMeal, Ingredient, Meal } from '@prisma/client';
 import { AddMealDialog } from "./AddMealDialog";
 import { RecipeAndIngredients, MealData, MealValues, TimeLineMeal } from '@/app/types/definitions';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { useState } from 'react';
-import { getMealValues } from '@/lib/meal_utils';
+import { getArchivedMealsValues, getMealValues } from '@/lib/meal_utils';
 
 function Diary({ 
     meals,
+    archivedMeals,
     recipes,
     ingredients
 } : {
     meals : Array<MealData>,
+    archivedMeals : Array<ArchivedMeal>
     recipes : Array<RecipeAndIngredients>,
     ingredients : Array<Ingredient>
 }) {
 
     const [isGrouped, setIsGrouped] = useState(false);
+
     const mealValues : Array<MealValues> = getMealValues(meals);
+    const archivedMealValues : Array<MealValues> = getArchivedMealsValues(archivedMeals)
+
+    const mealsValues : Array<MealValues> = mealValues.concat(archivedMealValues)
+
     const today = new Date();
 
     return (
@@ -38,7 +45,7 @@ function Diary({
           <AddMealDialog recipes={recipes} ingredients={ingredients}/>
         </div>
         <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-2 md:p-4">
-            <Timeline meals={mealValues} isGrouped={isGrouped}/>
+            <Timeline meals={mealsValues} isGrouped={isGrouped}/>
         </ScrollArea>
     </div>
   )

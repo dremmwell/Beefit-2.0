@@ -2,6 +2,7 @@
 
 import { MealData, RecipeAndIngredients, RecipeValues, TimeLineMeal, MealValues } from "@/app/types/definitions";
 import { fractionToDecimal,convertRecipeFraction,convertTo100g, convertToGrams, getRecipeValues } from "./recipe_utils";
+import { ArchivedMeal } from "@prisma/client";
 
 
 export function getMealValues(meals : Array<MealData>){
@@ -9,7 +10,6 @@ export function getMealValues(meals : Array<MealData>){
 
     meals.forEach((meal) => {
         const mealValues : MealValues = {
-            weight : 0,
             calories: 0,
             proteins : 0,
             carbs: 0,
@@ -25,7 +25,7 @@ export function getMealValues(meals : Array<MealData>){
         for (let index = 0; index < meal.recipe.length; index++) {
             if(meal.recipe[index].unit == "grams"){
                 const recipeValues : RecipeValues = convertToGrams(getRecipeValues(meal.recipe[index].recipe),meal.recipe[index].quantity);
-                mealValues.weight = recipeValues.weight;
+/*                 mealValues.weight = recipeValues.weight; */
                 mealValues.calories = recipeValues.calories;
                 mealValues.proteins = recipeValues.proteins;
                 mealValues.carbs = recipeValues.carbs;
@@ -35,7 +35,7 @@ export function getMealValues(meals : Array<MealData>){
             else{
                 const ratio : number = meal.recipe[index].quantity * fractionToDecimal(meal.recipe[index].unit);
                 const recipeValues : RecipeValues = convertRecipeFraction(getRecipeValues(meal.recipe[index].recipe), ratio);
-                mealValues.weight = recipeValues.weight;
+/*                 mealValues.weight = recipeValues.weight; */
                 mealValues.calories = recipeValues.calories;
                 mealValues.proteins = recipeValues.proteins;
                 mealValues.carbs = recipeValues.carbs;
@@ -45,7 +45,7 @@ export function getMealValues(meals : Array<MealData>){
         }
         for (let index = 0; index < meal.ingredients.length; index++) {
             if(meal.ingredients[index].unit === "grams"){
-                mealValues.weight += +meal.ingredients[index].quantity;
+/*                 mealValues.weight += +meal.ingredients[index].quantity; */
                 mealValues.calories += +meal.ingredients[index].ingredient.calories * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
                 mealValues.proteins += +meal.ingredients[index].ingredient.proteins * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
                 mealValues.carbs += +meal.ingredients[index].ingredient.carbs * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
@@ -53,7 +53,7 @@ export function getMealValues(meals : Array<MealData>){
                 mealValues.description += `${meal.ingredients[index].quantity} ${meal.ingredients[index].unit} of ${meal.ingredients[index].ingredient.name} \n` 
             }
             else{
-                mealValues.weight += +meal.ingredients[index].quantity* +meal.ingredients[index].ingredient.gramsPerUnit;
+/*                 mealValues.weight += +meal.ingredients[index].quantity* +meal.ingredients[index].ingredient.gramsPerUnit; */
                 mealValues.calories += +meal.ingredients[index].ingredient.calories * meal.ingredients[index].quantity;
                 mealValues.proteins += +meal.ingredients[index].ingredient.proteins * meal.ingredients[index].quantity;
                 mealValues.carbs += +meal.ingredients[index].ingredient.carbs * meal.ingredients[index].quantity;
@@ -66,11 +66,38 @@ export function getMealValues(meals : Array<MealData>){
     return mealsValues
 }
 
+export function getArchivedMealsValues(archivedMeals : ArchivedMeal[]){
+    const mealsValues : Array<MealValues> = []
+
+    archivedMeals.forEach((meal) => {
+        const mealValues : MealValues = {
+            calories: 0,
+            proteins : 0,
+            carbs: 0,
+            fats: 0,
+            description: "",
+            userId: "",
+            mealId: "",
+            mealType: ""
+        };
+        mealValues.mealId = meal.id;
+        mealValues.description = `${meal.description} \n`
+        mealValues.mealType = meal.mealType;
+        mealValues.calories = meal.calories;
+        mealValues.proteins = meal.proteins;
+        mealValues.carbs = meal.carbs;
+        mealValues.fats = meal.fats;
+        mealValues.userId = meal.userId;
+
+        mealsValues.push(mealValues);
+    })
+    return mealsValues
+}
+
 export function sumMealValues(mealArray: MealValues[]) {
     let totalMeal : MealValues = {
         mealId: "",
         mealType: "",    
-        weight: 0,
         calories: 0,
         proteins: 0,
         carbs: 0,
@@ -80,7 +107,6 @@ export function sumMealValues(mealArray: MealValues[]) {
     }
 
     mealArray.forEach(meal => {
-        totalMeal.weight += meal.weight;
         totalMeal.calories += meal.calories;
         totalMeal.proteins += meal.proteins;
         totalMeal.carbs += meal.carbs;

@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import MacroChart from "./MacroChart";
 import CaloriesChart from "./CaloriesChart";
 import { RecipeAndIngredients, MealData, MealValues } from "@/app/types/definitions";
-import { Ingredient, Objective } from "@prisma/client";
-import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients, getLatestObjective} from "@/app/actions/db.actions";
+import { ArchivedMeal, Ingredient, Objective } from "@prisma/client";
+import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients, getLatestObjective, getMealsByPeriod, getArchivedMealsByPeriod} from "@/app/actions/db.actions";
 import Diary from "./Diary";
-import { getMealValues, sumMealValues } from "@/lib/meal_utils";
+import { getArchivedMealsValues, getMealValues, sumMealValues } from "@/lib/meal_utils";
 
 export default async function Page() { 
 
@@ -16,29 +16,45 @@ export default async function Page() {
     return redirect("/")
   }
 
+  //---------------------------Db calls for recipes and ingredients for meal forms----------------------------------//
+
   const originalRecipes : Array<RecipeAndIngredients> = await getRecipesAndIngredients(user.id);
   const variantRecipes : Array<RecipeAndIngredients> = await getVariantRecipesAndIngredients(user.id);
   const recipes : Array<RecipeAndIngredients> = originalRecipes.concat(variantRecipes);
 
   const ingredients :Array<Ingredient> = await getIngredients(user.id);
 
+  //---------------------------Db calls for meals and custom meals for todays date----------------------------------//
+
   const today = new Date();
-  const todaysMeals : Array<MealData> = await getMealsByDate(user.id,today);
+  const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1)
 
-  const todaysValues : MealValues = sumMealValues(getMealValues(todaysMeals));
+  //Get Meals and custom ("archived") meals from DB//
+  const todaysMeals : Array<MealData> = await getMealsByPeriod(user.id, startDate, endDate);
+  const todaysArchivedMeals : Array<ArchivedMeal> = await getArchivedMealsByPeriod(user.id, startDate, endDate);
 
-  const objectives : Objective[] = await getLatestObjective(user.id);
-  const objective : Objective = objectives[0];
+  //Extract nutritional values from each meals and merge the 2 arrays//
+  const todaysMealValues : MealValues[] = getMealValues(todaysMeals)
+  const todaysArchivedMealValues : MealValues[] = getArchivedMealsValues(todaysArchivedMeals)
+  const todaysValues : MealValues[] = todaysMealValues.concat(todaysArchivedMealValues)
+
+  //Sums all meals values to get todays nutritional values//
+  const todaysValuesSum : MealValues = sumMealValues(todaysValues);
+
+  //---------------------------Db calls for the lastest objective----------------------------------//
+  const objectives : Objective[] = await getLatestObjective(user.id); //due to the "findmany" fucntion on DB call, the promise returns an array of 1 item
+  const objective : Objective = objectives[0];                        //get the only object of the array of one object
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col min-h-0 px-3 sm:px-10">
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Today</h1>
       <div className="flex flex-col xl:flex-row  gap-4 max-h-fit min-h-0 my-4 lg:mx-12">
           <div className="flex flex-col md:flex-row xl:flex-col md:gap-4 gap-2">
-            <CaloriesChart values={todaysValues} objective={objective}/>
-            <MacroChart values={todaysValues} objective={objective}/>
+            <CaloriesChart values={todaysValuesSum} objective={objective}/>
+            <MacroChart values={todaysValuesSum} objective={objective}/>
           </div>
-           <Diary meals={todaysMeals} recipes={recipes} ingredients={ingredients}/>
+           <Diary meals={todaysMeals} archivedMeals={todaysArchivedMeals} recipes={recipes} ingredients={ingredients}/>
       </div>
     </div>
   )
