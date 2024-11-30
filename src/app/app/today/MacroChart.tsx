@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState, createRef } from "react";
-import { MealData, MealValues, Objective } from "@/app/types/definitions";
+import { MealData, MealValues } from "@/app/types/definitions";
+import { Objective } from "@prisma/client";
 import {
   Card,
   CardContent,

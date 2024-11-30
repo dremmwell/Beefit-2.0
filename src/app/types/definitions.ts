@@ -58,5 +58,6 @@ export type MealValues = {
     carbs: number;
     fats: number;   
     description: string ;
-    userId : string
+    userId : string;
+    createdAt : Date;
 }

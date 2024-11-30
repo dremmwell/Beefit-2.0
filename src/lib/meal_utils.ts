@@ -17,11 +17,13 @@ export function getMealValues(meals : Array<MealData>){
             description: "",
             userId: "",
             mealId: "",
-            mealType: ""
+            mealType: "",
+            createdAt: "",
         };
         mealValues.mealId = meal.id;
         mealValues.mealType = meal.mealType;
         mealValues.userId = meal.userId;
+        mealValues.createdAt = meal.createdAt;
         for (let index = 0; index < meal.recipe.length; index++) {
             if(meal.recipe[index].unit == "grams"){
                 const recipeValues : RecipeValues = convertToGrams(getRecipeValues(meal.recipe[index].recipe),meal.recipe[index].quantity);
@@ -78,7 +80,8 @@ export function getArchivedMealsValues(archivedMeals : ArchivedMeal[]){
             description: "",
             userId: "",
             mealId: "",
-            mealType: ""
+            mealType: "",
+            createdAt: "",
         };
         mealValues.mealId = meal.id;
         mealValues.description = `${meal.description} \n`
@@ -88,6 +91,7 @@ export function getArchivedMealsValues(archivedMeals : ArchivedMeal[]){
         mealValues.carbs = meal.carbs;
         mealValues.fats = meal.fats;
         mealValues.userId = meal.userId;
+        mealValues.createdAt = meal.createdAt;
 
         mealsValues.push(mealValues);
     })
@@ -104,6 +108,7 @@ export function sumMealValues(mealArray: MealValues[]) {
         fats: 0,   
         description: "",
         userId :"",
+        createdAt: "",
     }
 
     mealArray.forEach(meal => {
@@ -115,4 +120,15 @@ export function sumMealValues(mealArray: MealValues[]) {
     });
 
     return totalMeal;
+}
+
+export function formatMealValues(meals : Meal[], archivedMeals : ArchivedMeal[]){
+      //Extract nutritional values from each meals and merge the 2 arrays//
+  const mealValues : MealValues[] = getMealValues(meals)
+  const archivedMealValues : MealValues[] = getArchivedMealsValues(archivedMeals)
+  const  allMealValues : MealValues[] = mealValues.concat(archivedMealValues)
+
+  //Sums all meals values to get todays nutritional values//
+  const mealValuesSum : MealValues = sumMealValues(allMealValues)
+  return mealValuesSum
 }

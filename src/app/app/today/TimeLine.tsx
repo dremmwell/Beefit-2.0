@@ -16,7 +16,7 @@ export default function Timeline({ meals, isGrouped }:{ meals : Array<MealValues
         calories: 0,
         description: "",
         mealId: "",
-        userId:""
+        userId:"",
     };
     timeLineItem.title = meal.mealType;
     timeLineItem.calories = meal.calories;

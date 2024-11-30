@@ -412,6 +412,22 @@ export async function getLatestObjective(userId : UserId){
   return objective
 }
 
+export async function getObjectiveByPeriod(userId : UserId, startDate : Date, endDate : Date){
+
+  const data = await db.objective.findMany({
+    where: {
+      userId: userId,
+      createdAt: {
+        gte: startDate.toISOString(),
+        lt: endDate.toISOString()
+      }
+    },
+    orderBy: { createdAt: 'desc' } 
+  })
+  const objective = JSON.parse(JSON.stringify(data));
+  return objective
+}
+
 export async function updateOrCreateObjective(objective : Objective) {
   const { user } = await validateRequest()
 

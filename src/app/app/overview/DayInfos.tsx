@@ -1,15 +1,23 @@
+import { MealValues } from '@/app/types/definitions';
+import { Objective } from '@prisma/client';
 import React from 'react';
+import { sumMealValues } from '@/lib/meal_utils';
 
-interface DayInfo {
+interface DayInfoProps {
   date: Date;
+  values :MealValues[];
+  objective : Objective
 }
 
-const DayInfo: React.FC<DayInfo> = ({ date }) => {
+export default function DayInfo ({ date, values, objective } : DayInfoProps) {
+
+  const sumValues : MealValues = sumMealValues(values);
+
   return (
     <div>
       <p>{date.toDateString()}</p>
+      <p>{objective?.calories}</p>
+      <p>{sumValues?.calories}</p>
     </div>
   );
 };
-
-export default DayInfo;
