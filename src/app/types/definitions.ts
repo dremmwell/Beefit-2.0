@@ -1,4 +1,4 @@
-import { Ingredient, Recipe, RecipeIngredient, Meal } from "@prisma/client";
+import { Ingredient, Recipe, RecipeIngredient, Meal, Objective } from "@prisma/client";
 
 export type RecipeValues = {
     recipeId: string;
@@ -60,4 +60,9 @@ export type MealValues = {
     description: string ;
     userId : string;
     createdAt : Date;
+}
+
+export type ObjectiveAndDate = {
+    objective : Objective,
+    date: Date
 }

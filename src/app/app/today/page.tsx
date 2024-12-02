@@ -43,8 +43,7 @@ export default async function Page() {
   const todaysValuesSum : MealValues = sumMealValues(todaysValues);
 
   //---------------------------Db calls for the lastest objective----------------------------------//
-  const objectives : Objective[] = await getLatestObjective(user.id); //due to the "findmany" fucntion on DB call, the promise returns an array of 1 item
-  const objective : Objective = objectives[0];                        //get the only object of the array of one object
+  const objective : Objective = await getLatestObjective(user.id);
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col min-h-0 px-3 sm:px-10">

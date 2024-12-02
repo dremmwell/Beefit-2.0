@@ -13,8 +13,7 @@ export default async function Page() {
     return redirect("/")
   }
 
-  const objectives = await getLatestObjective(user.id);
-  const objective = objectives[0];
+  const objective = await getLatestObjective(user.id);
  
   return (
     <div className="container sm:my-10 my-2 flex flex-col max-h-fit min-h-0 px-3 sm:px-10">

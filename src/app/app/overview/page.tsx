@@ -1,14 +1,13 @@
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import HeatmapCalender from "./HeatmapCalendar";
-import { getArchivedMealsByPeriod, getMealsByPeriod, getObjectiveByPeriod } from "@/app/actions/db.actions";
+import { getArchivedMealsByPeriod, getLatestObjective, getMealsByPeriod, getObjectiveByPeriod } from "@/app/actions/db.actions";
 import { ArchivedMeal, Objective } from "@prisma/client";
 import { MealData, MealValues } from "@/app/types/definitions";
 import Weekly from "./Weekly";
 import { getMealValues, getArchivedMealsValues } from "@/lib/meal_utils";
+import { setObjectiveForEachDay } from "@/lib/objective_utils";
   
-
-
 export default async function Page() { 
 
   // Validating Path if valid user // 
@@ -139,11 +138,14 @@ export default async function Page() {
   const weeklyValues : MealValues[] = weeklyMealValues.concat(weeklyArchivedValues)
 
   const weeklyObjectives : Array<Objective> = await getObjectiveByPeriod(user.id, startDate, endDate)
+  const lastestObjective : Objective = await getLatestObjective(user.id);
+
+  const weekDayObjectives : any = setObjectiveForEachDay(lastestObjective, weeklyObjectives, startDate, endDate)
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col gap-2 max-h-fit min-h-0 px-3 sm:px-10">
         <h1 className="border-b text-3xl font-semibold tracking-tight first:mt-0">Overview</h1>
-        <Weekly weeklyMeals={weeklyValues} weeklyObjectives={weeklyObjectives}/>
+        <Weekly weeklyMeals={weeklyValues} weeklyObjectives={weekDayObjectives}/>
 {/*       <div className="border flex ">
         <HeatmapCalender startDate="2024-09-01" endDate='2024-12-13' dataValues={mockdata} />
       </div> */}

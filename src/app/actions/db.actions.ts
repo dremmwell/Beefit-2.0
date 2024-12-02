@@ -408,7 +408,7 @@ export async function getLatestObjective(userId : UserId){
     },
     take: 1,
   })
-  const objective = JSON.parse(JSON.stringify(data));
+  const objective = JSON.parse(JSON.stringify(data[0]));
   return objective
 }
 

@@ -6,6 +6,7 @@ import DayCard from './DayCard';
 import DayInfo from './DayInfos';
 import { useState } from 'react';
 import { Objective } from '@prisma/client';
+import { sumMealValues } from '@/lib/meal_utils';
 
 
 function getMealsCreatedOnDate(mealValues: MealValues[], date: Date): MealValues[] {
@@ -41,16 +42,26 @@ function getObjectivesCreatedOnDate(objectives: Objective[], date: Date): Object
 
 function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValues>, weeklyObjectives : Array<Objective>}) {
 
-    /*  const mealsByDay = groupByCreationDay(weeklyMeals);*/
-
     const today : Date = new Date();
     const yesterday : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+
+    //-------------------------- Sets dot color for each week day --------------------//
     const dates: Date[] = [];
+    const datesInfo = {
+        date : Date,
+        color : "",
+    }
     for (let i = 0; i < 7; i++) {
         const day = new Date(today.getFullYear(), today.getMonth(), today.getDate() - (7 - i));
+        const dayObjective : Objective = getObjectivesCreatedOnDate(weeklyObjectives, day)[0];
+        const dayValues : MealValues = sumMealValues(getMealsCreatedOnDate(weeklyMeals, day));
+        if(dayValues.calories <= dayObjective?.calories*0.5){
+            
+        }
         dates.push(day);
     }
 
+    //---------------- Handles week day selection and format selected day values ----------------------//
     const [selectedDay, setSelectedDay] = useState<Date | null>(yesterday);
     const [dayValues, setDayValues] = useState<MealValues[]>(getMealsCreatedOnDate(weeklyMeals, yesterday))
     const [dayObjective, setDayObjective] = useState<Objective>(getObjectivesCreatedOnDate(weeklyObjectives, yesterday)[0])
