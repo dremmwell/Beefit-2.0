@@ -30,7 +30,7 @@ function getDayColor(objective : Objective,values : MealValues){
     if(objective.calories < values.calories){
         dayColor = "primary"
     }
-    else if(objective.calories * 0.5 < values.calories){
+    else if(objective.calories * 0.6 < values.calories){
         dayColor = "success"
     }
     else{
@@ -73,7 +73,7 @@ function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValu
     }
 
     return (
-        <>
+        <div>
             <div className='w-full flex flex-wrap md:px-4 py-2 md:py-4 px-0 gap-1 md:gap-2'>
             {weeklyObjectiveDateColor.map((day, index) => (
                 <div key={index} onClick={() => handleDaySelect(day)} className='flex-1'>
@@ -81,8 +81,24 @@ function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValu
                 </div>
             ))}
             </div>
+            <div className='flex gap-2 justify-end md:px-4'>
+                <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
+                    on target :
+                    <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-success`}></div>
+                    <div className='text-muted-foreground'>|</div>
+                </div>
+                <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
+                    over target :
+                    <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-primary`}></div>
+                    <div className='text-muted-foreground'>|</div>
+                </div>
+                <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
+                    below target :
+                    <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-below`}></div>
+                </div>
+            </div>
             {selectedDay && <DayInfo date={selectedDay} values={dayValues} objective={selectedObjective}/>}
-        </>
+        </div>
     )
 }
 
