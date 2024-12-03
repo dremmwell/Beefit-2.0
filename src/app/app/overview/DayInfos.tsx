@@ -16,8 +16,8 @@ export default function DayInfo ({ date, values, objective } : DayInfoProps) {
   return (
     <div>
       <p>{date.toDateString()}</p>
-      <p>{objective?.calories}</p>
-      <p>{sumValues?.calories}</p>
+      <p>obejctive : {objective?.calories}</p>
+      <p>cal :{sumValues?.calories}</p>
     </div>
   );
 };

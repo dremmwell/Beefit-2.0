@@ -66,3 +66,9 @@ export type ObjectiveAndDate = {
     objective : Objective,
     date: Date
 }
+
+export type ObjectiveAndDateandColor = {
+    objective : Objective,
+    date: Date
+    color: string
+}

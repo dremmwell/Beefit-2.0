@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import HeatmapCalender from "./HeatmapCalendar";
 import { getArchivedMealsByPeriod, getLatestObjective, getMealsByPeriod, getObjectiveByPeriod } from "@/app/actions/db.actions";
 import { ArchivedMeal, Objective } from "@prisma/client";
-import { MealData, MealValues } from "@/app/types/definitions";
+import { MealData, MealValues, ObjectiveAndDate } from "@/app/types/definitions";
 import Weekly from "./Weekly";
 import { getMealValues, getArchivedMealsValues } from "@/lib/meal_utils";
 import { setObjectiveForEachDay } from "@/lib/objective_utils";
@@ -125,8 +125,8 @@ export default async function Page() {
 
   const today : Date = new Date()
 
-  const endDate  : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-  const startDate : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)
+  const endDate  : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+  const startDate : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 8)
 
   //Get Meals and custom ("archived") meals from DB//
   const weeklyMeals : Array<MealData> = await getMealsByPeriod(user.id, startDate, endDate);
@@ -140,7 +140,7 @@ export default async function Page() {
   const weeklyObjectives : Array<Objective> = await getObjectiveByPeriod(user.id, startDate, endDate)
   const lastestObjective : Objective = await getLatestObjective(user.id);
 
-  const weekDayObjectives : any = setObjectiveForEachDay(lastestObjective, weeklyObjectives, startDate, endDate)
+  const weekDayObjectives : ObjectiveAndDate[] = setObjectiveForEachDay(lastestObjective, weeklyObjectives, startDate, endDate)
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col gap-2 max-h-fit min-h-0 px-3 sm:px-10">

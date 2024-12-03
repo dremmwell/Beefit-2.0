@@ -32,7 +32,6 @@ export function setObjectiveForEachDay(lastestObjective : Objective, objectives 
 
                     const checkDate = new Date(date)
                     checkDate.setDate(date.getDate() + 1)
-/*                     console.log(date, checkDate) */
 
                     if(checkDate > objectiveDate) {
                         const dateAndOjective : ObjectiveAndDate = { objective : objectives[i], date : date}
@@ -42,6 +41,5 @@ export function setObjectiveForEachDay(lastestObjective : Objective, objectives 
                 }
             }
     })
-    console.log(dateAndOjectives)
     return dateAndOjectives
-  }
+}

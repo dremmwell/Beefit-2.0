@@ -3,12 +3,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import useWindowDimensions from '@/lib/hooks/useWindowDimensions'
-import Dot from '@/components/dot'
 
 function DayCard({ date, color, isSelected } : { date : Date, color : string, isSelected: boolean | null; }) {
 
     const { height, width } = useWindowDimensions();
     const [isShorted , setIsShorted] = useState(false)
+    const [dotColor, setDotColor] = useState(color)
     
    // Get windows dimensions and set isShorted true/false
    const [size ,setSize] = useState(1);
@@ -34,7 +34,7 @@ function DayCard({ date, color, isSelected } : { date : Date, color : string, is
             <p className='text-sm text-muted-foreground'>{date.toLocaleString("en-GB", { weekday : "short"})}</p>
             <h4 className='scroll-m-20 text-md font-semibold tracking-tight'>{date.toLocaleString("en-GB", {day : '2-digit'})}</h4>
             <div
-            className={`mt-1 rounded-full w-3 h-3 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-${color}`}
+            className={`mt-1 rounded-full w-3 h-3 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-${dotColor}`}
             >
             </div>
         </>
@@ -43,7 +43,7 @@ function DayCard({ date, color, isSelected } : { date : Date, color : string, is
             <p className='text-sm text-muted-foreground'>{date.toLocaleString("en-GB", { weekday : "narrow"})}</p>
             <h4 className='scroll-m-20 text-md font-semibold tracking-tight'>{date.toLocaleString("en-GB", {day : '2-digit'})}</h4>
             <div
-            className={`mb-2 rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-${color}`}
+            className={`mb-2 rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-${dotColor}`}
             >
             </div>
         </>
