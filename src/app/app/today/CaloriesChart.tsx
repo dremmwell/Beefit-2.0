@@ -20,7 +20,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
 
  // Get windows dimensions and set isShorted true/false
  const [size ,setSize] = useState(1);
- const shortWidth = 768;
+ const shortWidth = 1023;
 
  useEffect(() => {
    if (typeof width !== 'undefined') {
@@ -58,13 +58,11 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
   const offsetSegment = arcSegment - (percentNormalizedSegment / 100) * arcSegment;
 
   return (
-    <Card >
+    <div >
       {!isShorted ?
       <>
-      <CardHeader>
-        <CardTitle className="text-center">Calories</CardTitle>
-      </CardHeader>
-      <CardContent className="translate-y-2 pb-2 flex flex-col items-center" >
+        <div className="text-center text-muted-foreground">Calories</div>
+      <div className="translate-y-2 pb-2 flex flex-col items-center" >
       <svg
         height={radius * 2}
         width={radius * 2}
@@ -131,7 +129,7 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
         <p className="fill-foreground text-4xl font-bold text-success">
         {values.calories.toFixed(0)}
         </p>
-        <p className="fill-muted-foreground">
+        <p className="fill-muted-foreground font-semibold">
         calories
         </p>
       </>
@@ -146,25 +144,25 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
         </>
       }
       </div>
-        </CardContent>
-          <CardFooter className="flex-col gap-2 text-sm">
-            <div className="flex items-center gap-2 font-medium leading-none">
+        </div>
+          <div className="flex flex-col gap-2 text-sm lg:transform lg:-translate-y-4">
+            <div className="font-medium leading-none text-center">
               of {objective.calories.toFixed(0)} cal
             </div>
             {values.calories <= objective.calories ?
-            <div className="leading-none text-success">
+            <div className="leading-none text-success text-center">
               ({(objective.calories - values.calories).toFixed(0)} cal. left)
             </div>
             :
-            <div className="leading-none text-primary">
+            <div className="leading-none text-primary text-center">
               ({(values.calories - objective.calories).toFixed(0)} cal. over)
             </div>
             }
-          </CardFooter>
+          </div>
       </>
       :
       <>
-      <CardContent className="translate-y-3 pb-0 flex justify-evenly gap-2 items-center" >
+      <div className="translate-y-3 pb-0 flex justify-evenly gap-2 items-center" >
       <div className="relative">
         <svg
           height={radius * 2}
@@ -261,10 +259,10 @@ export default function CaloriesChart({ values, objective } : { values : MealVal
         </div>
         }
       </div>
-      </CardContent>
+      </div>
       </>
       } 
-    </Card>
+    </div>
   )
 }
 

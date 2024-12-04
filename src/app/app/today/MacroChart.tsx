@@ -6,8 +6,6 @@ import { Objective } from "@prisma/client";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -22,7 +20,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
   const [cardWidth, setCardWidth ] = useState(100);
   const [isShorted , setIsShorted] = useState(false);
   const [size ,setSize] = useState(1);
-  const shortwidth = 768;
+  const shortwidth = 1023;
 
   useEffect(() => {
     if (cardRef.current){
@@ -31,7 +29,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
       setCardWidth(cardWidth); 
       if (typeof width !== 'undefined') {
         if (width <= shortwidth) {
-          setSize(0.8);
+          setSize(1);
           setIsShorted(true)
         }
         else {
@@ -44,7 +42,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
 
   const chartHeight = 8;
   //@ts-ignore
-  const chartWidth = 0.85 * cardWidth;
+  const chartWidth = size * cardWidth;
 
   const ratio =  chartWidth /100;
 
@@ -66,13 +64,11 @@ export default function MacroChart({ values, objective } : { values : MealValues
     <>
       {/* 
       // @ts-ignore */}
-      <Card ref={cardRef}> 
+      <div ref={cardRef}> 
         {!isShorted ? 
         <>
-          <CardHeader>
-            <CardTitle className="text-center">Macronutriments</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col justify-between gap-6">
+            <div className="text-center pb-4 text-muted-foreground">Macronutriments</div>
+          <div className="flex flex-col justify-between gap-6">
             <div className="flex flex-col">
               <p className="text-sm font-semibold text-foreground mb-1">Carbs</p>
               <div className="flex flex-col h-3">
@@ -181,11 +177,11 @@ export default function MacroChart({ values, objective } : { values : MealValues
                 <p className="ml-auto text-muted-foreground">{(objective.fats).toFixed(0)}g</p>
               </div>
             </div>
-          </CardContent>      
+          </div>      
         </>
         :
         <>
-          <CardContent className="flex flex-col pt-4 pb-4 justify-between gap-3">
+          <div className="flex flex-col pt-4 pb-4 justify-between gap-3">
             <div className="flex flex-col">
               <div className="flex gap-1 text-sm">
               <p className="text-sm font-semibold text-foreground mb-1">Carbs : </p>
@@ -294,10 +290,10 @@ export default function MacroChart({ values, objective } : { values : MealValues
                 </svg>
               </div>
             </div>
-          </CardContent>
+          </div>
         </>
         }
-      </Card>
+      </div>
     </>
   )
 }
