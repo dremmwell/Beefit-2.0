@@ -7,6 +7,7 @@ import { MealData, MealValues, ObjectiveAndDate } from "@/app/types/definitions"
 import Weekly from "./Weekly";
 import { getMealValues, getArchivedMealsValues } from "@/lib/meal_utils";
 import { setObjectiveForEachDay } from "@/lib/objective_utils";
+import ChartsCards from "../today/ChartsCard";
   
 export default async function Page() { 
 
@@ -144,8 +145,15 @@ export default async function Page() {
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col gap-2 max-h-fit min-h-0 px-3 sm:px-10">
-        <h1 className="border-b text-3xl font-semibold tracking-tight first:mt-0">Overview</h1>
-        <Weekly weeklyMeals={weeklyValues} weeklyObjectives={weekDayObjectives}/>
+        <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Overview</h1>
+        <div className="flex flex-col lg:flex-row gap-4 max-h-fit min-h-0 my-4 xl:mx-12 h-full">
+          <div className="flex flex-1 flex-col">
+             <Weekly weeklyMeals={weeklyValues} weeklyObjectives={weekDayObjectives}/>
+          </div>
+          <div className="border rounded-xl w-1/2 h-full">
+
+          </div>
+        </div>
 {/*       <div className="border flex ">
         <HeatmapCalender startDate="2024-09-01" endDate='2024-12-13' dataValues={mockdata} />
       </div> */}

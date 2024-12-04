@@ -6,7 +6,7 @@ import DayCard from './DayCard';
 import { useState } from 'react';
 import { Objective } from '@prisma/client';
 import { sumMealValues } from '@/lib/meal_utils';
-import ChartsCards from '../today/ChartsCard';
+import DayChartsCards from './DayChartCard';
 
 function getMealsCreatedOnDate(mealValues: MealValues[], date: Date): MealValues[] {
     // Convert the date to midnight UTC
@@ -71,32 +71,34 @@ function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValu
     }
 
     return (
-        <div className='flex flex-col gap-2'>
-            <div className='w-full flex flex-wrap md:px-4 pt-2 md:pt-4 px-0 gap-1 md:gap-2'>
-            {weeklyObjectiveDateColor.map((day, index) => (
-                <div key={index} onClick={() => handleDaySelect(day)} className='flex-1'>
-                    <DayCard date={day.date} color={day.color} isSelected={selectedDay && selectedDay.getTime() === day.date.getTime()}/> 
+        <>
+            <div className='flex flex-col gap-2 pb-2'>
+                <div className='flex gap-1'>
+                    {weeklyObjectiveDateColor.map((day, index) => (
+                        <div key={index} onClick={() => handleDaySelect(day)} className='flex-1'>
+                            <DayCard date={day.date} color={day.color} isSelected={selectedDay && selectedDay.getTime() === day.date.getTime()}/> 
+                        </div>
+                    ))}
                 </div>
-            ))}
+                <div className='flex gap-2 justify-end md:px-4'>
+                    <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
+                        on target :
+                        <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-success`}></div>
+                        <div className='text-muted-foreground'>|</div>
+                    </div>
+                    <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
+                        over target :
+                        <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-primary`}></div>
+                        <div className='text-muted-foreground'>|</div>
+                    </div>
+                    <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
+                        below target :
+                        <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-below`}></div>
+                    </div>
+                </div>
             </div>
-            <div className='flex gap-2 justify-end md:px-4'>
-                <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
-                    on target :
-                    <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-success`}></div>
-                    <div className='text-muted-foreground'>|</div>
-                </div>
-                <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
-                    over target :
-                    <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-primary`}></div>
-                    <div className='text-muted-foreground'>|</div>
-                </div>
-                <div className='flex items-center sm:gap-2 gap-1 sm:text-sm text-xs text-muted-foreground'>
-                    below target :
-                    <div className={`rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-below`}></div>
-                </div>
-            </div>
-            {selectedDay && <ChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>}
-        </div>
+            {selectedDay && <DayChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>}
+        </>
     )
 }
 
