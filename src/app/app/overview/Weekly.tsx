@@ -7,8 +7,6 @@ import DayInfo from './DayInfos';
 import { useState } from 'react';
 import { Objective } from '@prisma/client';
 import { sumMealValues } from '@/lib/meal_utils';
-import { object } from 'zod';
-
 
 function getMealsCreatedOnDate(mealValues: MealValues[], date: Date): MealValues[] {
     // Convert the date to midnight UTC
@@ -56,10 +54,10 @@ function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValu
     })
 
     //---------------------- Handles week day selection and format selected day values ----------------------//
-    const [selectedDay, setSelectedDay] = useState<Date | null>(weeklyObjectives[0].date);
-    const [selectedObjective, setSelectedObjective] = useState<Objective>(weeklyObjectives[0].objective)
-    const [dayValues, setDayValues] = useState<MealValues[]>(getMealsCreatedOnDate(weeklyMeals, weeklyObjectives[0].date))
-    const [dayColor, setDayColor] = useState<string>(getDayColor(weeklyObjectives[0].objective,sumMealValues(dayValues)))
+    const [selectedDay, setSelectedDay] = useState<Date | null>(weeklyObjectives[weeklyObjectives.length - 1].date);
+    const [selectedObjective, setSelectedObjective] = useState<Objective>(weeklyObjectives[weeklyObjectives.length - 1].objective)
+    const [dayValues, setDayValues] = useState<MealValues[]>(getMealsCreatedOnDate(weeklyMeals, weeklyObjectives[weeklyObjectives.length - 1].date))
+    const [dayColor, setDayColor] = useState<string>(getDayColor(weeklyObjectives[weeklyObjectives.length - 1].objective,sumMealValues(dayValues)))
 
     function handleDaySelect (dayObjective : ObjectiveAndDate ) {
         setSelectedDay(dayObjective.date)

@@ -22,6 +22,11 @@ export function setObjectiveForEachDay(lastestObjective : Objective, objectives 
     const lastestObjectiveDate : Date = new Date(lastestObjective.createdAt)
    
     dates.forEach((date : Date) => {
+        if(objectives === undefined || objectives.length == 0){
+            const dateAndOjective : ObjectiveAndDate = {objective : lastestObjective, date : date}
+            dateAndOjectives.push(dateAndOjective);
+        }
+        else{
             if(date > lastestObjectiveDate){
                 const dateAndOjective : ObjectiveAndDate = {objective : lastestObjective, date : date}
                 dateAndOjectives.push(dateAndOjective);
@@ -40,6 +45,7 @@ export function setObjectiveForEachDay(lastestObjective : Objective, objectives 
                     }
                 }
             }
+        }
     })
     return dateAndOjectives
 }
