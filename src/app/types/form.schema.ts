@@ -3,9 +3,15 @@ import { z } from "zod"
 //------------------------------------------ Ingredients form schemas ------------------------------------------//
 
 export const AddIngredientSchema = z.object({
-  name: z.string().min(2).max(40),
+  name: z.string().min(2, {
+    message: "Ingredient name must be at least 2 characters.",
+  }).max(40,{
+    message: "Ingredient name must be at most 40 characters."
+  }),
   measureType: z.string(),
-  customMeasureName: z.string().max(15).optional(),
+  customMeasureName: z.string().max(15, {
+    message: "Cannot exceed 40 characters."
+  }).optional(),
   measureWeight: z.coerce.number().positive({message: "must be positive",}).optional(),
   calories: z.coerce.number().positive({message: "must be positive",}),
   proteins: z.coerce.number().positive({message: "must be positive",}),

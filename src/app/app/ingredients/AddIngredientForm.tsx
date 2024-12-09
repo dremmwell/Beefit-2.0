@@ -56,30 +56,44 @@ export default function AddIngredientForm({onSave} : {onSave : Function}) {
 function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
     
     const uuid = uuidv4();
-    const ingredient: Ingredient = {
-        id: uuid,
-        name: data.name,
-        unit: data.measureType,
-        gramsPerUnit: 100,
-        calories: data.calories,
-        proteins: data.proteins,
-        carbs: data.carbs,
-        fats: data.fats,
-        userId: "",
-        bookmarked: false,
-        customMeal: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    }
-    if(data.customMeasureName){
-        if(data.measureType === "100g"){
-            ingredient.gramsPerUnit = 100;
+
+    if(data.measureType === "custom"){
+        const ingredient: Ingredient = {
+          id: uuid,
+          name: data.name,
+          //@ts-ignore
+          unit: data.customMeasureName,
+          //@ts-ignore
+          gramsPerUnit: data.measureWeight,
+          calories: data.calories,
+          proteins: data.proteins,
+          carbs: data.carbs,
+          fats: data.fats,
+          userId: "",
+          bookmarked: false,
+          customMeal: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         }
-        else{
-            ingredient.unit = data.customMeasureName;
-        }
+        return ingredient
+    }else{
+        const ingredient: Ingredient = {
+          id: uuid,
+          name: data.name,
+          unit: data.measureType,
+          gramsPerUnit: 100,
+          calories: data.calories,
+          proteins: data.proteins,
+          carbs: data.carbs,
+          fats: data.fats,
+          userId: "",
+          bookmarked: false,
+          customMeal: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+      }
+      return ingredient
     }
-    return ingredient
   }
 
   // Handles measure type toggle
