@@ -27,8 +27,9 @@ import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
 import { Ingredient } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { AddIngredientForm } from "./AddIngredientForm"
+import AddIngredientForm from "./AddIngredientForm"
 import { columns } from "./columns"
+import CustomMealForm from "../today/CustomMealForm"
 
 
 export function AddIngredientDialog() {
