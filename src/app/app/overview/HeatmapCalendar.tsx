@@ -1,6 +1,7 @@
 import React from 'react'
 
-const HeatmapCalender = ({startDate, endDate, dataValues} : {startDate : any, endDate : any, dataValues : any}) => {
+function  HeatmapCalender ({startDate, endDate, dataValues} : {startDate : any, endDate : any, dataValues : any}) {
+
     let startingDate : any = new Date(startDate)
     let endingDate : any = new Date(endDate);
     const daysInMonth = Math.ceil((endingDate - startingDate) / (1000 * 60 * 60 * 24)) + 1;
@@ -23,8 +24,7 @@ const HeatmapCalender = ({startDate, endDate, dataValues} : {startDate : any, en
     }
   return (
     <div className='grid grid-flow-col gap-1' style={{gridTemplateRows: 'repeat(7, minmax(0, 1fr)'}}>
-        { 
-        calenderGrid.map((day, index)=>{
+        {calenderGrid.map((day, index)=>{
             const activityCount = dataValues.find((item : any)=> item.date === day)?.count || 0;
             const intensity = getIntensity(activityCount);
             const color = getColorFromIntensity(intensity)

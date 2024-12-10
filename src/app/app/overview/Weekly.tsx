@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { Objective } from '@prisma/client';
 import { sumMealValues } from '@/lib/meal_utils';
 import DayChartsCards from './DayChartCard';
+import Timeline from '../today/TimeLine';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 function getMealsCreatedOnDate(mealValues: MealValues[], date: Date): MealValues[] {
     // Convert the date to midnight UTC
@@ -41,7 +43,6 @@ function getDayColor(objective : Objective,values : MealValues){
 function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValues>, weeklyObjectives : Array<ObjectiveAndDate>}) {
 
     //-----------------------------Sets day color for all days---------------------------------------//
-
     const weeklyObjectiveDateColor : ObjectiveAndDateandColor[] = []
     weeklyObjectives.forEach(dayObjective => {
         const dayColor = getDayColor(dayObjective.objective,sumMealValues(getMealsCreatedOnDate(weeklyMeals, dayObjective.date)));
@@ -57,7 +58,6 @@ function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValu
     const [selectedDay, setSelectedDay] = useState<Date | null>(weeklyObjectives[weeklyObjectives.length - 1].date);
     const [selectedObjective, setSelectedObjective] = useState<Objective>(weeklyObjectives[weeklyObjectives.length - 1].objective)
     const [dayValues, setDayValues] = useState<MealValues[]>(getMealsCreatedOnDate(weeklyMeals, weeklyObjectives[weeklyObjectives.length - 1].date))
-    const [dayColor, setDayColor] = useState<string>(getDayColor(weeklyObjectives[weeklyObjectives.length - 1].objective,sumMealValues(dayValues)))
 
     function handleDaySelect (dayObjective : ObjectiveAndDate ) {
         setSelectedDay(dayObjective.date)
@@ -65,9 +65,6 @@ function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValu
 
         const dayValues : MealValues[] = getMealsCreatedOnDate(weeklyMeals, dayObjective.date);
         setDayValues(dayValues)
-
-        const dayColor : string = getDayColor(dayObjective.objective, sumMealValues(dayValues))
-        setDayColor(dayColor)
     }
 
     return (
@@ -97,7 +94,14 @@ function Weekly({ weeklyMeals, weeklyObjectives }: {weeklyMeals : Array<MealValu
                     </div>
                 </div>
             </div>
-            {selectedDay && <DayChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>}
+            {selectedDay && 
+                <div className='flex flex-col 2xl:flex-row gap-4'>
+                    <DayChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>
+                    <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-2 md:p-4">
+                        <Timeline meals={dayValues} isGrouped={true}/>
+                    </ScrollArea>
+                </div>
+            }
         </>
     )
 }
