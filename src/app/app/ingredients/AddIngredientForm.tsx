@@ -125,7 +125,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-w-3xl md:mx-auto mx-4 py-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-3xl md:mx-auto mx-4 py-2">
             <FormField
               control={form.control}
               name="name"

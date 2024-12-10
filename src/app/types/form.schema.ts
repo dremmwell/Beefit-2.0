@@ -50,11 +50,11 @@ export const EditIngredientFormSchema = z.object({
   customMeasureName: z.string().max(15, {
     message: "Cannot exceed 40 characters."
   }).optional(),
-  measureWeight: z.coerce.number().optional(),
-  calories: z.coerce.number().positive(),
-  proteins: z.coerce.number().positive(),
-  carbs: z.coerce.number().positive(),
-  fats: z.coerce.number().positive(),
+  measureWeight: z.coerce.number().positive({message: "must be positive",}).optional(),
+  calories: z.coerce.number().positive({message: "must be positive",}),
+  proteins: z.coerce.number().positive({message: "must be positive",}),
+  carbs: z.coerce.number().positive({message: "must be positive",}),
+  fats: z.coerce.number().positive({message: "must be positive",}),
 })
 .refine((data) => {
   if(data.measureType === "custom") {

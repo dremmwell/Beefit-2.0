@@ -89,7 +89,7 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 max-w-3xl md:mx-auto mx-4 py-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-3xl md:mx-auto mx-4 py-2">
         <FormField
           control={form.control}
           name="mealType"
@@ -129,8 +129,7 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
                 </FormItem>
               )}
             />
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6">
+        <div className="flex gap-4 justify-between">
             <FormField
               control={form.control}
               name="calories"
@@ -139,16 +138,17 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
                   <FormLabel>Calories (cal)</FormLabel>
                   <FormControl>
                     <Input 
-                    placeholder="Calories in your meal..."
+                    placeholder="in cal..."
                     type="number"
                     {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Calories in your meal
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-          <div className="col-span-6">
             <FormField
               control={form.control}
               name="proteins"
@@ -157,18 +157,19 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
                   <FormLabel>Proteins (g)</FormLabel>
                   <FormControl>
                     <Input 
-                    placeholder="Proteins in your meal..."
+                    placeholder="in grams..."
                     type="number"
                     {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Proteins in your meal
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-        </div>
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6">
+        <div className="flex gap-4 justify-between">
             <FormField
               control={form.control}
               name="carbs"
@@ -177,16 +178,17 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
                   <FormLabel>Carbohydrates (g)</FormLabel>
                   <FormControl>
                     <Input 
-                    placeholder="Carbs in your meal..."
+                    placeholder="in grams..."
                     type="number"
                     {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Carbs in your meal
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
-          <div className="col-span-6">
             <FormField
               control={form.control}
               name="fats"
@@ -195,16 +197,18 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
                   <FormLabel>Fats (g)</FormLabel>
                   <FormControl>
                     <Input 
-                    placeholder="Fats in your meal..."
+                    placeholder="in grams..."
                     type="number"
                     {...field} />
                   </FormControl>
+                  <FormDescription>
+                    Fats in your meal
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
-        </div>
         <Button  disabled={isSubmitting} className="mb-4 md:mb-0 w-full" type="submit">
           {isSubmitting && (
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
