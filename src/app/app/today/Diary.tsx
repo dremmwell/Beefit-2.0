@@ -12,23 +12,16 @@ import { useState } from 'react';
 import { getArchivedMealsValues, getMealValues } from '@/lib/meal_utils';
 
 function Diary({ 
-    meals,
-    archivedMeals,
+    mealValues,
     recipes,
     ingredients
 } : {
-    meals : Array<MealData>,
-    archivedMeals : Array<ArchivedMeal>
+    mealValues : Array<MealValues>
     recipes : Array<RecipeAndIngredients>,
     ingredients : Array<Ingredient>
 }) {
 
     const [isGrouped, setIsGrouped] = useState(false);
-
-    const mealValues : Array<MealValues> = getMealValues(meals);
-    const archivedMealValues : Array<MealValues> = getArchivedMealsValues(archivedMeals)
-
-    const mealsValues : Array<MealValues> = mealValues.concat(archivedMealValues)
 
     const today = new Date();
 
@@ -45,7 +38,7 @@ function Diary({
           <AddMealDialog recipes={recipes} ingredients={ingredients}/>
         </div>
         <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-2 md:p-4">
-            <Timeline meals={mealsValues} isGrouped={isGrouped}/>
+            <Timeline meals={mealValues} isGrouped={isGrouped}/>
         </ScrollArea>
     </div>
   )

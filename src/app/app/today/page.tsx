@@ -51,7 +51,7 @@ export default async function Page() {
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Today</h1>
       <div className="flex flex-col lg:flex-row gap-4 max-h-fit min-h-0 my-4 xl:mx-12">
           <ChartsCards values={todaysValuesSum} objective={objective} date={today}/>
-          <Diary meals={todaysMeals} archivedMeals={todaysArchivedMeals} recipes={recipes} ingredients={ingredients}/>
+          <Diary mealValues={todaysValues} recipes={recipes} ingredients={ingredients}/>
       </div>
     </div>
   )
