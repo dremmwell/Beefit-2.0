@@ -15,6 +15,16 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
     const userId = generateId(15)
   
     try {
+      const existingUser = await db.user.findUnique({
+        where: {
+          username: values.username,
+        },
+      });
+      if (existingUser) {
+        return {
+          error: "Username already taken",
+        };
+      }
         await db.user.create({
             data: {
                 id: userId,

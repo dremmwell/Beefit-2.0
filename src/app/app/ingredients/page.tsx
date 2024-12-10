@@ -9,6 +9,7 @@ import { getIngredients, createIngredient } from "../../actions/db.actions";
 
 /* import { placeholderIngredients } from '../../../lib/placeholder-data'
 placeholderIngredients.forEach(ingredient => {
+  //@ts-ignore
   createIngredient(ingredient)
 }) */
 
