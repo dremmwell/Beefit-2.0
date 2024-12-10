@@ -39,12 +39,12 @@ export function LoginForm() {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof LogInSchema>) {
     const res = await logIn(values);
-    if(res.error){
+    if(res?.error){
       toast({
         variant: 'destructive',
         description: res.error
       })
-    } else if(res.success) {
+    } else if(res?.success) {
       toast({
         variant: 'default',
         description: "Logged in"

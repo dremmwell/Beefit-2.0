@@ -18,25 +18,11 @@ import { Ingredient } from '@prisma/client';
 import DetailsDialog from './DetailsDialog';
 import { EditIngredientDialog } from './EditIngredientDialog';
 
-interface CommonIngredient {
-        id: string;
-        name: string;
-        unit: string;
-        gramsPerUnit: number;
-        calories: number;
-        proteins: number;
-        carbs: number;
-        fats: number;
-        userId: string;
-        bookmarked: boolean;
-        createdAt: Date;
-        updatedAt: Date;
-}
 interface DataTableRowActionsProps<TData extends Ingredient> {
   row: Row<TData>;
 }
 
-export function DataTableRowActions<TData extends CommonIngredient>({
+export function DataTableRowActions<TData extends Ingredient>({
   row
 }: 
 DataTableRowActionsProps<TData>) {

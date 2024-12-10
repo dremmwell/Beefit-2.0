@@ -19,6 +19,7 @@ export function convertTo100g(ingredient: Ingredient){
         bookmarked: ingredient.bookmarked,
         createdAt: ingredient.createdAt,
         updatedAt: ingredient.updatedAt,
+        customMeal: ingredient.customMeal
     }
     return convertedIngredient
 }
