@@ -22,14 +22,10 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { useState, useEffect } from "react"
 import { Ingredient } from "@prisma/client"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { EditIngredientForm } from "./EditIngredientForm"
-import { columns } from "./columns"
 import { Dispatch, SetStateAction } from 'react';
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 
 export function EditIngredientDialog(
@@ -49,17 +45,19 @@ export function EditIngredientDialog(
     setIsOpen(false)
   }
  
-  if (isDesktop) {
+  if (true) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="min-w-fit flex-1">
+        <DialogContent className="min-w-fit max-h-full flex-1">
           <DialogHeader >
             <DialogTitle>Edit Ingredient</DialogTitle>
             <DialogDescription>
               Edit your ingredient !
             </DialogDescription>
           </DialogHeader>
-          <EditIngredientForm ingredient={ingredient} onSave={handleCloseDialog}/>
+          <ScrollArea className="overflow-y-scroll no-scrollbar">
+            <EditIngredientForm ingredient={ingredient} onSave={handleCloseDialog}/>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     )

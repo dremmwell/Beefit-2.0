@@ -315,6 +315,7 @@ export default function AddRecipeForm<TData, TValue>({
                         className="w-[100px] justify-end"
                         placeholder="Quantity..."
                         required
+                        type="number"
                         />
                       </FormControl>
                       <FormMessage />
@@ -363,7 +364,7 @@ export default function AddRecipeForm<TData, TValue>({
             </div>
           </div>
         </div>
-        <Button disabled={isSubmitting} className="mt-auto mb-4 md:mb-0" type="submit">
+        <Button disabled={isSubmitting} className="mt-auto mb-4 md:mb-0" type="button" onClick={form.handleSubmit(onSubmit)}>
           {isSubmitting && (
             <Loader2 className="h-4 w-4 animate-spin mr-2" />
           )}

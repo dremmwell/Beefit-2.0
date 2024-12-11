@@ -45,20 +45,22 @@ export default function MealEditRecipeDialog({
         setOpen(false)
       }
 
-  if (isDesktop) {
+  if (true) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button >Edit Recipe</Button>
         </DialogTrigger>
-        <DialogContent className="min-w-fit min-h-[620px] flex-1">
+        <DialogContent className="min-w-fit min-h-[620px] max-h-full flex-1">
           <DialogHeader >
             <DialogTitle>Edit Recipe</DialogTitle>
             <DialogDescription>
               Edit your recipe for today only !
             </DialogDescription>
           </DialogHeader>
+          <ScrollArea className="overflow-y-scroll no-scrollbar">
           <MealEditRecipeForm columns={columnsIngredients} data={ingredients} onSave={handlesSave} recipe={recipe}/>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     )

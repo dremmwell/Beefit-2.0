@@ -53,35 +53,37 @@ export function AddMealDialog( {
     setOpen(false);
   };
 
-  if (isDesktop) {
+  if (true) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button >Add Meal</Button>
         </DialogTrigger>
-        <DialogContent className="min-w-fit flex-1">
+        <DialogContent className="min-w-fit max-h-full flex-1">
         <DialogHeader >
             <DialogTitle>New Meal</DialogTitle>
             <DialogDescription>
               Add a new meal to your diary !
             </DialogDescription>
           </DialogHeader>
-          <Tabs defaultValue="ingredients">
-            <TabsList className="grid w-full grid-cols-3 mb-5">
-              <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
-              <TabsTrigger value="recipes">Recipes</TabsTrigger>
-              <TabsTrigger value="custom">Custom</TabsTrigger>
-            </TabsList>
-            <TabsContent value="ingredients">
-              <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
-            </TabsContent>
-            <TabsContent value="recipes">
-              <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
-            </TabsContent>
-            <TabsContent value="custom">
-              <CustomMealForm onSave={handleClose}/>
-            </TabsContent>
-          </Tabs>
+          <ScrollArea className="overflow-y-scroll no-scrollbar">
+            <Tabs defaultValue="ingredients">
+              <TabsList className="grid w-full grid-cols-3 mb-5">
+                <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
+                <TabsTrigger value="recipes">Recipes</TabsTrigger>
+                <TabsTrigger value="custom">Custom</TabsTrigger>
+              </TabsList>
+              <TabsContent value="ingredients">
+                <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
+              </TabsContent>
+              <TabsContent value="recipes">
+                <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
+              </TabsContent>
+              <TabsContent value="custom">
+                <CustomMealForm onSave={handleClose}/>
+              </TabsContent>
+            </Tabs>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     )

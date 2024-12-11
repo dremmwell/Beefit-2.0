@@ -41,17 +41,19 @@ export default function EditRecipeDialog({
 
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
-  if (isDesktop) {
+  if (true) {
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="min-w-fit min-h-[620px] flex-1">
+        <DialogContent className="min-w-fit min-h-[620px] max-h-full flex-1">
           <DialogHeader >
             <DialogTitle>Edit Recipe</DialogTitle>
             <DialogDescription>
               Edit and save your recipe updates!
             </DialogDescription>
           </DialogHeader>
-          <EditRecipeForm columns={columns} data={ingredients} onSave={setIsOpen} recipe={recipe}/>
+          <ScrollArea className="overflow-y-scroll no-scrollbar">
+            <EditRecipeForm columns={columns} data={ingredients} onSave={setIsOpen} recipe={recipe}/>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     )

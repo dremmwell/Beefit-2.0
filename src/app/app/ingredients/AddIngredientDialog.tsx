@@ -22,14 +22,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { useState, useEffect } from "react"
-import { Ingredient } from "@prisma/client"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import AddIngredientForm from "./AddIngredientForm"
-import { columns } from "./columns"
-import CustomMealForm from "../today/CustomMealForm"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 
 export function AddIngredientDialog() {
@@ -40,20 +35,22 @@ export function AddIngredientDialog() {
     setOpen(false)
   }
  
-  if (isDesktop) {
+  if (true) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button >Add Ingredient</Button>
         </DialogTrigger>
-        <DialogContent className="min-w-fit flex-1">
+        <DialogContent className="min-w-fit max-h-full flex-1">
           <DialogHeader >
             <DialogTitle>New Ingredient</DialogTitle>
             <DialogDescription>
             Save a new ingredient in your list !
             </DialogDescription>
           </DialogHeader>
-          <AddIngredientForm onSave={handleCloseDialog}/>
+          <ScrollArea className="overflow-y-scroll no-scrollbar">
+            <AddIngredientForm onSave={handleCloseDialog}/>
+          </ScrollArea>
         </DialogContent>
       </Dialog>
     )

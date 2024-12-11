@@ -390,6 +390,7 @@ export default function EditRecipeForm<TData, TValue>({
                         className="w-[100px] justify-end"
                         placeholder="Quantity..."
                         required
+                        type="number"
                         />
                       </FormControl>
                       <FormMessage />

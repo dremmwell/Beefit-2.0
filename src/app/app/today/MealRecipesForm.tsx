@@ -339,8 +339,9 @@ const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
                         <Input 
                         {...field} 
                         className="max-w-[110px]"
-                        placeholder="Quantity (1)"
+                        placeholder="Quantity"
                         required
+                        type="number"
                         />
                       </FormControl>
                       <FormMessage />

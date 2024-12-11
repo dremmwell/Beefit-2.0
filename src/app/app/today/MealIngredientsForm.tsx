@@ -297,6 +297,7 @@ export default function MealIngredientsForm<TData, TValue>({
                           <Input 
                           {...field} 
                           className="w-[100px] justify-end"
+                          autoFocus
                           type="number"
                           placeholder="Quantity..."
                           required
