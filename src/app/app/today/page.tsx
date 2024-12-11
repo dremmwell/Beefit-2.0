@@ -1,7 +1,5 @@
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import MacroChart from "./MacroChart";
-import CaloriesChart from "./CaloriesChart";
 import { RecipeAndIngredients, MealData, MealValues } from "@/app/types/definitions";
 import { ArchivedMeal, Ingredient, Objective } from "@prisma/client";
 import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients, getLatestObjective, getMealsByPeriod, getArchivedMealsByPeriod} from "@/app/actions/db.actions";
@@ -48,7 +46,7 @@ export default async function Page() {
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col min-h-0 px-3 sm:px-10">
-      <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Today</h1>
+        <div className="scroll-m-20 border-b text-3xl font-semibold tracking-tight flex justify-between"><span>Today</span><span className="display md:hidden text-xl content-center">{today.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</span></div>
       <div className="flex flex-col lg:flex-row gap-4 max-h-fit min-h-0 my-4 xl:mx-12">
           <ChartsCards values={todaysValuesSum} objective={objective} date={today}/>
           <Diary mealValues={todaysValues} recipes={recipes} ingredients={ingredients}/>

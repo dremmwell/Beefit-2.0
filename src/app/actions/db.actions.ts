@@ -418,6 +418,16 @@ export async function getLatestObjective(userId : UserId){
   return objective
 }
 
+export async function getObjectives(userId : UserId){
+  const data = await db.objective.findMany({
+    where : {
+      userId: userId,
+    }
+  })
+  const objectives = JSON.parse(JSON.stringify(data));
+  return objectives
+}
+
 export async function getObjectiveByPeriod(userId : UserId, startDate : Date, endDate : Date){
 
   const data = await db.objective.findMany({

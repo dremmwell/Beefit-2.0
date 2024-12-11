@@ -1,51 +1,22 @@
-import { ObjectiveAndDate } from "@/app/types/definitions";
 import { Objective } from "@prisma/client";
 
-export function setObjectiveForEachDay(lastestObjective : Objective, objectives : Objective[], startDate : Date, endDate : Date, ){
-    
-    if (!(startDate instanceof Date) || !(endDate instanceof Date)) {
-        throw new Error('Both startDate and endDate must be valid Date objects.');
-    }
-    if (startDate > endDate) {
-        throw new Error('startDate must be earlier than or equal to endDate.');
-    }
+export function getDayObjective(objectives : Objective[], date : Date){
 
-    const dates: Date[] = [];
-    let currentDate = new Date(startDate);
 
-    while (currentDate <= endDate) {
-        dates.push(new Date(currentDate));
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
+            let dateNext = new Date(date)
+            dateNext.setDate(dateNext.getDate() + 1);
+            const dateTime = dateNext.getTime()
 
-    const dateAndOjectives : ObjectiveAndDate[] = [];
-    const lastestObjectiveDate : Date = new Date(lastestObjective.createdAt)
-   
-    dates.forEach((date : Date) => {
-        if(objectives === undefined || objectives.length == 0){
-            const dateAndOjective : ObjectiveAndDate = {objective : lastestObjective, date : date}
-            dateAndOjectives.push(dateAndOjective);
-        }
-        else{
-            if(date > lastestObjectiveDate){
-                const dateAndOjective : ObjectiveAndDate = {objective : lastestObjective, date : date}
-                dateAndOjectives.push(dateAndOjective);
-            }
-            else{
-                for(let i = 0; i < objectives.length; i++){
-                    const objectiveDate : Date = new Date(objectives[i].createdAt)
-
-                    const checkDate = new Date(date)
-                    checkDate.setDate(date.getDate() + 1)
-
-                    if(checkDate > objectiveDate) {
-                        const dateAndOjective : ObjectiveAndDate = { objective : objectives[i], date : date}
-                        dateAndOjectives.push(dateAndOjective)
-                        break
-                    }
-                }
-            }
-        }
-    })
-    return dateAndOjectives
+            // Find the existing objectives before the date
+            const objectivesBeforeDate = objectives.filter(
+                obj => {var objDate = new Date(obj.createdAt).getTime();
+                return (objDate < dateTime)
+            });
+                // Find the first objective of the filtered list
+                const firstObjective = objectivesBeforeDate.reduce((latest, current) => {
+                    var currentDate = new Date(current.createdAt).getTime();
+                    var latestDate = new Date(latest.createdAt).getTime();
+                return currentDate > latestDate ? current : latest
+                });
+                return firstObjective
 }
