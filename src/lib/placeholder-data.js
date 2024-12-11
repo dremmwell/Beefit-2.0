@@ -128,7 +128,7 @@ export const placeholderIngredients = [
     },
     {
         name: 'Milk',
-        unit: 'ml',
+        unit: '100ml',
         gramsPerUnit: 103,
         calories: 50,
         proteins: 3.6,

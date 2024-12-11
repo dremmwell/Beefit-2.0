@@ -17,6 +17,12 @@ export async function seedDB(userId : UserId){
   })
 }
 
+export async function seedIngredients(userId : UserId, ingredients : any){
+  ingredients.forEach((ingredient : any) => {
+    createIngredient(ingredient)
+  });
+}
+
 //----------------------------------------- Ingredients CRUD operations ------------------------------------//
 
 export async function getIngredients(userId: UserId) {
