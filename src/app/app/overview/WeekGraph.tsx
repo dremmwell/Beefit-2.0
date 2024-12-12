@@ -47,7 +47,7 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
     })
 
     const [selectedValue, setSelectedValue] = useState("calories")
-    const [selectedObjective, setSelectedObjective] = useState("objectiveCalories")
+    const [selectedObjective, setSelectedObjective] = useState("objectivecalories")
 
     const handleSelectChange = (value: string) => {
       setSelectedValue(value)
@@ -141,20 +141,20 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
               </linearGradient>
             </defs>
             <Area
-              dataKey={selectedObjective}
-              type="natural"
-              fill="url(#fillobjective)"
-              fillOpacity={0.4}
-              stroke={`var(--color-${selectedObjective})`}
-              stackId="b"
-            />
-            <Area
               dataKey={selectedValue}
               type="natural"
               fill="url(#fill)"
               fillOpacity={0.4}
               stroke={`var(--color-${selectedValue})`}
               stackId="a"
+            />
+            <Area
+              dataKey={selectedObjective}
+              type="natural"
+              fill="url(#fillobjective)"
+              fillOpacity={0.4}
+              stroke={`var(--color-${selectedObjective})`}
+              stackId="b"
             />
           </AreaChart>
         </ChartContainer>
