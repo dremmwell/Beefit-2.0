@@ -33,26 +33,28 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
 
     weekData.forEach((day : DayData)=> {
         const dayChartData = {
-            day : day.date.toLocaleString("en-GB", {day : 'numeric', weekday : 'short'}),
+            day : day.date.toLocaleString("en-GB", {day : 'numeric', weekday : 'short', month : 'short'}),
             calories : sumMealValues(day.mealsValues).calories.toFixed(),
             proteins : sumMealValues(day.mealsValues).proteins.toFixed(),
             carbs : sumMealValues(day.mealsValues).carbs.toFixed(),
             fats : sumMealValues(day.mealsValues).fats.toFixed(),
-            objective : day.objective.calories.toFixed()
+            objectivecalories : day.objective.calories.toFixed(),
+            objectiveproteins : day.objective.proteins.toFixed(),
+            objectivecarbs : day.objective.carbs.toFixed(),
+            objectivefats : day.objective.fats.toFixed(),
         }
         chartData.push(dayChartData)
     })
 
     const [selectedValue, setSelectedValue] = useState("calories")
+    const [selectedObjective, setSelectedObjective] = useState("objectiveCalories")
+
     const handleSelectChange = (value: string) => {
       setSelectedValue(value)
+      setSelectedObjective(`objective${value}`)
     }
 
     const chartConfig = {
-      objective: {
-        label: "Objective",
-        color: "hsl(var(--chart-2))",
-      },
       calories: {
           label: "Calories", 
           color: "hsl(var(--chart-1))",
@@ -68,6 +70,22 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
       fats : {
         label: "Fats", 
         color: "hsl(var(--chart-4))",
+      },
+      objectivecalories: {
+        label: "Objective",
+        color: "hsl(var(--chart-2))",
+      },
+      objectiveproteins : {
+        label: "Objective",
+        color: "hsl(var(--chart-2))",
+      },
+      objectivecarbs : {
+        label: "Objective",
+        color: "hsl(var(--chart-2))",
+      },
+      objectivefats : {
+        label: "Objective",
+        color: "hsl(var(--chart-2))",
       }
     } satisfies ChartConfig
 
@@ -123,11 +141,11 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
               </linearGradient>
             </defs>
             <Area
-              dataKey="objective"
+              dataKey={selectedObjective}
               type="natural"
               fill="url(#fillobjective)"
               fillOpacity={0.4}
-              stroke="var(--color-objective)"
+              stroke={`var(--color-${selectedObjective})`}
               stackId="b"
             />
             <Area
