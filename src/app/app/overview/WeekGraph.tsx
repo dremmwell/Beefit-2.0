@@ -1,6 +1,6 @@
 "use client"
 
-import { CartesianGrid, Line, LineChart, XAxis, Area, AreaChart } from "recharts"
+import { CartesianGrid, Line, LineChart, XAxis, Area, AreaChart, LabelList } from "recharts"
 import {
   Card,
   CardContent,
@@ -113,8 +113,8 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
             accessibilityLayer
             data={chartData}
             margin={{
-              left: 12,
-              right: 12,
+              left: 14,
+              right: 14,
             }}
           >
             <CartesianGrid vertical={false} />
@@ -147,7 +147,15 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
               fillOpacity={0.4}
               stroke={`var(--color-${selectedValue})`}
               stackId="a"
-            />
+              dot={{fill : `var(--color-${selectedValue})`}}
+            >
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-foreground"
+                fontSize={12}
+              />
+            </Area>
             <Area
               dataKey={selectedObjective}
               type="natural"

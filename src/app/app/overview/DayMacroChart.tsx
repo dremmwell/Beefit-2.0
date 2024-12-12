@@ -68,7 +68,7 @@ export default function DayMacroChart({ values, objective } : { values : MealVal
         {!isShorted ? 
         <>
           <div className="text-center pb-4 text-muted-foreground">Macronutriments</div>
-          <div className="flex flex-col justify-between gap-6">
+          <div className="flex flex-col justify-between gap-2">
             <div className="flex flex-col">
               <p className="text-sm font-semibold text-foreground mb-1">Carbs</p>
               <div className="flex flex-col h-3">
@@ -181,7 +181,7 @@ export default function DayMacroChart({ values, objective } : { values : MealVal
         </>
         :
         <>
-          <div className="flex flex-col pt-4 pb-4 justify-between gap-3">
+          <div className="flex flex-col justify-between gap-3">
             <div className="flex flex-col">
               <div className="flex gap-1 text-sm">
               <p className="text-xs font-semibold text-foreground mb-1">Carbs : </p>

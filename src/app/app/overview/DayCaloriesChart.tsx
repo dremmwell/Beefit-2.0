@@ -30,7 +30,7 @@ export default function DayCaloriesChart({ values, objective } : { values : Meal
      }
      else {
       setIsShorted(false)
-       setSize(1);
+       setSize(0.8);
      }
    }
  }, [width]);
@@ -126,7 +126,7 @@ export default function DayCaloriesChart({ values, objective } : { values : Meal
       <div className="absolute top-1/2 left-1/2  transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
       {values.calories <= objective.calories ?
       <>
-        <p className="fill-foreground text-4xl font-bold text-success">
+        <p className="fill-foreground text-3xl font-bold text-success">
         {values.calories.toFixed(0)}
         </p>
         <p className="fill-muted-foreground font-semibold">
@@ -135,7 +135,7 @@ export default function DayCaloriesChart({ values, objective } : { values : Meal
       </>
         :
         <>
-        <p className="fill-foreground text-4xl font-bold text-primary">
+        <p className="fill-foreground text-3xl font-bold text-primary">
         {values.calories.toFixed(0)}
         </p>
         <p className="fill-muted-foreground">

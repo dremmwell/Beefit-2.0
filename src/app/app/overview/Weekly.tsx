@@ -14,9 +14,9 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 function Weekly({ weekData }: {weekData : DayData[]}) {
 
     //---------------------- Handles week day selection and format selected day values ----------------------//
-    const [selectedDay, setSelectedDay] = useState<Date | null>(weekData[0].date);
-    const [selectedObjective, setSelectedObjective] = useState<Objective>(weekData[0].objective)
-    const [dayValues, setDayValues] = useState<MealValues[]>(weekData[0].mealsValues)
+    const [selectedDay, setSelectedDay] = useState<Date | null>(weekData[weekData.length - 1].date);
+    const [selectedObjective, setSelectedObjective] = useState<Objective>(weekData[weekData.length - 1].objective)
+    const [dayValues, setDayValues] = useState<MealValues[]>(weekData[weekData.length - 1].mealsValues)
 
     function handleDaySelect (dayData : DayData) {
         setSelectedDay(dayData.date)
@@ -25,7 +25,7 @@ function Weekly({ weekData }: {weekData : DayData[]}) {
     }
 
     return (
-        <>
+        <div className='flex flex-col gap-2'>
             <div className='flex flex-col gap-2'>
                 <div className='flex gap-1'>
                     {weekData.map((dayData, index) => (
@@ -52,14 +52,14 @@ function Weekly({ weekData }: {weekData : DayData[]}) {
                 </div>
             </div>
             {selectedDay && 
-                <div className='flex flex-col 2xl:flex-row gap-4'>
+                <div className='flex flex-col gap-4'>
                     <DayChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>
-                    <ScrollArea className="display hidden md:block rounded-xl border col-start-2 row-start-3 p-2 md:p-4 2xl:w-2/5">
+                    <ScrollArea className="display hidden md:block rounded-xl border col-start-2 row-start-3 p-2 md:p-4">
                         <Timeline meals={dayValues} isGrouped={true}/>
                     </ScrollArea>
                 </div>
             }
-        </>
+        </div>
     )
 }
 
