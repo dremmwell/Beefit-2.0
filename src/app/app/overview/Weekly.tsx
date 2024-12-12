@@ -26,8 +26,8 @@ function Weekly({ weekData }: {weekData : DayData[]}) {
 
     return (
         <>
-            <div className='flex flex-col gap-2 pb-2'>
-                <div className='flex gap-1 flex-row-reverse'>
+            <div className='flex flex-col gap-2'>
+                <div className='flex gap-1'>
                     {weekData.map((dayData, index) => (
                         <div key={index} onClick={() => handleDaySelect(dayData)} className='flex-1'>
                             <DayCard date={dayData.date} color={dayData.color} isSelected={selectedDay && selectedDay.getTime() === dayData.date.getTime()}/> 
@@ -54,7 +54,7 @@ function Weekly({ weekData }: {weekData : DayData[]}) {
             {selectedDay && 
                 <div className='flex flex-col 2xl:flex-row gap-4'>
                     <DayChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>
-                    <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-2 md:p-4 lg:w-2/5">
+                    <ScrollArea className="display hidden md:block rounded-xl border col-start-2 row-start-3 p-2 md:p-4 2xl:w-2/5">
                         <Timeline meals={dayValues} isGrouped={true}/>
                     </ScrollArea>
                 </div>

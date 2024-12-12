@@ -28,11 +28,11 @@ function DayCard({ date, color, isSelected } : { date : Date, color : string, is
    }, [width]);
 
   return (
-    <div className={`rounded-xl border gap-1 bg-card text-card-foreground shadow cursor-pointer flex flex-col items-center p-2 ${isSelected ? `border-primary` : ''}`}>
+    <div className={`rounded-xl border gap-1 bg-card text-card-foreground shadow cursor-pointer flex flex-col items-center p-1 sm:p-2 ${isSelected ? `border-primary` : ''}`}>
         {!isShorted ?
         <>
             <p className='text-sm text-muted-foreground'>{date.toLocaleString("en-GB", { weekday : "short"})}</p>
-            <h4 className='scroll-m-20 text-md font-semibold tracking-tight'>{date.toLocaleString("en-GB", {day : '2-digit'})}</h4>
+            <h4 className='scroll-m-20 text-sm font-semibold tracking-tight'>{date.toLocaleString("en-GB", {day : '2-digit'})}</h4>
             <div
             className={`mt-1 rounded-full w-3 h-3 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-${dotColor}`}
             >
@@ -41,9 +41,9 @@ function DayCard({ date, color, isSelected } : { date : Date, color : string, is
         :
         <>
             <p className='text-sm text-muted-foreground'>{date.toLocaleString("en-GB", { weekday : "narrow"})}</p>
-            <h4 className='scroll-m-20 text-md font-semibold tracking-tight'>{date.toLocaleString("en-GB", {day : '2-digit'})}</h4>
+            <h4 className='scroll-m-20 text-sm font-semibold tracking-tight'>{date.toLocaleString("en-GB", {day : '2-digit'})}</h4>
             <div
-            className={`mb-2 rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-${dotColor}`}
+            className={`my-1 rounded-full w-2 h-2 shadow-[inset_-1px_-1px_2px_rgba(0,0,0,0.2),_1px_1px_2px_rgba(255,255,255,0.3)] bg-${dotColor}`}
             >
             </div>
         </>

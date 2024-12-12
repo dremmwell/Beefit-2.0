@@ -6,6 +6,7 @@ import { MealData, MealValues, DayData } from "@/app/types/definitions";
 import Weekly from "./Weekly";
 import { getMealValues, getArchivedMealsValues, sumMealValues } from "@/lib/meal_utils";
 import { getDayObjective } from "@/lib/objective_utils";
+import { WeekGraph } from "./WeekGraph";
 
 function getMealsCreatedOnDate(mealValues: MealValues[], date: Date): MealValues[] {
 
@@ -77,14 +78,15 @@ export default async function Page() {
     }
     weekData.push(dayData)
   }
+  //Order the weekData list by date
+  const weekDataOrdered : DayData[] = weekData.sort((a,b) =>  a.date.getTime() - b.date.getTime() )
 
   return (
     <div className="container sm:my-10 my-2 flex flex-col gap-2 max-h-fit min-h-0 px-3 sm:px-10">
-        <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Week Overview</h1>
-        <div className="flex flex-col lg:flex-row gap-4 max-h-fit min-h-0 my-4 xl:mx-12">
-          <div className="flex flex-1 flex-col">
-             <Weekly weekData={weekData}/>
-          </div>
+        <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Overview</h1>
+          <div className="flex flex-1 flex-col gap-2">
+             <Weekly weekData={weekDataOrdered}/>
+             <WeekGraph weekData={weekDataOrdered} />
         </div>
     </div>
   )
