@@ -271,13 +271,13 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
       </Card>
       <div className="grid grid-cols-2 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 xl:p-6 xl:pb-2">
             <CardTitle className="text-sm font-medium">
               Mean Weekly {selectedValue[0].toUpperCase() + selectedValue.slice(1)}
             </CardTitle>
           <Beef></Beef>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-1 xl:p-6 xl:pt-2">
             <div className="text-xl font-bold">{selectedMean + " " + unit}</div>
             <p className="text-xs text-muted-foreground">
               out of {selectedMeanObjective} {unit} objective
@@ -285,13 +285,13 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
           </CardContent>
         </Card>
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 xl:p-6 xl:pb-2">
             <CardTitle className="text-sm font-medium">
               Total Weekly {selectedValue[0].toUpperCase() + selectedValue.slice(1)} 
             </CardTitle>
             <CookingPot></CookingPot>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 pt-1 xl:p-6 xl:pt-2">
             <div className="text-xl font-bold">{selectedTotal + " " + unit}</div>
             <p className="text-xs text-muted-foreground">
               out of {selectedTotalObjective} {unit} objective
