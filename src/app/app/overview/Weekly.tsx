@@ -7,11 +7,20 @@ import { useState } from 'react';
 import { Objective } from '@prisma/client';
 import { sumMealValues } from '@/lib/meal_utils';
 import DayChartsCards from './DayChartCard';
-import Timeline from '../today/TimeLine';
+import TimelineWeekday from './TimeLineWeekday';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Recipe, Ingredient } from "@prisma/client"
 
 
-function Weekly({ weekData }: {weekData : DayData[]}) {
+function Weekly({ 
+    weekData,
+    recipes,
+    ingredients,
+}: {
+    weekData : DayData[],
+    recipes : Array<Recipe>,
+    ingredients : Array<Ingredient>,
+}) {
 
     //---------------------- Handles week day selection and format selected day values ----------------------//
     const [selectedDay, setSelectedDay] = useState<Date | null>(weekData[weekData.length - 1].date);
@@ -55,7 +64,7 @@ function Weekly({ weekData }: {weekData : DayData[]}) {
                 <div className='flex flex-col gap-4'>
                     <DayChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>
                     <ScrollArea className="display hidden md:block rounded-xl border col-start-2 row-start-3 p-2 md:p-4">
-                        <Timeline meals={dayValues} isGrouped={true}/>
+                        <TimelineWeekday day={selectedDay} meals={dayValues} isGrouped={true} recipes={recipes} ingredients={ingredients}/>
                     </ScrollArea>
                 </div>
             }

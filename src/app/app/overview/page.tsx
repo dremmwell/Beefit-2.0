@@ -1,8 +1,8 @@
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { getArchivedMealsByPeriod, getMealsByPeriod, getObjectives } from "@/app/actions/db.actions";
-import { ArchivedMeal, Objective } from "@prisma/client";
-import { MealData, MealValues, DayData } from "@/app/types/definitions";
+import { getArchivedMealsByPeriod, getMealsByPeriod, getObjectives,getRecipesAndIngredients, getVariantRecipesAndIngredients, getIngredients } from "@/app/actions/db.actions";
+import { ArchivedMeal, Objective, Ingredient } from "@prisma/client";
+import { MealData, MealValues, DayData, RecipeAndIngredients } from "@/app/types/definitions";
 import Weekly from "./Weekly";
 import { getMealValues, getArchivedMealsValues, sumMealValues } from "@/lib/meal_utils";
 import { getDayObjective } from "@/lib/objective_utils";
@@ -46,6 +46,13 @@ export default async function Page() {
     return redirect("/")
   }
 
+  //Db calls for recipes and ingredients for weekday meal forms//
+  const originalRecipes : Array<RecipeAndIngredients> = await getRecipesAndIngredients(user.id);
+  const variantRecipes : Array<RecipeAndIngredients> = await getVariantRecipesAndIngredients(user.id);
+  const recipes : Array<RecipeAndIngredients> = originalRecipes.concat(variantRecipes);
+
+  const ingredients :Array<Ingredient> = await getIngredients(user.id);
+
   const today : Date = new Date()
   const endDate  : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate())
   const startDate : Date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7)
@@ -85,7 +92,7 @@ export default async function Page() {
     <div className="container sm:my-10 my-2 flex flex-col gap-2 max-h-fit min-h-0 px-3 sm:px-10">
         <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 col-span-2">Overview</h1>
           <div className="flex flex-col xl:flex-row gap-4 xl:mt-4 overflow-scroll no-scrollbar">
-             <Weekly weekData={weekDataOrdered}/>
+             <Weekly weekData={weekDataOrdered} ingredients={ingredients} recipes={recipes}/>
              <div className="flex flex-col gap-4 w-full">
                 <WeekGraph weekData={weekDataOrdered} />
              </div>
