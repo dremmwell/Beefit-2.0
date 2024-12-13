@@ -65,14 +65,16 @@ interface MealrecipesWeekdayForm<TData, TValue> {
   ingredients: Array<Ingredient>
   columns: ColumnDef<TData, TValue>[],
   data: TData[],
-  onSave: Function
+  onSave: Function,
+  date : Date
 }
 
 export default function MealRecipeWeekdayForm<TData, TValue>({
   ingredients,
   columns,
   data,
-  onSave
+  onSave,
+  date
 }: MealrecipesWeekdayForm<TData, TValue>) {
 
   const { toast } = useToast()
@@ -124,12 +126,12 @@ export default function MealRecipeWeekdayForm<TData, TValue>({
 
   //------------------------------------ Data Formatting and Storing -------------------------------------//
 
-  function createNewMeal(values : z.infer<typeof MealRecipeSchema>){
+  function createNewMeal(values : z.infer<typeof MealRecipeSchema>, date : Date){
     const meal : Meal = {
       id: uuidv4(),
       mealType : values.meal,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: date,
+      updatedAt: date,
       userId: "",
     }
     return meal
@@ -159,7 +161,7 @@ export default function MealRecipeWeekdayForm<TData, TValue>({
     try{
       //Handles data formatting and db storing //
       if(selectedRecipe){
-        const meal = createNewMeal(formValues);
+        const meal = createNewMeal(formValues, date);
         const mealRecipes = createNewMealFromRecipe(formValues, selectedRecipe, meal);
         await createMealFromRecipe(meal, mealRecipes)
       }

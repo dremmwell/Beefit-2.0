@@ -75,13 +75,13 @@ export function AddMealDialogWeekday( {
                 <TabsTrigger value="custom">Custom</TabsTrigger>
               </TabsList>
               <TabsContent value="ingredients">
-                <MealIngredientsWeekdayForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
+                <MealIngredientsWeekdayForm columns={columnsIngredients} data={ingredients} onSave={handleClose} date={date}/>
               </TabsContent>
               <TabsContent value="recipes">
-                <MealRecipeWeekdayForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
+                <MealRecipeWeekdayForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose} date={date}/>
               </TabsContent>
               <TabsContent value="custom">
-                <CustomMealWeekdayForm onSave={handleClose}/>
+                <CustomMealWeekdayForm onSave={handleClose} date={date}/>
               </TabsContent>
             </Tabs>
           </ScrollArea>
@@ -110,13 +110,13 @@ export function AddMealDialogWeekday( {
                 <TabsTrigger value="custom">Custom</TabsTrigger>
               </TabsList>
               <TabsContent value="ingredients">
-                <MealIngredientsWeekdayForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
+                <MealIngredientsWeekdayForm columns={columnsIngredients} data={ingredients} onSave={handleClose} date={date}/>
               </TabsContent>
               <TabsContent value="recipes">
-                <MealRecipeWeekdayForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
+                <MealRecipeWeekdayForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose} date={date}/>
               </TabsContent>
               <TabsContent value="custom">
-                <CustomMealWeekdayForm onSave={handleClose}/>
+                <CustomMealWeekdayForm onSave={handleClose} date={date}/>
               </TabsContent>
             </Tabs>
           </ScrollArea>

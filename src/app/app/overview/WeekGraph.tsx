@@ -208,7 +208,7 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
             </Select>
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 pt-0">
+        <CardContent className="p-4">
         <ChartContainer config={chartConfig}>
             <AreaChart
               accessibilityLayer

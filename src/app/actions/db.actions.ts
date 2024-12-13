@@ -330,6 +330,7 @@ export async function createMealFromIngredients (meal : Meal, ingredients : Arra
       data
     })
     revalidatePath('/app/today')
+    revalidatePath('/app/overview')
   }
   return
 }
@@ -351,6 +352,7 @@ export async function createMealFromRecipe(meal: Meal, mealRecipe : Array<MealRe
       data
     })
     revalidatePath('/app/today')
+    revalidatePath('/app/overview')
   }
   return
 }
@@ -373,6 +375,7 @@ export async function createCustomMeal(meal : ArchivedMeal){
       }
     })
     revalidatePath('/app/today')
+    revalidatePath('/app/overview')
   }
   return
 }

@@ -62,13 +62,15 @@ import { Loader2 } from "lucide-react"
 interface MealIngredientsWeekdayForm<TData, TValue> {
   columns: ColumnDef<TData, TValue>[],
   data: TData[],
-  onSave: Function
+  onSave: Function,
+  date :Date
 }
 
 export default function MealIngredientsWeekdayForm<TData, TValue>({
   columns,
   data,
-  onSave
+  onSave,
+  date
 }: MealIngredientsWeekdayForm<TData, TValue>) {
 
   const { toast } = useToast()
@@ -118,12 +120,13 @@ export default function MealIngredientsWeekdayForm<TData, TValue>({
 
     //------------------------------------ Data Formatting and Storing -------------------------------------//
 
-  function createNewMeal(values : z.infer<typeof MealIngredientSchema>){
+  function createNewMeal(values : z.infer<typeof MealIngredientSchema>, date : Date){
+
       const meal : Meal = {
         id: uuidv4(),
         mealType : values.meal,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: date,
+        updatedAt: date,
         userId: "",
       }
       return meal
@@ -152,7 +155,7 @@ export default function MealIngredientsWeekdayForm<TData, TValue>({
 
     try{
       //Handles data formatting and db storing //
-      const meal = createNewMeal(formValues);
+      const meal = createNewMeal(formValues, date);
       const mealIngredientArray = createIngredientArray(formValues, meal);
       await createMealFromIngredients(meal, mealIngredientArray);
       

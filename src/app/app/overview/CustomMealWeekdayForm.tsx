@@ -31,7 +31,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
 import { createCustomMeal } from "@/app/actions/db.actions"
 
-export default function CustomMealWeekdayForm({onSave} : {onSave : Function}) {
+export default function CustomMealWeekdayForm({onSave, date} : {onSave : Function, date : Date}) {
 
   const { toast } = useToast()
 
@@ -49,7 +49,7 @@ export default function CustomMealWeekdayForm({onSave} : {onSave : Function}) {
 
   //------------------------------------ Data Formatting and Storing -------------------------------------//
 
-  function createNewMeal(values : z.infer<typeof CustomMealSchema>){
+  function createNewMeal(values : z.infer<typeof CustomMealSchema>, date : Date){
     const meal : ArchivedMeal = {
       id: uuidv4(),
       description : values.description,
@@ -58,7 +58,7 @@ export default function CustomMealWeekdayForm({onSave} : {onSave : Function}) {
       proteins: values.proteins,
       carbs: values.carbs,
       fats: values.fats,
-      createdAt: new Date(),
+      createdAt: date,
       userId: "",
     }
     return meal
@@ -67,7 +67,7 @@ export default function CustomMealWeekdayForm({onSave} : {onSave : Function}) {
   async function onSubmit (formValues: z.infer<typeof CustomMealSchema>) {
     try{
       //Handles data formatting and db storing //
-      const newMeal = createNewMeal(formValues);
+      const newMeal = createNewMeal(formValues, date);
       await createCustomMeal(newMeal)
       toast({
         title: `Meal saved`,
