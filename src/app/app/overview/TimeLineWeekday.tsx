@@ -4,17 +4,17 @@ import { MealValues, TimeLineMeal } from '@/app/types/definitions';
 import TimelineItemWeekday from './TimelineItemWeekday';
 import { Recipe, Ingredient } from "@prisma/client"
 import { AddMealDialogWeekday } from './AddMealDialogWeekday';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 
 export default function TimelineWeekday({ 
   meals, 
-  isGrouped, 
   day,
   recipes,
   ingredients,
 }:{ 
   meals : Array<MealValues>,
-  isGrouped : boolean,
   day : Date,
   recipes : Array<Recipe>,
   ingredients : Array<Ingredient>,
@@ -68,19 +68,23 @@ export default function TimelineWeekday({
   const items = getTimeLineItems(meals)[0];
   const itemsGrouped = getTimeLineItems(meals)[1];
 
-  const [isAddMealOpen, setIsAddMealOpen] = useState(false);
+  const [isGrouped, setIsGrouped] = useState(false);
 
   return (
     <>
-      <div className='flex justify-between mx-2'>
-        <p className='pt-2 px-2'>
-          {day.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}
-        </p>
-       <AddMealDialogWeekday 
-            recipes = {recipes}
-            ingredients={ingredients}
-            date={day}
-        />
+      <div className='flex justify-between mx-2 gap-1'>
+        <div className='flex items-center'>
+          <p className='px-2'>
+            {day.toLocaleString("en-GB", {month : 'short', day : 'numeric', year : 'numeric'})}
+          </p>
+          <Switch checked={isGrouped} onCheckedChange={setIsGrouped}/>
+          <Label htmlFor="converted"className="ml-2 text-sm text-muted-foreground">group meals</Label>
+        </div>
+        <AddMealDialogWeekday 
+              recipes = {recipes}
+              ingredients={ingredients}
+              date={day}
+          />
       </div>
       <ol className='mx-2 my-4 mt-2'>
         {!isGrouped && items.map((item) => (
