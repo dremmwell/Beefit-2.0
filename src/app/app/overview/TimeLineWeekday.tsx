@@ -1,7 +1,9 @@
 import React from 'react'
+import { useState } from 'react';
 import { MealValues, TimeLineMeal } from '@/app/types/definitions';
 import TimelineItemWeekday from './TimelineItemWeekday';
 import { Recipe, Ingredient } from "@prisma/client"
+import { AddMealDialogWeekday } from './AddMealDialogWeekday';
 
 
 export default function TimelineWeekday({ 
@@ -66,9 +68,20 @@ export default function TimelineWeekday({
   const items = getTimeLineItems(meals)[0];
   const itemsGrouped = getTimeLineItems(meals)[1];
 
+  const [isAddMealOpen, setIsAddMealOpen] = useState(false);
+
   return (
     <>
-      {day.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}
+      <div className='flex justify-between mx-2'>
+        <p className='pt-2 px-2'>
+          {day.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}
+        </p>
+       <AddMealDialogWeekday 
+            recipes = {recipes}
+            ingredients={ingredients}
+            date={day}
+        />
+      </div>
       <ol className='mx-2 my-4 mt-2'>
         {!isGrouped && items.map((item) => (
             <TimelineItemWeekday key={item.mealId} meal={item} ingredients={ingredients} recipes={recipes} day={day}/> 

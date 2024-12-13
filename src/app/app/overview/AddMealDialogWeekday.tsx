@@ -43,27 +43,23 @@ export function AddMealDialogWeekday( {
   recipes,
   ingredients,
   date,
-  isOpen,
-  setIsOpen,
 } : {
   recipes : Array<Recipe>,
   ingredients : Array<Ingredient>,
   date : Date,
-  isOpen: boolean,
-  setIsOpen: Dispatch<SetStateAction<boolean>>,
 }) {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const handleClose = () => {
-    setIsOpen(false);
+    setOpen(false);
   };
 
   if (true) {
     return (
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button >Add Meal</Button>
+          <Button variant="outline">Add Meal</Button>
         </DialogTrigger>
         <DialogContent className="min-w-fit max-h-full flex-1">
         <DialogHeader >

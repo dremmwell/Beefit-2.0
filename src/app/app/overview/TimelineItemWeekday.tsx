@@ -10,12 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from '../../../components/ui/badge'
 import { useState } from 'react'
-import { ArrowUpDown, MoreHorizontal, SquarePen, Trash2, ListCollapse } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, PlusIcon, Trash2, ListCollapse } from "lucide-react"
 import IconMenu from "@/components/icon-menu";
 import DeleteMealDialog from '../today/DeleteMealDialog';
 import DetailsDialog from '../today/DetailsMealDialog';
 import { Recipe, Ingredient } from '@prisma/client';
-import { AddMealDialogWeekday } from './AddMealDialogWeekday';
 
 function TimelineItemWeekday( {
     meal,
@@ -32,7 +31,6 @@ function TimelineItemWeekday( {
       // Handles Dioalog open/close state //
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isAddMealOpen, setIsAddMealOpen] = useState(false);
 
   return (
       <>
@@ -45,13 +43,6 @@ function TimelineItemWeekday( {
             meal={meal}
             isOpen={isDetailsOpen}
             setIsOpen={setIsDetailsOpen}
-        />
-        <AddMealDialogWeekday 
-            recipes = {recipes}
-            ingredients={ingredients}
-            date={day}
-            isOpen={isAddMealOpen}
-            setIsOpen={setIsAddMealOpen}
         />
         
         <li key={meal.mealId} className="last:mb-0 mb-2">
@@ -77,31 +68,31 @@ function TimelineItemWeekday( {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 ">
-                    <button
-                        onClick={() => {
-                        setIsDetailsOpen(true);
-                        }}
-                        className="w-full justify-start flex rounded-md p-2"
-                    >
-                        <IconMenu
-                        text="Details"
-                        icon={<ListCollapse className="h-4 w-4" />}
-                        />
-                    </button>
+                        <button
+                            onClick={() => {
+                            setIsDetailsOpen(true);
+                            }}
+                            className="w-full justify-start flex rounded-md p-2"
+                        >
+                            <IconMenu
+                            text="Details"
+                            icon={<ListCollapse className="h-4 w-4" />}
+                            />
+                        </button>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="group flex w-full items-center justify-between  text-left p-0 text-sm font-base text-neutral-500 focus:bg-destructive">
-                    <button
-                        onClick={() => {
-                        setIsDeleteOpen(true);
-                        }}
-                        className="w-full justify-start flex rounded-md p-2"
-                    >
-                        <IconMenu
-                        text="Delete"
-                        icon={<Trash2 className="h-4 w-4" />}
-                        />
-                    </button>
+                        <button
+                            onClick={() => {
+                            setIsDeleteOpen(true);
+                            }}
+                            className="w-full justify-start flex rounded-md p-2"
+                        >
+                            <IconMenu
+                            text="Delete"
+                            icon={<Trash2 className="h-4 w-4" />}
+                            />
+                        </button>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
                 </DropdownMenu>
