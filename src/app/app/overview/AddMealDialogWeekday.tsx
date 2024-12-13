@@ -32,11 +32,10 @@ import { useState, useEffect } from "react"
 import { Ingredient } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Recipe } from "@prisma/client"
-import MealIngredientsForm from "../today/MealIngredientsForm"
 import { columnsIngredients, columnsRecipes  } from "../today/columns"
-import MealRecipeForm from "../today/MealRecipesForm"
-import CustomMealForm from "../today/CustomMealForm"
-
+import CustomMealWeekdayForm from './CustomMealWeekdayForm';
+import MealIngredientsWeekdayForm from './MealIngredientsWeekdayForm';
+import MealRecipeWeekdayForm from './MealRecipesWeekdayForm';
 
 
 export function AddMealDialogWeekday( {
@@ -63,9 +62,9 @@ export function AddMealDialogWeekday( {
         </DialogTrigger>
         <DialogContent className="min-w-fit max-h-full flex-1">
         <DialogHeader >
-            <DialogTitle>New Meal</DialogTitle>
+            <DialogTitle>New Meal on {date.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</DialogTitle>
             <DialogDescription>
-              Add a new meal to your diary !
+              Add a new meal on your {date.toLocaleString("en-GB", {month : 'long', day : 'numeric'})} diary!
             </DialogDescription>
           </DialogHeader>
           <ScrollArea className="overflow-y-scroll no-scrollbar">
@@ -76,13 +75,13 @@ export function AddMealDialogWeekday( {
                 <TabsTrigger value="custom">Custom</TabsTrigger>
               </TabsList>
               <TabsContent value="ingredients">
-                <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
+                <MealIngredientsWeekdayForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
               </TabsContent>
               <TabsContent value="recipes">
-                <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
+                <MealRecipeWeekdayForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
               </TabsContent>
               <TabsContent value="custom">
-                <CustomMealForm onSave={handleClose}/>
+                <CustomMealWeekdayForm onSave={handleClose}/>
               </TabsContent>
             </Tabs>
           </ScrollArea>
@@ -111,13 +110,13 @@ export function AddMealDialogWeekday( {
                 <TabsTrigger value="custom">Custom</TabsTrigger>
               </TabsList>
               <TabsContent value="ingredients">
-                <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
+                <MealIngredientsWeekdayForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
               </TabsContent>
               <TabsContent value="recipes">
-                <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
+                <MealRecipeWeekdayForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
               </TabsContent>
               <TabsContent value="custom">
-                <CustomMealForm onSave={handleClose}/>
+                <CustomMealWeekdayForm onSave={handleClose}/>
               </TabsContent>
             </Tabs>
           </ScrollArea>

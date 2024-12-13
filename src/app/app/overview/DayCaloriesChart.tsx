@@ -61,7 +61,7 @@ export default function DayCaloriesChart({ values, objective } : { values : Meal
     <div >
       {!isShorted ?
       <>
-        <div className="text-center text-muted-foreground">Calories</div>
+        <div className="text-center text-muted-foreground mb-4">Calories</div>
       <div className="translate-y-2 pb-2 flex flex-col items-center" >
       <svg
         height={radius * 2}
@@ -162,6 +162,7 @@ export default function DayCaloriesChart({ values, objective } : { values : Meal
       </>
       :
       <>
+     <div className="text-center text-muted-foreground">Calories</div>
       <div className="translate-y-3 pb-0 flex flex-col justify-evenly gap-2 items-center" >
       <div className="relative">
         <svg

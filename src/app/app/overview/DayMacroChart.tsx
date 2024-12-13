@@ -175,6 +175,7 @@ export default function DayMacroChart({ values, objective } : { values : MealVal
         </>
         :
         <>
+        <div className="text-center pb-4 text-muted-foreground">Macronutriments</div>
           <div className="flex flex-col justify-between gap-3">
             <div className="flex flex-col">
               <div className="flex gap-1 text-sm">

@@ -278,7 +278,7 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
           <Beef></Beef>
           </CardHeader>
           <CardContent className="p-4 pt-1 xl:p-6 xl:pt-2">
-            <div className="xl:text-xl text-lg font-bold">{selectedMean + " " + unit}/day</div>
+            <div className="xl:text-xl text-base font-bold">{selectedMean + " " + unit}/day</div>
             <p className="text-xs text-muted-foreground">
               out of {selectedMeanObjective} {unit} objective
             </p>
@@ -292,7 +292,7 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
             <CookingPot></CookingPot>
           </CardHeader>
           <CardContent className="p-4 pt-1 xl:p-6 xl:pt-2">
-            <div className="xl:text-xl text-lg font-bold">{selectedTotal + " " + unit}/week</div>
+            <div className="xl:text-xl text-base font-bold">{selectedTotal + " " + unit}/week</div>
             <p className="text-xs text-muted-foreground">
               out of {selectedTotalObjective} {unit} objective
             </p>
