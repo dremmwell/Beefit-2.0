@@ -30,7 +30,30 @@ import { useState } from "react"
 
 export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
 
-    const chartData : any = []
+    const chartData : any = [];
+    const totalData = {
+      calories: 0,
+      proteins: 0,
+      carbs: 0,
+      fats:0
+    }
+
+    const totalObjective = {
+      calories: 0,
+      proteins: 0,
+      carbs: 0,
+      fats:0
+    }
+
+   const calArray : number[] = []
+   const protArray : number[] = []
+   const carbArray : number[] = []
+   const fatArray : number[] = []
+
+   const calObjArray : number[] = []
+   const protObjArray : number[] = []
+   const carbObjArray : number[] = []
+   const fatObjArray : number[] = []
 
     weekData.forEach((day : DayData)=> {
         const dayChartData = {
@@ -45,14 +68,90 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
             objectivefats : day.objective.fats.toFixed(),
         }
         chartData.push(dayChartData)
+
+        calArray.push(sumMealValues(day.mealsValues).calories)
+        protArray.push(sumMealValues(day.mealsValues).proteins)
+        carbArray.push(sumMealValues(day.mealsValues).carbs)
+        fatArray.push(sumMealValues(day.mealsValues).fats)
+
+        calObjArray.push(day.objective.calories)
+        protObjArray.push(day.objective.proteins)
+        carbObjArray.push(day.objective.carbs)
+        fatObjArray.push(day.objective.fats)
+
+        totalData.calories += sumMealValues(day.mealsValues).calories;
+        totalData.proteins += sumMealValues(day.mealsValues).proteins;
+        totalData.carbs += sumMealValues(day.mealsValues).carbs;
+        totalData.fats += sumMealValues(day.mealsValues).fats;
+
+        totalObjective.calories += day.objective.calories;
+        totalObjective.proteins += day.objective.proteins;
+        totalObjective.carbs += day.objective.carbs;
+        totalObjective.fats += day.objective.fats 
+
     })
+
+    const meanData = {
+      calories : calArray.reduce((a, b) => a+ b) / calArray.length,
+      proteins : protArray.reduce((a, b) => a+ b) / protArray.length,
+      carbs : carbArray.reduce((a, b) => a+ b) / carbArray.length,
+      fats : fatArray.reduce((a, b) => a + b) / fatArray.length
+    }
+
+    const meanObjective = {
+      calories : calObjArray.reduce((a, b) => a+ b) / calObjArray.length,
+      proteins : protObjArray.reduce((a, b) => a+ b) / calObjArray.length,
+      carbs : carbObjArray.reduce((a, b) => a+ b) / calObjArray.length,
+      fats : fatObjArray.reduce((a, b) => a + b) / calObjArray.length
+    }
 
     const [selectedValue, setSelectedValue] = useState("calories")
     const [selectedObjective, setSelectedObjective] = useState("objectivecalories")
+    const [selectedTotal, setSelectedTotal] = useState(totalData.calories.toFixed(0))
+    const [unit, setUnit] = useState("cal")
+    const [selectedMean, setSelectedMean] = useState(meanData.calories.toFixed(0))
+    const [selectedMeanObjective, setSelectedMeanObjective] = useState(meanObjective.calories.toFixed(0))
+    const [selectedTotalObjective, setSelectedTotalObjective] = useState(totalObjective.calories.toFixed(0))
 
     const handleSelectChange = (value: string) => {
       setSelectedValue(value)
       setSelectedObjective(`objective${value}`)
+      switch(value){
+        case "calories":
+          setSelectedTotal(totalData.calories.toFixed(0))
+          setSelectedMean(meanData.calories.toFixed(0))
+          setSelectedMeanObjective( meanObjective.calories.toFixed(0))
+          setSelectedTotalObjective(totalObjective.calories.toFixed(0))
+          setUnit("cal")
+          break
+        case "proteins":
+          setSelectedTotal(totalData.proteins.toFixed(0))
+          setSelectedMean(meanData.proteins.toFixed(0))
+          setSelectedMeanObjective( meanObjective.proteins.toFixed(0))
+          setSelectedTotalObjective(totalObjective.proteins.toFixed(0))
+          setUnit("g")
+          break
+        case "carbs":
+          setSelectedTotal(totalData.carbs.toFixed(0))
+          setSelectedMean(meanData.carbs.toFixed(0))
+          setSelectedMeanObjective( meanObjective.carbs.toFixed(0))
+          setSelectedTotalObjective(totalObjective.carbs.toFixed(0))
+          setUnit("g")
+          break
+        case "fats":
+          setSelectedTotal(totalData.fats.toFixed(0))
+          setSelectedMean(meanData.fats.toFixed(0))
+          setSelectedMeanObjective( meanObjective.fats.toFixed(0))
+          setSelectedTotalObjective(totalObjective.fats.toFixed(0))
+          setUnit("g")
+          break
+        default :
+          setSelectedTotal(totalData.calories.toFixed(0))
+          setSelectedMean(meanData.calories.toFixed(0))
+          setSelectedMeanObjective( meanObjective.calories.toFixed(0))
+          setSelectedTotalObjective(totalObjective.calories.toFixed(0))
+          setUnit("cal")
+      }
     }
 
     const chartConfig = {
@@ -174,28 +273,28 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Weekly
+              Mean Weekly {selectedValue[0].toUpperCase() + selectedValue.slice(1)}
             </CardTitle>
-            <CookingPot></CookingPot>
+          <Beef></Beef>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$45,231.89</div>
+            <div className="text-xl font-bold">{selectedMean + " " + unit}</div>
             <p className="text-xs text-muted-foreground">
-              +20.1% from last month
+              out of {selectedMeanObjective} {unit} objective
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Total Revenue
+              Total Weekly {selectedValue[0].toUpperCase() + selectedValue.slice(1)} 
             </CardTitle>
-          <Beef></Beef>
+            <CookingPot></CookingPot>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$45,231.89</div>
+            <div className="text-xl font-bold">{selectedTotal + " " + unit}</div>
             <p className="text-xs text-muted-foreground">
-              +20.1% from last month
+              out of {selectedTotalObjective} {unit} objective
             </p>
           </CardContent>
         </Card>
