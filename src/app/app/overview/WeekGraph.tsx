@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Beef, CookingPot } from "lucide-react";
 import {
   ChartConfig,
   ChartContainer,
@@ -90,84 +91,116 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
     } satisfies ChartConfig
 
   return (
-    <Card >
-      <CardHeader className="p-4 pb-0">
-        <CardTitle className="flex justify-between">
-          <p className="my-auto">Your week</p>
-          <Select defaultValue={selectedValue} onValueChange={handleSelectChange}>
-            <SelectTrigger className="max-w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="calories">Calories</SelectItem>
-              <SelectItem value="proteins">Proteins</SelectItem>
-              <SelectItem value="carbs">Carbs</SelectItem>
-              <SelectItem value="fats">Fats</SelectItem>
-            </SelectContent>
-          </Select>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-4 pt-0">
-      <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 14,
-              right: 14,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="day"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent  indicator="dot"/>} />
-            <defs>
-              <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor={`var(--color-${selectedValue})`}
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor={`var(--color-${selectedValue})`}
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <Area
-              dataKey={selectedValue}
-              type="natural"
-              fill="url(#fill)"
-              fillOpacity={0.4}
-              stroke={`var(--color-${selectedValue})`}
-              stackId="a"
-              dot={{fill : `var(--color-${selectedValue})`}}
+    <div className="flex flex-col gap-4">
+      <Card >
+        <CardHeader className="p-4 pb-0">
+          <CardTitle className="flex justify-between">
+            <p className="my-auto">Your week</p>
+            <Select defaultValue={selectedValue} onValueChange={handleSelectChange}>
+              <SelectTrigger className="max-w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="calories">Calories</SelectItem>
+                <SelectItem value="proteins">Proteins</SelectItem>
+                <SelectItem value="carbs">Carbs</SelectItem>
+                <SelectItem value="fats">Fats</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4 pt-0">
+        <ChartContainer config={chartConfig}>
+            <AreaChart
+              accessibilityLayer
+              data={chartData}
+              margin={{
+                left: 14,
+                right: 14,
+              }}
             >
-              <LabelList
-                position="top"
-                offset={12}
-                className="fill-foreground"
-                fontSize={12}
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="day"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickFormatter={(value) => value.slice(0, 3)}
               />
-            </Area>
-            <Area
-              dataKey={selectedObjective}
-              type="natural"
-              fill="url(#fillobjective)"
-              fillOpacity={0.4}
-              stroke={`var(--color-${selectedObjective})`}
-              stackId="b"
-            />
-          </AreaChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+              <ChartTooltip cursor={false} content={<ChartTooltipContent  indicator="dot"/>} />
+              <defs>
+                <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor={`var(--color-${selectedValue})`}
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={`var(--color-${selectedValue})`}
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <Area
+                dataKey={selectedValue}
+                type="natural"
+                fill="url(#fill)"
+                fillOpacity={0.4}
+                stroke={`var(--color-${selectedValue})`}
+                stackId="a"
+                dot={{fill : `var(--color-${selectedValue})`}}
+              >
+                <LabelList
+                  position="top"
+                  offset={12}
+                  className="fill-foreground"
+                  fontSize={12}
+                />
+              </Area>
+              <Area
+                dataKey={selectedObjective}
+                type="natural"
+                fill="url(#fillobjective)"
+                fillOpacity={0.4}
+                stroke={`var(--color-${selectedObjective})`}
+                stackId="b"
+              />
+            </AreaChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+      <div className="grid grid-cols-2 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Weekly
+            </CardTitle>
+            <CookingPot></CookingPot>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">$45,231.89</div>
+            <p className="text-xs text-muted-foreground">
+              +20.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Total Revenue
+            </CardTitle>
+          <Beef></Beef>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">$45,231.89</div>
+            <p className="text-xs text-muted-foreground">
+              +20.1% from last month
+            </p>
+          </CardContent>
+        </Card>
+    </div>
+  </div>
   )
 }
 

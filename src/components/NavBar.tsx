@@ -9,7 +9,7 @@ import {
     CookingPot,
     Target,
     CalendarDays,
-    Home
+    Home,
   } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 

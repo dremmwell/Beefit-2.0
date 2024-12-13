@@ -14,14 +14,14 @@ export default function DayChartsCards({ values, objective, date} : { values : M
     return(
         <Card>
             <CardHeader className="display md:hidden p-4 pb-0">
-                <p className="display">{date.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</p>
+                <p className="text-center">{date.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</p>
             </CardHeader>
-            <CardContent className="flex gap-6 p-4 justify-between">
-                <div className="flex flex-col md:pt-4 pb-2 gap-4">
+            <CardContent className="flex gap-6 md:pb-2 last:only:justify-between">
+                <div className="flex flex-col md:pt-6 pb-2 gap-4">
                     <p className="display hidden md:block">{date.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</p>
                     <DayCaloriesChart values={values} objective={objective}/>
                 </div>
-                <div className="md:mx-6 mt-4">
+                <div className="md:mx-6 pt-6">
                     <DayMacroChart values={values} objective={objective}/>
                 </div>
             </CardContent>

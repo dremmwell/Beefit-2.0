@@ -3,12 +3,6 @@
 import { useEffect, useState, createRef } from "react";
 import { MealData, MealValues } from "@/app/types/definitions";
 import { Objective } from "@prisma/client";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 
 export default function DayMacroChart({ values, objective } : { values : MealValues, objective : Objective}) {
