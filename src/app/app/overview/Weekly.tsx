@@ -61,8 +61,8 @@ function Weekly({
                 </div>
             </div>
             {selectedDay && 
-                <div className='flex lg:flex-col flex-col-reverse gap-4'>
-                    <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-2 md:p-4">
+                <div className='flex flex-col-reverse gap-4'>
+                    <ScrollArea className="rounded-xl border col-start-2 row-start-3 p-2 md:p-4 display hidden lg:block lg:max-h-[247px]">
                         <TimelineWeekday day={selectedDay} meals={dayValues} recipes={recipes} ingredients={ingredients}/>
                     </ScrollArea>
                     <DayChartsCards date={selectedDay} values={sumMealValues(dayValues)} objective={selectedObjective}/>

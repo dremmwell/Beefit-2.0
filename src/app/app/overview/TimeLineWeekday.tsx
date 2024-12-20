@@ -74,7 +74,7 @@ export default function TimelineWeekday({
     <>
       <div className='flex justify-between mx-2 gap-1'>
         <div className='flex items-center'>
-          <p className='px-2'>
+          <p className='lg:px-2 pr-2'>
             {day.toLocaleString("en-GB", {month : 'short', day : 'numeric', year : 'numeric'})}
           </p>
           <Switch checked={isGrouped} onCheckedChange={setIsGrouped}/>
