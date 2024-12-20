@@ -68,3 +68,9 @@ export type DayData = {
     color : string,
     mealsValues : MealValues[]
 }
+
+export type StreakData = {
+    title : string,
+    value : number,
+    footer : string
+}
