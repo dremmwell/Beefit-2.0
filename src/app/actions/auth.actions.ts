@@ -7,7 +7,7 @@ import { generateId } from "lucia";
 import db from "@/db/db";
 import { lucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
-import { seedDB } from "./db.actions";
+import { seedDB } from "./db.actions/seed.actions";
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   

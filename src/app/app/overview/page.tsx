@@ -1,6 +1,12 @@
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { getArchivedMealsByPeriod, getMealsByPeriod, getObjectives,getRecipesAndIngredients, getVariantRecipesAndIngredients, getIngredients } from "@/app/actions/db.actions";
+
+import { getIngredients } from "@/app/actions/db.actions/ingredient.actions";
+import { getArchivedMealsByPeriod, getMealsByPeriod } from "@/app/actions/db.actions/meal.actions";
+import { getObjectives } from "@/app/actions/db.actions/objective.actions";
+import { getVariantRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
+import { getRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
+
 import { ArchivedMeal, Objective, Ingredient } from "@prisma/client";
 import { MealData, MealValues, DayData, RecipeAndIngredients } from "@/app/types/definitions";
 import Weekly from "./Weekly";

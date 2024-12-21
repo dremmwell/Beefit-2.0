@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { updateOrCreateObjective } from "@/app/actions/db.actions";
+import { updateOrCreateObjective } from "@/app/actions/db.actions/objective.actions";
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from "lucide-react";
 

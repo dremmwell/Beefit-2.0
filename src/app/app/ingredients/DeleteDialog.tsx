@@ -11,7 +11,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { deleteIngredient } from "../../actions/db.actions" 
+import { deleteIngredient } from "../../actions/db.actions/ingredient.actions" 
 import { Ingredient } from '@prisma/client';
 import { useToast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';

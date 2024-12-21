@@ -2,7 +2,13 @@ import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { RecipeAndIngredients, MealData, MealValues } from "@/app/types/definitions";
 import { ArchivedMeal, Ingredient, Objective } from "@prisma/client";
-import { getRecipesAndIngredients, getIngredients, getMealsByDate, getVariantRecipesAndIngredients, getLatestObjective, getMealsByPeriod, getArchivedMealsByPeriod} from "@/app/actions/db.actions";
+
+import { getRecipesAndIngredients, getVariantRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
+import { getIngredients } from "@/app/actions/db.actions/ingredient.actions";
+import { getMealsByDate } from "@/app/actions/db.actions/meal.actions";
+import { getLatestObjective } from "@/app/actions/db.actions/objective.actions";
+import { getMealsByPeriod, getArchivedMealsByPeriod } from "@/app/actions/db.actions/meal.actions";
+
 import Diary from "./Diary";
 import { getArchivedMealsValues, getMealValues, sumMealValues } from "@/lib/meal_utils";
 import ChartsCards from "./ChartsCard";

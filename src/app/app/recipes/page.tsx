@@ -7,7 +7,8 @@ import { RecipeAndIngredients } from "@/app/types/definitions";
 import { User } from "lucia";
 import { AddRecipeDialog } from "./AddRecipeDialog";
 import SearchBar from "./SearchBar";
-import { getIngredients, getRecipesAndIngredients } from "@/app/actions/db.actions";
+import { getIngredients } from "@/app/actions/db.actions/ingredient.actions";
+import { getRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
 import { Toaster } from "@/components/ui/toaster";
 import { Ingredient } from "@prisma/client";
 

@@ -54,7 +54,7 @@ import { AddRecipeFormSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
-import { createRecipe} from "@/app/actions/db.actions"
+import { createRecipe} from "@/app/actions/db.actions/recipe.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
 import { getCurrentDate } from "@/lib/utils"

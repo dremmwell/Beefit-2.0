@@ -58,7 +58,7 @@ import { Ingredient, Meal, MealRecipe } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import MealEditRecipeDialog from "./MealEditRecipeDialog"
 import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions"
-import { createMealFromRecipe } from "@/app/actions/db.actions"
+import { createMealFromRecipe } from "@/app/actions/db.actions/meal.actions"
 import { Loader2 } from "lucide-react"
 
 interface MealrecipesForm<TData, TValue> {

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import CaloriesGoalCard from "./CaloriesGoalCard";
 import { Toaster } from "@/components/ui/toaster";
 import MacroGoalCard from "./MacroGoalCard";
-import { getLatestObjective } from "@/app/actions/db.actions";
+import { getLatestObjective } from "@/app/actions/db.actions/objective.actions";
 
 export default async function Page() { 
 

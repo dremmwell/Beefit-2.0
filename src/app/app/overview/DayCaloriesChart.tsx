@@ -2,14 +2,6 @@
 
 import { MealData, MealValues} from "@/app/types/definitions";
 import { Objective } from "@prisma/client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
 import { useEffect, useState } from "react";
 

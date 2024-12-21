@@ -12,7 +12,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-import { deleteMeal } from '@/app/actions/db.actions';
+import { deleteMeal } from '@/app/actions/db.actions/meal.actions';
 import { Meal } from '@prisma/client';
 import { MealValues, TimeLineMeal } from '@/app/types/definitions';
 import { Loader2 } from 'lucide-react';

@@ -22,7 +22,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
 import { Ingredient } from "@prisma/client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { createIngredient } from "@/app/actions/db.actions";
+import { createIngredient } from "@/app/actions/db.actions/ingredient.actions";
 import { AddIngredientSchema } from "@/app/types/form.schema";
 
 

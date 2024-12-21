@@ -55,7 +55,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { MealIngredient, Recipe, RecipeIngredient } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import { Meal } from "@prisma/client"
-import { createMealFromIngredients } from "@/app/actions/db.actions"
+import { createMealFromIngredients } from "@/app/actions/db.actions/meal.actions"
 import { Loader2 } from "lucide-react"
 
 

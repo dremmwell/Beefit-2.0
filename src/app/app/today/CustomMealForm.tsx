@@ -29,7 +29,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ArchivedMeal } from "@prisma/client"
 import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
-import { createCustomMeal } from "@/app/actions/db.actions"
+import { createCustomMeal } from "@/app/actions/db.actions/meal.actions"
 
 export default function CustomMealForm({onSave} : {onSave : Function}) {
 

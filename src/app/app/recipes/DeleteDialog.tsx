@@ -12,7 +12,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
-import { deleteRecipe } from '@/app/actions/db.actions';
+import { deleteRecipe } from '@/app/actions/db.actions/recipe.actions';
 import { Recipe } from '@prisma/client';
 import { Loader2 } from 'lucide-react';
 

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { updateIngredient } from "../../actions/db.actions"
+import { updateIngredient } from "../../actions/db.actions/ingredient.actions"
 import { Ingredient } from "@prisma/client"
 import { AddIngredientSchema } from "@/app/types/form.schema"
 import React from 'react';

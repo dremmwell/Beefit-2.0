@@ -1,14 +1,15 @@
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-import { getRecipesAndIngredients, getIngredients, getVariantRecipesAndIngredients} from "@/app/actions/db.actions";
+import { getIngredients} from "@/app/actions/db.actions/ingredient.actions";
+import { getRecipesAndIngredients, getVariantRecipesAndIngredients } from "../actions/db.actions/recipe.actions";
 import { Ingredient } from "@prisma/client";
 import { RecipeAndIngredients, StreakData, MealValues, MealData } from "../types/definitions";
 import CarouselStreack from "./dashboard/StreakCarousel";
 import ChartsCards from "./today/ChartsCard";
 import { Objective, ArchivedMeal } from "@prisma/client";
-import { getLatestObjective } from "@/app/actions/db.actions";
-import { getMealsByPeriod, getArchivedMealsByPeriod } from "@/app/actions/db.actions";
+import { getLatestObjective } from "@/app/actions/db.actions/objective.actions";
+import { getMealsByPeriod, getArchivedMealsByPeriod } from "@/app/actions/db.actions/meal.actions";
 
 
 export default async function Dashboard() {

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Table from "./Table"
 import { columns } from "./columns";
 
-import { getIngredients, createIngredient } from "../../actions/db.actions";
+import { getIngredients, createIngredient } from "../../actions/db.actions/ingredient.actions";
 
 
 /* import { placeholderIngredients } from '../../../lib/placeholder-data'
