@@ -10,7 +10,7 @@ export default async function Login() {
     const {user} = await validateRequest()
 
     if(user) {
-      return redirect("/app")
+      return redirect("/app/today")
     }
 
     return (

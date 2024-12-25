@@ -24,13 +24,13 @@ export default function NavBar({isCollapsed} : NavBarProps) {
         <Nav 
             isCollapsed={isCollapsed}
             links={[
-              {
+/*               {
                 title: "Home",
                 label: "",
                 ref: "/app",
                 icon: Home,
                 variant: "ghost",
-              },
+              }, */
               {
                 title: "Today",
                 label: "",
