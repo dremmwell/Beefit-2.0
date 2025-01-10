@@ -57,6 +57,8 @@ import { useToast } from "@/components/ui/use-toast"
 import { Meal } from "@prisma/client"
 import { createMealFromIngredients } from "@/app/actions/db.actions/meal.actions"
 import { Loader2 } from "lucide-react"
+import Link from "next/link"
+import { buttonVariants } from "@/components/ui/button"
 
 
 interface MealIngredientsForm<TData, TValue> {
@@ -230,10 +232,13 @@ export default function MealIngredientsForm<TData, TValue>({
             </FormItem>
           )}
         />
-        <div className="flex flex-col gap-4">
-          <h2 className="scroll-m-20 border-b pb-2 text-sm font-medium tracking-tight first:mt-0">
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between border-b pb-2">
+            <h2 className="my-auto scroll-m-20 text-sm">
               Select Ingredients :
-          </h2>
+            </h2>
+            <Link className={buttonVariants({ variant: "outline"})} href="/app/ingredients">New Ingredient</Link>
+          </div>
           <div className="flex md:flex-row flex-col">
             <div className="md:min-h-[300px] md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 md:max-w-96">
                 <Input

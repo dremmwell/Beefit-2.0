@@ -60,6 +60,8 @@ import MealEditRecipeDialog from "./MealEditRecipeDialog"
 import { RecipeAndIngredients, RecipeValues } from "@/app/types/definitions"
 import { createMealFromRecipe } from "@/app/actions/db.actions/meal.actions"
 import { Loader2 } from "lucide-react"
+import Link from "next/link"
+import { buttonVariants } from "@/components/ui/button"
 
 interface MealrecipesForm<TData, TValue> {
   ingredients: Array<Ingredient>
@@ -249,9 +251,12 @@ const [selectedRecipe, setSelectedRecipe] = useState<RecipeAndIngredients>();
         <div className="flex flex-col">
         {!isRowSelected ?
           <div className="flex flex-col gap-4">
-          <h2 className="scroll-m-20 border-b pb-2 text-sm font-medium tracking-tight first:mt-0">
-              Select a recipe :
-          </h2>
+          <div className="flex justify-between border-b pb-2">
+            <h2 className="my-auto scroll-m-20 text-sm">
+              Select a Recipe :
+            </h2>
+            <Link className={buttonVariants({ variant: "outline"})} href="/app/recipes">New Recipe</Link>
+          </div>
             <div className="md:min-w-[300px] w-full flex flex-col gap-2 mt-2 grow-0 md:max-w-96">
                 <Input
                   id="filterInput"
