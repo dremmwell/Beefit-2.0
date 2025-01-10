@@ -314,7 +314,7 @@ export function EditIngredientForm ( {
             {isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             )}
-            Create Ingredient
+            Edit Ingredient
           </Button>
       </form>
     </Form>
