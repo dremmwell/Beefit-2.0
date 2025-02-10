@@ -216,6 +216,7 @@ export function WeekGraph( {weekData} : {weekData : DayData[]} ) {
               margin={{
                 left: 14,
                 right: 14,
+                top: 50,
               }}
             >
               <CartesianGrid vertical={false} />
