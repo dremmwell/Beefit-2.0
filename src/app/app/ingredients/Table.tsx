@@ -1,22 +1,17 @@
-import {
-    ColumnDef,
-  } from "@tanstack/react-table"
 import { DataTable } from "./data-table"
+import { columns } from "./columns";
+import { getIngredients, createIngredient } from "../../actions/db.actions/ingredient.actions"
+import { User } from "lucia";
+;
 
 
-interface TableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[],
-    data: TData[]
-}
+export default async function Table({user}: {user : User}) {
 
-export default function Table<TData, TValue>({
-    columns,
-    data
-}: TableProps<TData, TValue>) {
+  const ingredients = await getIngredients(user.id);
 
   return (
     <div className="overflow-hidden flex px-0.5">
-      <DataTable columns={columns} data={data} isLoading={false}/>
+        <DataTable columns={columns} data={ingredients} isLoading={false}/>
     </div>
   )
 }

@@ -14,6 +14,7 @@ export async function getIngredients(userId: UserId) {
       }
     });
     const ingredients = JSON.parse(JSON.stringify(data));
+/*     await new Promise(resolve => setTimeout(resolve, 10000)); */
     return ingredients
 }
 
