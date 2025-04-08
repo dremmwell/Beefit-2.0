@@ -12,16 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
 import { useState, useEffect } from "react"
 import { Ingredient } from "@prisma/client"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -29,6 +19,7 @@ import AddRecipeForm from "./AddRecipeForm"
 import { columns } from "./columns"
 import { getIngredients } from "@/app/actions/db.actions/ingredient.actions"
 import { User } from "lucia"
+import { Skeleton } from "@/components/ui/skeleton"
 
 
 export function AddRecipeDialog( { user } : { user : User }) {
@@ -61,10 +52,30 @@ export function AddRecipeDialog( { user } : { user : User }) {
             Create a new recipe and add it to your list!
           </DialogDescription>
         </DialogHeader>
-        {ingredients &&
+        {ingredients ?
           <ScrollArea className="overflow-y-scroll no-scrollbar">
             <AddRecipeForm columns={columns} data={ingredients} onSave={handleCloseDialog}/>
           </ScrollArea>
+        :
+        <div className="flex flex-col m-3 gap-8">
+          <div className="flex flex-col gap-2">
+            <Skeleton className= 'h-4 w-[200px]'></Skeleton>
+            <Skeleton className= 'h-8 w-full'></Skeleton>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Skeleton className= 'h-4 w-[200px]'></Skeleton>
+            <Skeleton className= 'h-12 w-full'></Skeleton>
+          </div>
+          <div className="flex flex-col gap-2 mr-10">
+            <Skeleton className= 'h-4 w-[200px]'></Skeleton>
+            <Skeleton className= 'h-8 w-full'></Skeleton>
+            <Skeleton className= 'h-52 w-full'></Skeleton>
+          </div>
+          <div className="flex flex-col gap-2">
+            <Skeleton className= 'h-4 w-[200px]'></Skeleton>
+            <Skeleton className= 'h-8 w-full'></Skeleton>
+          </div>
+        </div>
         }
       </DialogContent>
     </Dialog>

@@ -100,8 +100,6 @@ export function EditIngredientForm ( {
 
     let isSubmitting : boolean = form.formState.isSubmitting;
 
-    console.log(ingredient)
-
     let measureType = initialMeasureType;
     measureType = form.watch("measureType");
 

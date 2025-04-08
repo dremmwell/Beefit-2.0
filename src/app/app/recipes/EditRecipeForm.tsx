@@ -54,7 +54,7 @@ import { AddRecipeFormSchema } from "@/app/types/form.schema"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { v4 as uuidv4 } from 'uuid';
 import { Recipe, RecipeIngredient } from "@prisma/client"
-import { updateRecipe } from "@/app/actions/db.actions/recipe.actions"
+import { createArchivedRecipe, updateRecipe } from "@/app/actions/db.actions/recipe.actions"
 import { useToast } from "@/components/ui/use-toast"
 import { RecipeAndIngredients } from "@/app/types/definitions"
 import { Loader2 } from "lucide-react"
@@ -169,7 +169,7 @@ export default function EditRecipeForm<TData, TValue>({
     try{
       // Handles data formatting and db storing //
       const newRecipe = createNewRecipe(formValues,recipe);
-      const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);
+      const recipeIngredientArray = createNewRecipeIngredientArray(formValues, newRecipe);    
       await updateRecipe(newRecipe, recipeIngredientArray);
       toast({
         title: `Recipe "${recipe.name}" edited`,
