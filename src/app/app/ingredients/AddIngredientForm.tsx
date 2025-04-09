@@ -177,6 +177,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                       <FormControl>
                       <Input {...field}
                       type="number"
+                      step="any"
                       placeholder="in grams..." />
                       </FormControl>
                       <FormDescription>
@@ -198,6 +199,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                       <FormControl>
                         <Input 
                         placeholder="in cal..."
+                        step="any"
                         type="number"
                         {...field} />
                       </FormControl>
@@ -225,6 +227,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                         <Input 
                         placeholder="in grams..."
                         type="number"
+                        step="any"
                         {...field} />
                       </FormControl>
                       {measureType === "100g" &&
@@ -253,6 +256,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                           <Input 
                           placeholder="in grams..."
                           type="number"
+                          step="any"
                           {...field} />
                         </FormControl>
                         {measureType === "100g" &&
@@ -279,6 +283,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                           <Input 
                           placeholder="in grams..."
                           type="number"
+                          step="any"
                           {...field} />
                         </FormControl>
                         {measureType === "100g" &&
