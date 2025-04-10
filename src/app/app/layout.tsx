@@ -10,7 +10,7 @@ export default function Layout({
   }>) {
     return (
       <>
-      <Suspense fallback={<LogInLoading />} >
+      <Suspense fallback={<LogInLoading />}>
         <SideBar />
           {children}
         <Toaster />
