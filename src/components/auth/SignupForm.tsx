@@ -46,7 +46,7 @@ export function SignupForm() {
         variant: 'default',
         description: "Account created sucessfully"
       })
-      router.push("/app/today")
+      router.push("/app")
     }
   }
 

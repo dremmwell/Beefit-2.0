@@ -49,7 +49,7 @@ export function LoginForm() {
         variant: 'default',
         description: "Logged in"
       })
-      router.push("/app/today")
+      router.push("/app")
     }
   }
 

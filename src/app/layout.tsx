@@ -8,6 +8,8 @@ import SideBar from "@/components/SideBar";
 import { Toaster } from "@/components/ui/toaster";
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+import { Suspense } from "react";
+import LogInLoading from "@/components/logInLoading";
 
 
 const fontSans = FontSans({
@@ -55,7 +57,9 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-                {children}
+            <Suspense fallback={<LogInLoading />}>
+              {children}
+            </Suspense>
               <Toaster />
             </ThemeProvider>
         </div>
