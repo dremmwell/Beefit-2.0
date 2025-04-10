@@ -84,6 +84,7 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "spin-loader" : "spin 1s cubic-bezier(.8,.05,.22,.88) infinite"
       },
       fontFamily : {
         sans: ['var(--font-geist-sans)'],

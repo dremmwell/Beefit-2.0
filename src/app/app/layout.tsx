@@ -1,5 +1,7 @@
 import SideBar from "@/components/SideBar";
 import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
+import LogInLoading from "@/components/logInLoading";
 
 export default function Layout({
     children,
@@ -8,9 +10,11 @@ export default function Layout({
   }>) {
     return (
       <>
+      <Suspense fallback={<LogInLoading />} >
         <SideBar />
-            {children}
+          {children}
         <Toaster />
+      </Suspense>
       </>
     )
   }
