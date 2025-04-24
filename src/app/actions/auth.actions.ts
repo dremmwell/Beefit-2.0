@@ -29,7 +29,7 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
             data: {
                 id: userId,
                 username: values.username,
-                password_hash: hashedPassword
+                password_hash: hashedPassword,
             },
           })
       
@@ -56,7 +56,6 @@ export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
 }
 
 export const logIn = async (value: z.infer<typeof LogInSchema>) => {
-
   try{
     const existingUser = await db.user.findUnique({
       where: {

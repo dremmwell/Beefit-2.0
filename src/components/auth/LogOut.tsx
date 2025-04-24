@@ -18,7 +18,7 @@ export function LogOut() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-          <Button variant="outline">Log out</Button>
+          <Button >Log out</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

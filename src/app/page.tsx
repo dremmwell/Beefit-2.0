@@ -3,6 +3,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import 'react-image-crop/dist/ReactCrop.css'
+import { getUserInfo } from "./actions/db.actions/user.action";
 
 export default async function Home() {
 
