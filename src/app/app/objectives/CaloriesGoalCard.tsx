@@ -13,7 +13,6 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { updateOrCreateObjective } from "@/app/actions/db.actions/objective.actions";
-import { seedDB } from "@/app/actions/db.actions/seed.actions";
 import { Loader2 } from "lucide-react";
 
 export default function CaloriesGoalCard( {objective} : {objective : any}) {

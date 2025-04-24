@@ -2,10 +2,11 @@
 
 import db from "@/db/db";
 import { Ingredient, Recipe, RecipeIngredient, MealIngredient, Meal, MealRecipe, Objective, ArchivedMeal } from '@prisma/client';
-import { RecipeAndIngredients } from "../../types/definitions";
+import { RecipeAndIngredients, RecipeValues } from "../../types/definitions";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
+import { getRecipeValues } from "@/lib/recipe_utils";
 
 export async function getRecipesAndIngredients(userId : UserId) {
 
@@ -133,3 +134,25 @@ export async function getRecipesAndIngredients(userId : UserId) {
     return recipeIngredient
   }
   
+
+  // Handles Archived recipes //
+
+  export async function createArchivedRecipe(recipe : RecipeAndIngredients) {
+    const { user } = await validateRequest()
+    if(user && user.id === recipe.userId){
+      const recipeValues : RecipeValues= getRecipeValues(recipe)
+      await db.archivedRecipe.create({
+        data : {
+          id : recipe.id,
+          name: recipe.name,
+          instructions : recipe.instructions,
+          calories : recipeValues.calories,
+          proteins : recipeValues.proteins,
+          carbs : recipeValues.carbs,
+          fats : recipeValues.fats,
+          userId : recipe.userId
+        }
+      })
+    }
+    return
+  }

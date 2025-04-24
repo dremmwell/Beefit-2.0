@@ -162,11 +162,13 @@ model ArchivedMeal {
 }
 
 model ArchivedRecipe {
-  id       String @id @default(uuid())
-  calories Float
-  proteins Float
-  carbs    Float
-  fats     Float
+  id           String @id @default(uuid())
+  name         String
+  instructions String
+  calories     Float
+  proteins     Float
+  carbs        Float
+  fats         Float
 
   createdAt DateTime @default(now())
 
