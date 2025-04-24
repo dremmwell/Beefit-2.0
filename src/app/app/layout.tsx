@@ -1,16 +1,25 @@
 import SideBar from "@/components/SideBar";
 import { Toaster } from "@/components/ui/toaster";
-import { Suspense } from "react";
-import LogInLoading from "@/components/logInLoading";
+import { validateRequest } from "@/lib/auth";
+import { redirect } from "next/navigation";
+import { getUserInfo } from "../actions/db.actions/user.action";
 
-export default function Layout({
+export default async function Layout({
     children,
   }: Readonly<{
     children: React.ReactNode;
   }>) {
+
+      // Validating Path if valid user // 
+    const { user } = await validateRequest()
+      if(!user) {
+        return redirect("/")
+      }
+      const userInfo = await getUserInfo(user)
+    
     return (
       <>
-        <SideBar />
+        <SideBar user={userInfo}/>
           {children}
         <Toaster />
       </>
