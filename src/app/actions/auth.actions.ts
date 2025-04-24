@@ -8,6 +8,8 @@ import db from "@/db/db";
 import { lucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { seedDB } from "./db.actions/seed.actions";
+import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   
@@ -130,5 +132,5 @@ export const signOut = async () => {
       error: error.message,
     }
   }
-
+  redirect('/login')
 }
