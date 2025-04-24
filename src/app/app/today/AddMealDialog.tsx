@@ -47,7 +47,6 @@ export function AddMealDialog( {
   ingredients : Array<Ingredient>
 }) {
   const [open, setOpen] = useState(false)
-  const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const handleClose = () => {
     setOpen(false);
@@ -89,37 +88,4 @@ export function AddMealDialog( {
     )
   }
  
-  return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <Button >Add Meal</Button>
-      </DrawerTrigger>
-      <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>New Meal</DrawerTitle>
-          <DrawerDescription>
-            Add a new meal to your diary !
-          </DrawerDescription>
-        </DrawerHeader>
-          <ScrollArea className="overflow-y-scroll no-scrollbar">
-            <Tabs defaultValue="ingredients">
-              <TabsList className="grid w-full grid-cols-3 mb-5">
-                <TabsTrigger value="ingredients">Ingredients</TabsTrigger>
-                <TabsTrigger value="recipes">Recipes</TabsTrigger>
-                <TabsTrigger value="custom">Custom</TabsTrigger>
-              </TabsList>
-              <TabsContent value="ingredients">
-                <MealIngredientsForm columns={columnsIngredients} data={ingredients} onSave={handleClose}/>
-              </TabsContent>
-              <TabsContent value="recipes">
-                <MealRecipeForm columns={columnsRecipes} data={recipes} ingredients={ingredients} onSave={handleClose}/>
-              </TabsContent>
-              <TabsContent value="custom">
-                <CustomMealForm onSave={handleClose}/>
-              </TabsContent>
-            </Tabs>
-          </ScrollArea>
-      </DrawerContent>
-    </Drawer>
-  )
 }

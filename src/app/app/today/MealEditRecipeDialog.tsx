@@ -38,7 +38,6 @@ export default function MealEditRecipeDialog({
 }) {
 
     const [open, setOpen] = useState(false)
-    const isDesktop = useMediaQuery("(min-width: 768px)")
 
     const handlesSave = (recipe : RecipeAndIngredients) => {
         onEdit(recipe)
@@ -65,22 +64,4 @@ export default function MealEditRecipeDialog({
       </Dialog>
     )
   }
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button >Edit Recipe</Button>
-      </DialogTrigger>
-      <DialogContent className="min-w-fit max-h-full flex-1">
-        <DialogHeader >
-          <DialogTitle>Edit Recipe</DialogTitle>
-          <DialogDescription>
-            Edit your recipe for today only !
-          </DialogDescription>
-        </DialogHeader>
-        <div className='overflow-scroll'>
-        <MealEditRecipeForm columns={columnsIngredients} data={ingredients} onSave={handlesSave} recipe={recipe}/>
-        </div>
-      </DialogContent>
-    </Dialog>
-  )
 } 
