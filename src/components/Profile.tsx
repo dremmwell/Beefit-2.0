@@ -29,13 +29,15 @@ import { Label } from './ui/label'
 import { LogOut } from './auth/LogOut'
 import { DeleteAccount } from './DeleteAccount'
 import { Separator } from './ui/separator'
+import { useState } from 'react'
+import { signOut } from "@/app/actions/auth.actions"
 
 function Profile({user} : {user : User}) {
 
     const userDate = new Date(user.createdAt);
 
   return (
-    <Dialog>
+    <Dialog >
         <DialogTrigger >
             <TooltipProvider>
                 <Tooltip>
@@ -85,11 +87,10 @@ function Profile({user} : {user : User}) {
                 <Separator />
             </div>
             <DialogFooter>
-                
                 <div className='mr-auto'>
                  <DeleteAccount />
                 </div>
-                <LogOut />
+{/*                 <LogOut/> Why does logging out here bugs? Dialogs to close?*/}
             </DialogFooter>
         </DialogContent>
     </Dialog>

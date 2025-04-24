@@ -132,5 +132,4 @@ export const signOut = async () => {
       error: error.message,
     }
   }
-  redirect('/login')
 }

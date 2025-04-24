@@ -11,14 +11,16 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { buttonVariants } from "@/components/ui/button"
-import Link from "next/link"
+import { useState } from "react"
 
 export function LogOut() {
+
+  const [open, setOpen] = useState(false)
+
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-          <Button >Log out</Button>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild >
+          <Button variant="outline">Log out</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
