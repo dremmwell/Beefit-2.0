@@ -90,7 +90,6 @@ function Profile({user} : {user : User}) {
                 <div className='mr-auto'>
                  <DeleteAccount />
                 </div>
-{/*                 <LogOut/> Why does logging out here bugs? Dialogs to close?*/}
             </DialogFooter>
         </DialogContent>
     </Dialog>
