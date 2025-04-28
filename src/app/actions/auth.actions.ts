@@ -2,16 +2,22 @@
 
 import { z } from "zod"
 import { LogInSchema, SignUpSchema } from "../types/auth.schema"
-import * as argon2 from "argon2";
 import { generateId } from "lucia";
 import db from "@/db/db";
 import { lucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { seedDB } from "./db.actions/seed.actions";
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 export const signUp = async (values: z.infer<typeof SignUpSchema>) => {
   
-    const hashedPassword = await argon2.hash(values.password)
+    const hashPassword = async (password : string) => {
+      const salt = await bcrypt.genSalt(10);
+      return await bcrypt.hash(password, salt);
+    };
+    const hashedPassword = await hashPassword(values.password)
     const userId = generateId(15)
   
     try {
@@ -75,9 +81,9 @@ export const logIn = async (value: z.infer<typeof LogInSchema>) => {
       };
     }
   
-    const validPassword = await argon2.verify(
-      existingUser.password_hash,
-      value.password
+    const validPassword = await bcrypt.compare(
+      value.password,
+      existingUser.password_hash
     )
   
     if(!validPassword) {
