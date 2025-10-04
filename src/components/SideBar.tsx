@@ -42,7 +42,7 @@ function SideBar({user} : {user : User}) {
             <NavBar isCollapsed={isCollapsed}/>
             <Separator className="hidden sm:block"/>
         </div>
-        <div className="col-start-1 row-start-1 mr-auto ml-2 sm:mt-auto sm:ml-auto mt-2 sm:mb-4 flex flex-col gap-4">
+        <div className="col-start-1 row-start-1 mr-auto ml-2 sm:mt-auto sm:ml-auto mt-2 flex flex-col gap-4">
 {/*          <div className="m-auto">
           <Profile user={user}/>
          </div>
@@ -51,7 +51,7 @@ function SideBar({user} : {user : User}) {
          </div> */}
          <LogOut />
         </div>
-        <div className="sm:mt-5 sm:mr-auto ml-auto sm:mb-2 mr-2 col-span-1 col-start-8 display sm:hidden">
+        <div className="sm:mt-5 sm:mr-auto ml-auto sm:mb-2 mr-2 col-span-1 col-start-8">
           <ModeToggle />
         </div>
       </nav>
