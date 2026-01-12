@@ -3,7 +3,7 @@
 import type React from "react"
 import { Dumbbell, Tag, BarChart } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import PriorityBoard from "./PriorityBoard.tsx"
+import PriorityBoard from "./PriorityBoard"
 
 
 export default function WorkoutTabs() {
