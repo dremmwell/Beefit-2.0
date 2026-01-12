@@ -10,6 +10,7 @@ import {
     Target,
     CalendarDays,
     Home,
+    Dumbbell,
   } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 
@@ -74,6 +75,18 @@ export default function NavBar({isCollapsed} : NavBarProps) {
                 label: "",
                 ref: "/app/overview",
                 icon: CalendarDays,
+                variant: "ghost",
+              },
+            ]} />
+                        <Separator className='hidden sm:block'/>
+            <Nav 
+            isCollapsed={isCollapsed}
+            links={[
+              {
+                title: "Workouts",
+                label: "",
+                ref: "/app/workouts",
+                icon: Dumbbell,
                 variant: "ghost",
               },
             ]} />

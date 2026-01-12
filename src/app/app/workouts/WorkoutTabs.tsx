@@ -14,8 +14,8 @@ export default function WorkoutTabs() {
           <TabsList className="mb-4 sm:mb-6 w-full sm:w-auto bg-muted">
             <TabsTrigger value="priority" className="flex items-center flex-1 sm:flex-auto">
               <Tag className="h-4 w-4 mr-2" />
-              <span className="hidden sm:inline">Priority</span>
-              <span className="sm:hidden">Priority</span>
+              <span className="hidden sm:inline">Focus</span>
+              <span className="sm:hidden">Focus</span>
             </TabsTrigger>
             <TabsTrigger value="workouts" className="flex items-center flex-1 sm:flex-auto">
               <Dumbbell className="h-4 w-4 mr-2" />
