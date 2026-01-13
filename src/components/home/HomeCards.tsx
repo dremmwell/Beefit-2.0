@@ -29,7 +29,7 @@ function HomeCards({ title, text, image, link, footer }: HomeCardsProps) {
       )}
     >
       {/* Image container with gradient overlay */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+      <div className="group relative aspect-[16/10] w-full overflow-hidden bg-muted">
         <Image
           src={image || "/placeholder.svg"}
           alt={title}
