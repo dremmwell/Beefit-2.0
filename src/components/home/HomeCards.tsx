@@ -25,7 +25,7 @@ function HomeCards({ title, text, image, link, footer }: HomeCardsProps) {
     <Link
       href={link}
       className={cn(
-        "group relative flex lg:flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg hover:shadow-foreground/5",
+        "relative flex lg:flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg hover:shadow-foreground/5",
       )}
     >
       {/* Image container with gradient overlay */}
@@ -56,8 +56,8 @@ function HomeCards({ title, text, image, link, footer }: HomeCardsProps) {
       </div>
 
       {/* Content section */}
-      <div className="flex flex-1 flex-col gap-2 p-5">
-        <p className="text-sm leading-relaxed text-muted-foreground">{text}</p>
+      <div className="flex flex-1 flex-col gap-2 p-5 my-auto">
+        <p className="text-sm leading-relaxed text-muted-foreground display hidden lg:block">{text}</p>
 
         {/* Subtle arrow indicator */}
         <div className="mt-auto flex items-center gap-1 pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
