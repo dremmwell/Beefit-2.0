@@ -50,7 +50,7 @@ function HomeCards({ title, text, image, link, footer }: HomeCardsProps) {
             >
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
-        <div className="mt-auto flex items-center gap-1 pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+        <div className="mt-auto flex items-center gap-1 lg:pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
         </div>
         </div>
       </div>
@@ -60,7 +60,7 @@ function HomeCards({ title, text, image, link, footer }: HomeCardsProps) {
         <p className="text-sm leading-relaxed text-muted-foreground display hidden lg:block">{text}</p>
 
         {/* Subtle arrow indicator */}
-        <div className="mt-auto flex items-center gap-1 pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+        <div className="mt-auto flex items-center gap-1 lg:pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
           <span>{footer}</span>
           <svg
             className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
