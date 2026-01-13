@@ -7,38 +7,64 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 import Link from 'next/link'
-import { text } from 'stream/consumers';
-
-interface CardData {
-  title: string;
-  text: string
-  image: string;
-  link: string;
-}
+import { cn } from "@/lib/utils"
 
 interface HomeCardsProps {
-  cards: CardData[];
+  title: string
+  text: string
+  image: StaticImageData
+  link: string
 }
 
-function HomeCards({ cards }: HomeCardsProps) {
+
+function HomeCards({ title, text, image, link }: HomeCardsProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {cards.map((card, index) => (
-        <Link key={index} href={card.link}>
-          <Card className="cursor-pointer hover:shadow-lg hover:ring-2 hover:ring-primary hover:-translate-y-1 transition-all">
-            <CardHeader>
-              <CardTitle>{card.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-            {card.text}
-              <Image src={card.image} alt={card.title} width={200} height={150} className="w-full h-32 object-cover rounded" />
-            </CardContent>
-          </Card>
-        </Link>
-      ))}
-    </div>
+    <Link
+      href={link}
+      className={cn(
+        "group relative flex lg:flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg hover:shadow-foreground/5",
+      )}
+    >
+      {/* Image container with gradient overlay */}
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+        <Image
+          src={image || "/placeholder.svg"}
+          alt={title}
+          fill
+          className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+        />
+        {/* Subtle gradient overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/35 to-transparent" />
+
+        <h3 className="absolute bottom-4 left-5 right-5 text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
+          {title}
+        </h3>
+      </div>
+
+      {/* Content section */}
+      <div className="flex flex-1 flex-col gap-2 p-5">
+        <p className="text-sm leading-relaxed text-muted-foreground">{text}</p>
+
+        {/* Subtle arrow indicator */}
+        <div className="mt-auto flex items-center gap-1 pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+          <span>{title}</span>
+          <svg
+            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Hover glow effect */}
+      <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-foreground/5 transition-all duration-300 group-hover:ring-foreground/10" />
+    </Link>
   )
 }
 
