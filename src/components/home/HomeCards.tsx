@@ -25,11 +25,11 @@ function HomeCards({ title, text, image, link, footer }: HomeCardsProps) {
     <Link
       href={link}
       className={cn(
-        "relative flex lg:flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg hover:shadow-foreground/5",
+        "group relative flex lg:flex-col overflow-hidden rounded-xl border border-border bg-card transition-all duration-300 hover:border-foreground/20 hover:shadow-lg hover:shadow-foreground/5",
       )}
     >
       {/* Image container with gradient overlay */}
-      <div className="group relative aspect-[16/10] w-full overflow-hidden bg-muted">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
         <Image
           src={image || "/placeholder.svg"}
           alt={title}
