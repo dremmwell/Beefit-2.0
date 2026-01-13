@@ -15,11 +15,12 @@ interface HomeCardsProps {
   title: string
   text: string
   image: StaticImageData
+  footer: string
   link: string
 }
 
 
-function HomeCards({ title, text, image, link }: HomeCardsProps) {
+function HomeCards({ title, text, image, link, footer }: HomeCardsProps) {
   return (
     <Link
       href={link}
@@ -36,11 +37,22 @@ function HomeCards({ title, text, image, link }: HomeCardsProps) {
           className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
         />
         {/* Subtle gradient overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/35 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-card via-card/ to-transparent" />
 
-        <h3 className="absolute bottom-4 left-5 right-5 text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-primary">
+        <div className="absolute bottom-4 left-5 right-5 text-lg font-semibold text-foreground transition-colors duration-300 group-hover:text-primary flex">
           {title}
-        </h3>
+            <svg
+              className="h-6 w-6 transition-transform duration-300 group-hover:translate-x-1 ml-auto"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+        <div className="mt-auto flex items-center gap-1 pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+        </div>
+        </div>
       </div>
 
       {/* Content section */}
@@ -49,7 +61,7 @@ function HomeCards({ title, text, image, link }: HomeCardsProps) {
 
         {/* Subtle arrow indicator */}
         <div className="mt-auto flex items-center gap-1 pt-3 text-sm font-medium text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
-          <span>{title}</span>
+          <span>{footer}</span>
           <svg
             className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
             fill="none"
