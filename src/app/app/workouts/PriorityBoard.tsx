@@ -316,7 +316,7 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
               if (el) cardRefs.current.set(card.id, el)
               else cardRefs.current.delete(card.id)
             }}
-            className={cn("transition-all duration-200 flex-1", isDragOver && "border-primary")}
+            className={cn("transition-all duration-200 flex-1 lg:max-w-60 group", isDragOver && "border-primary")}
             onDragOver={(e) => handleDragOver(e, card.id)}
             onDragLeave={(e) => handleDragLeave(e, card.id)}
             onDrop={(e) => handleDrop(e, card.id)}
@@ -406,7 +406,7 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
             <div className={cn("grid transition-all duration-200 lg:grid-rows-[1fr]", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
               <div className="overflow-hidden">
                 <CardContent className="pt-0 pb-3">
-                  {card.items.length === 0 ? (
+                  {card.labels.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4 border-2 border-dashed rounded-lg">
                       Drop items here
                     </p>
@@ -444,16 +444,24 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
                       ))}
                     </ul>
                   )}
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-center text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-2"
+                    onClick={()=>{}}
+                  >
+                    <PlusCircle className="h-4 w-4 mr-1" />
+                    Add Label
+                  </Button>
                 </CardContent>
               </div>
             </div>
           </Card>
         )
       })}
-          <Button onClick={addNewCard} variant="outline" className="">
+          <Button onClick={addNewCard} variant="outline" className="h-fit p-3 border-dashed text-muted-foreground shrink-0">
+          <PlusCircle className="mr-2 h-4 w-4" />
             Add Group
           </Button>
-      </div>
 
       {touchDragItem && touchDragPosition && isDragReady && (
         <div
