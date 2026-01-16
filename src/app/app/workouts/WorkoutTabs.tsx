@@ -9,10 +9,8 @@ import { FocusLabels } from "@/app/types/definitions"
 
 export default function WorkoutTabs({focus}: {focus: Array<FocusLabels>}) {
 
-  console.log(focus)
-
   return (
-        <Tabs defaultValue="progress" className="flex-1 flex flex-col min-h-0 px-4 mt-2">
+        <Tabs defaultValue="progress" className="flex-1 flex flex-col min-h-0 lg:px-4 mt-2">
           <TabsList className="mb-3 lg:mb-6 w-full sm:w-auto bg-muted">
             <TabsTrigger value="priority" className="flex items-center flex-1 sm:flex-auto">
               <Tag className="h-4 w-4 mr-2" />

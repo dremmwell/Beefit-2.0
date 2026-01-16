@@ -11,8 +11,6 @@ import { PlusCircle } from "lucide-react"
 
 export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
 
-  console.log(focus)
-
   const [cards, setCards] = useState<FocusLabels[]>(focus)
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(["card-1"]))
   const [draggedItem, setDraggedItem] = useState<{ itemId: string; fromCardId: string } | null>(null)
@@ -303,7 +301,7 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row overflow-y-auto lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
+    <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-auto lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
         {cards && cards.map((card) => {
         const isExpanded = expandedCards.has(card.id)
         const isDragOver = dragOverCardId === card.id
@@ -438,8 +436,9 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
                               deleteItem(card.id, label.id)
                             }}
                           >
-                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground group-hover/itemdelete:text-red-500 transition-colors" />
+                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
                           </Button>
+                          )}
                         </li>
                       ))}
                     </ul>
