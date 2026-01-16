@@ -1,7 +1,4 @@
-"use client"
-
 import type React from "react"
-
 import { useState, useRef, useCallback, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChevronDown, GripVertical, Pencil, Trash2, X } from "lucide-react"
@@ -9,52 +6,14 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { FocusLabels } from "@/app/types/definitions"
+import { PlusCircle } from "lucide-react"
 
-interface Item {
-  id: string
-  label: string
-}
+export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
 
-interface CardData {
-  id: string
-  title: string
-  priority: number
-  items: Item[]
-}
+  console.log(focus)
 
-const initialData: CardData[] = [
-  {
-    id: "card-1",
-    title: "Priority",
-    priority: 12,
-    items: [
-      { id: "item-1", label: "Research competitors" },
-      { id: "item-2", label: "Create wireframes" },
-      { id: "item-3", label: "Write documentation" },
-    ],
-  },
-  {
-    id: "card-2",
-    title: "Moderate",
-    priority: 6,
-    items: [
-      { id: "item-4", label: "Build prototype" },
-      { id: "item-5", label: "Design system setup" },
-    ],
-  },
-  {
-    id: "card-3",
-    title: "Maintenance",
-    priority: 2,
-    items: [
-      { id: "item-6", label: "Initial planning" },
-      { id: "item-7", label: "Team kickoff" },
-    ],
-  },
-]
-
-export default function PriorityBoard() {
-  const [cards, setCards] = useState<CardData[]>(initialData)
+  const [cards, setCards] = useState<FocusLabels[]>(focus)
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(["card-1"]))
   const [draggedItem, setDraggedItem] = useState<{ itemId: string; fromCardId: string } | null>(null)
   const [dragOverCardId, setDragOverCardId] = useState<string | null>(null)
@@ -88,10 +47,10 @@ export default function PriorityBoard() {
     })
   }
 
-  const startEditing = (e: React.MouseEvent, card: CardData) => {
+  const startEditing = (e: React.MouseEvent, card: FocusLabels) => {
     e.stopPropagation()
     setEditingCardId(card.id)
-    setEditTitle(card.title)
+    setEditTitle(card.name)
     setEditPriority(card.priority.toString())
   }
 
@@ -99,10 +58,10 @@ export default function PriorityBoard() {
     e.stopPropagation()
     if (!editingCardId) return
 
-    setCards((prev) =>
-      prev.map((card) =>
+    setCards((prev : any) =>
+      prev.map((card : FocusLabels) =>
         card.id === editingCardId
-          ? { ...card, title: editTitle || card.title, priority: Number.parseInt(editPriority) || card.priority }
+          ? { ...card, name: editTitle || card.name, priority: Number.parseInt(editPriority) || card.priority }
           : card,
       ),
     )
@@ -122,7 +81,7 @@ export default function PriorityBoard() {
   const deleteItem = (cardId: string, itemId: string) => {
     setCards((prev) =>
       prev.map((card) =>
-        card.id === cardId ? { ...card, items: card.items.filter((item) => item.id !== itemId) } : card,
+        card.id === cardId ? { ...card, label: card.labels.filter((label) => label.id !== itemId) } : card,
       ),
     )
   }
@@ -183,18 +142,18 @@ export default function PriorityBoard() {
     }
 
     setCards((prevCards) => {
-      const newCards = prevCards.map((card) => ({ ...card, items: [...card.items] }))
+      const newCards = prevCards.map((card) => ({ ...card, labels: [...card.labels] }))
 
       const fromCard = newCards.find((c) => c.id === draggedItem.fromCardId)
       const toCard = newCards.find((c) => c.id === toCardId)
 
       if (!fromCard || !toCard) return prevCards
 
-      const itemIndex = fromCard.items.findIndex((item) => item.id === draggedItem.itemId)
+      const itemIndex = fromCard.labels.findIndex((label) => label.id === draggedItem.itemId)
       if (itemIndex === -1) return prevCards
 
-      const [movedItem] = fromCard.items.splice(itemIndex, 1)
-      toCard.items.push(movedItem)
+      const [movedItem] = fromCard.labels.splice(itemIndex, 1)
+      toCard.labels.push(movedItem)
 
       return newCards
     })
@@ -291,17 +250,17 @@ export default function PriorityBoard() {
 
       if (targetCardId && targetCardId !== touchDragItem.fromCardId) {
         setCards((prevCards) => {
-          const newCards = prevCards.map((card) => ({ ...card, items: [...card.items] }))
+          const newCards = prevCards.map((card) => ({ ...card, labels: [...card.labels] }))
           const fromCard = newCards.find((c) => c.id === touchDragItem.fromCardId)
           const toCard = newCards.find((c) => c.id === targetCardId)
 
           if (!fromCard || !toCard) return prevCards
 
-          const itemIndex = fromCard.items.findIndex((item) => item.id === touchDragItem.itemId)
+          const itemIndex = fromCard.labels.findIndex((label) => label.id === touchDragItem.itemId)
           if (itemIndex === -1) return prevCards
 
-          const [movedItem] = fromCard.items.splice(itemIndex, 1)
-          toCard.items.push(movedItem)
+          const [movedItem] = fromCard.labels.splice(itemIndex, 1)
+          toCard.labels.push(movedItem)
 
           return newCards
         })
@@ -331,20 +290,21 @@ export default function PriorityBoard() {
   }, [])
 
   const addNewCard = () => {
-    const newCard: CardData = {
+    const newCard: FocusLabels = {
+      createdAt: new Date().toISOString(),
+      userId: "user123",
       id: `card-${Date.now()}`,
-      title: "New Group",
-      priority: cards.length + 1,
-      items: [],
+      name: "New Group",
+      priority: (cards.length + 1).toString(),
+      labels: [],
     }
     setCards((prev) => [...prev, newCard])
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
 
   return (
-    <div className="flex flex-col gap-4 max-w-md flex-1 overflow-x-auto min-w-full lg:pb-4">
-      <div className="flex flex-col lg:flex-row gap-4 flex-1">
-        {cards.map((card) => {
+    <div className="flex flex-col gap-4 lg:flex-row overflow-y-auto lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
+        {cards && cards.map((card) => {
         const isExpanded = expandedCards.has(card.id)
         const isDragOver = dragOverCardId === card.id
         const isEditing = editingCardId === card.id
@@ -406,7 +366,7 @@ export default function PriorityBoard() {
                 ) : (
                   <>
                     <CardTitle className="text-base flex items-center gap-2">
-                      {card.title}
+                      {card.name}
                       <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                         {card.priority}
                       </span>
@@ -420,12 +380,12 @@ export default function PriorityBoard() {
                         variant="ghost"
                         className="h-8 w-8 group/delete"
                         onClick={(e) => deleteCard(e, card.id)}
-                        disabled={card.items.length > 0}
+                        disabled={card.labels.length > 0}
                       >
                         <Trash2
                           className={cn(
                             "h-4 w-4 transition-colors",
-                            card.items.length > 0
+                            card.labels.length > 0
                               ? "text-muted-foreground/40"
                               : "text-muted-foreground group-hover/delete:text-red-500",
                           )}
@@ -452,30 +412,30 @@ export default function PriorityBoard() {
                     </p>
                   ) : (
                     <ul className="space-y-2">
-                      {card.items.map((item) => (
+                      {card.labels.map((label) => (
                         <li
-                          key={item.id}
+                          key={label.id}
                           draggable
-                          onDragStart={(e) => handleDragStart(e, item.id, card.id)}
+                          onDragStart={(e) => handleDragStart(e, label.id, card.id)}
                           onDragEnd={handleDragEnd}
-                          onTouchStart={(e) => handleTouchStart(e, item.id, card.id, item.label)}
+                          onTouchStart={(e) => handleTouchStart(e, label.id, card.id, label.name)}
                           onTouchMove={handleTouchMove}
                           onTouchEnd={handleTouchEnd}
                           onTouchCancel={handleTouchCancel}
                           className={cn(
-                            "flex items-center gap-2 p-3 bg-secondary rounded-lg cursor-grab active:cursor-grabbing transition-opacity touch-none",
-                            (draggedItem?.itemId === item.id || touchDragItem?.itemId === item.id) && "opacity-50",
+                            "flex items-center gap-2 lg:p-3 p-2 bg-secondary rounded-lg cursor-grab active:cursor-grabbing transition-opacity touch-none",
+                            (draggedItem?.itemId === label.id || touchDragItem?.itemId === label.id) && "opacity-50",
                           )}
                         >
                           <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
-                          <span className="text-sm flex-1">{item.label}</span>
+                          <span className="text-sm flex-1">{label.name}</span>
                           <Button
                             size="icon"
                             variant="ghost"
                             className="h-6 w-6 shrink-0 group/itemdelete"
                             onClick={(e) => {
                               e.stopPropagation()
-                              deleteItem(card.id, item.id)
+                              deleteItem(card.id, label.id)
                             }}
                           >
                             <Trash2 className="h-3.5 w-3.5 text-muted-foreground group-hover/itemdelete:text-red-500 transition-colors" />

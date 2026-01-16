@@ -22,9 +22,9 @@ export default async function Login() {
           </div>
         </div>
           <div className="flex flex-col sm:rounded-[0.5rem] sm:border bg-background sm:shadow-md p-4 sm:m-auto gap-4">
-            <h3  className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
+            <div  className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
               Log in
-            </h3>
+            </div>
             <Link  className={`m-auto ${buttonVariants({ variant: "link" })}`} href="/signup">Not registered yet? Sign up here.</Link>
             <LoginForm />
           </div>

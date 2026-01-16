@@ -4,14 +4,16 @@ import type React from "react"
 import { Dumbbell, Tag, BarChart } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import PriorityBoard from "./PriorityBoard"
+import { FocusLabels } from "@/app/types/definitions"
 
 
-export default function WorkoutTabs() {
+export default function WorkoutTabs({focus}: {focus: Array<FocusLabels>}) {
+
+  console.log(focus)
 
   return (
-      <div className="max-h-fit mt-4">
-        <Tabs defaultValue="progress" className="w-full">
-          <TabsList className="mb-4 sm:mb-6 w-full sm:w-auto bg-muted">
+        <Tabs defaultValue="progress" className="flex-1 flex flex-col min-h-0 px-4 mt-2">
+          <TabsList className="mb-3 lg:mb-6 w-full sm:w-auto bg-muted">
             <TabsTrigger value="priority" className="flex items-center flex-1 sm:flex-auto">
               <Tag className="h-4 w-4 mr-2" />
               <span className="hidden sm:inline">Focus</span>
@@ -29,18 +31,17 @@ export default function WorkoutTabs() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="priority" className="mt-0">
-            <PriorityBoard />
+          <TabsContent value="priority" className="flex-1 min-h-0 lg:mt-4 mt-0 flex flex-col overflow-hidden">
+            <PriorityBoard focus={focus}/>
           </TabsContent>
 
-          <TabsContent value="workouts" className="mt-0">
-            WORKOUTS
+          <TabsContent value="workouts" className="mt-0 flex flex-col">
+            Workout
           </TabsContent>
 
           <TabsContent value="progress" className="mt-0">
             PROGRESS
           </TabsContent>
         </Tabs>
-      </div>
   )
 }

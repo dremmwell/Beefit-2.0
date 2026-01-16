@@ -37,7 +37,7 @@ function TimelineItem( {meal} : {meal : TimeLineMeal} ) {
         <li key={meal.mealId} className="last:mb-0 mb-2">
             <div className="grid grid-cols-[minmax(60px,70px)_auto_1fr_auto] grid-rows-[20px_auto] md:gap-3 gap-1">
             <div className="ml-auto">
-                <h3 className="text-sm font-semibold text-foreground">{meal.title}</h3>
+                <div className="text-sm font-semibold text-foreground">{meal.title}</div>
             </div>
             <div className='flex justify-center max-h-5 w-20'>
             <Badge>{meal.calories.toFixed(0)} cal</Badge> 

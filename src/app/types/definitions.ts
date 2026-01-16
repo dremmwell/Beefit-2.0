@@ -1,4 +1,5 @@
 import { Ingredient, Recipe, RecipeIngredient, Meal, Objective } from "@prisma/client";
+import { Labels } from "@prisma/client";
 
 export type RecipeValues = {
     recipeId: string;
@@ -73,4 +74,13 @@ export type StreakData = {
     title : string,
     value : number,
     footer : string
+}
+
+export type FocusLabels = {
+  id: string
+  name: string
+  createdAt: string,
+  userId: string,
+  priority: string
+  labels: Array<Labels>
 }
