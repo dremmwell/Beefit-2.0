@@ -314,7 +314,7 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
   }
 
   return (
-    <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-auto lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
+    <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-scroll lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
         {cards && cards.map((card) => {
         const isExpanded = expandedCards.has(card.id)
         const isDragOver = dragOverCardId === card.id
