@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { useState, useRef, useCallback, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -337,15 +339,15 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
               <div className="flex items-center justify-between">
                 {isEditing ? (
                   <div className="flex flex-col gap-3 flex-1" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex justify-end">
-                      <Button size="icon" variant="ghost" className="h-6 w-6 -mt-1 -mr-2" onClick={cancelEdit}>
-                        <X className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                    </div>
                     <div className="space-y-1">
-                      <Label htmlFor={`title-${card.id}`} className="text-xs text-muted-foreground">
-                        Title
-                      </Label>
+                      <div className="flex">
+                        <Label htmlFor={`title-${card.id}`} className="text-xs text-muted-foreground">
+                          Focus Name
+                        </Label>
+                        <Button size="icon" variant="ghost" className="h-6 w-6 -mt-1 -mr-2 ml-auto" onClick={cancelEdit}>
+                          <X className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </div>
                       <Input
                         id={`title-${card.id}`}
                         value={editTitle}
@@ -357,7 +359,7 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor={`priority-${card.id}`} className="text-xs text-muted-foreground">
-                        Priority Value
+                        Sets
                       </Label>
                       <Input
                         id={`priority-${card.id}`}
