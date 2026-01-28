@@ -20,7 +20,7 @@ export default function NavTabs({ tabs, className }: NavTabsProps) {
   return (
     <div
       className={cn(
-        "bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
+        "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
         className
       )}
     >
@@ -32,11 +32,11 @@ export default function NavTabs({ tabs, className }: NavTabsProps) {
             key={tab.href}
             href={tab.href}
             className={cn(
-              "inline-flex h-[calc(100%-1px)] items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-1 text-sm font-medium whitespace-nowrap transition-all",
+              "flex h-full flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-all",
               "hover:text-foreground",
               isActive && [
                 "bg-background text-foreground shadow-sm",
-                "dark:bg-input/30 dark:border-input dark:text-foreground",
+                "dark:bg-background dark:border-input dark:text-foreground",
               ]
             )}
           >

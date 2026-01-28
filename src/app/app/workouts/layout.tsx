@@ -25,7 +25,7 @@ export default async function Layout({
         <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2">Workouts</h1>
-        <NavTabs tabs={workoutTabs} className="mb-8" />
+        <NavTabs tabs={workoutTabs} className="w-full" />
         <div>{children}</div>
       </div>
     </div>
