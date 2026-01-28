@@ -85,7 +85,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
               {
                 title: "Workouts",
                 label: "",
-                ref: "/app/workouts/progress",
+                ref: "/app/workouts",
                 icon: Dumbbell,
                 variant: "ghost",
               },

@@ -40,10 +40,7 @@ export default function Nav({ links, isCollapsed }: NavProps) {
                   <Link
                     href={link.ref}
                     className={cn(
-                      buttonVariants({ 
-                        variant: pathname === link.ref || (link.ref !== '/' && pathname.startsWith(`${link.ref}/`)) ? 'default' : 'ghost', 
-                        size: "icon" 
-                      }),
+                      buttonVariants({variant: pathname === link.ref || (link.ref !== '/' && pathname.startsWith(`${link.ref}/`)) ? 'default' : 'ghost', size: "icon" }),
                       "h-9 w-9",
                       link.variant === "default" &&
                         "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
@@ -68,7 +65,7 @@ export default function Nav({ links, isCollapsed }: NavProps) {
               key={index}
               href={link.ref}
               className={cn(
-                buttonVariants({ variant: link.ref === pathname ? 'default' : 'ghost', size: "sm" }),
+                buttonVariants({ variant: pathname === link.ref || (link.ref !== '/' && pathname.startsWith(`${link.ref}/`)) ? 'default' : 'ghost', size: "sm" }),
                 link.variant === "default" &&
                   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
                 "justify-start"
