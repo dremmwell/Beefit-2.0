@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FocusLabels } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
+import { updateLabel } from "@/app/actions/db.actions/workout.actions"
 
 export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
 
@@ -153,6 +154,11 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
       const [movedItem] = fromCard.labels.splice(itemIndex, 1)
       toCard.labels.push(movedItem)
 
+      // Call updateLabel when the destination group is different from the source group
+      if (draggedItem.fromCardId !== toCardId) {
+        updateLabel(movedItem.userId, movedItem, toCardId)
+      }
+
       return newCards
     })
 
@@ -260,6 +266,11 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
           const [movedItem] = fromCard.labels.splice(itemIndex, 1)
           toCard.labels.push(movedItem)
 
+          // Call updateLabel when the destination group is different from the source group
+          if (touchDragItem.fromCardId !== targetCardId) {
+            updateLabel(movedItem.userId, movedItem, targetCardId)
+          }
+
           return newCards
         })
       }
@@ -314,7 +325,7 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
               if (el) cardRefs.current.set(card.id, el)
               else cardRefs.current.delete(card.id)
             }}
-            className={cn("transition-all duration-200 flex-1 lg:max-w-60 group", isDragOver && "border-primary")}
+            className={cn("transition-all duration-200 flex-1 lg:max-w-80 group py-1", isDragOver && "border-primary")}
             onDragOver={(e) => handleDragOver(e, card.id)}
             onDragLeave={(e) => handleDragLeave(e, card.id)}
             onDrop={(e) => handleDrop(e, card.id)}
@@ -421,11 +432,12 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
                           onTouchEnd={handleTouchEnd}
                           onTouchCancel={handleTouchCancel}
                           className={cn(
-                            "flex items-center gap-2 lg:p-3 p-2 bg-secondary rounded-lg cursor-grab active:cursor-grabbing transition-opacity touch-none",
+                            "flex items-center gap-2 lg:p-3 p-2 bg-secondary rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
                             (draggedItem?.itemId === label.id || touchDragItem?.itemId === label.id) && "opacity-50",
                           )}
                         >
                           <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
+                          <div className="h-5 w-5 rounded-full mr-2 flex-shrink-0" style={{ backgroundColor: label.color }} />
                           <span className="text-sm flex-1">{label.name}</span>
                           <Button
                             size="icon"
@@ -438,7 +450,6 @@ export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
                           >
                             <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
                           </Button>
-                          )}
                         </li>
                       ))}
                     </ul>

@@ -78,14 +78,14 @@ export default function NavBar({isCollapsed} : NavBarProps) {
                 variant: "ghost",
               },
             ]} />
-                        <Separator className='hidden sm:block'/>
+            <Separator className='hidden sm:block'/>
             <Nav 
             isCollapsed={isCollapsed}
             links={[
               {
                 title: "Workouts",
                 label: "",
-                ref: "/app/workouts",
+                ref: "/app/workouts/progress",
                 icon: Dumbbell,
                 variant: "ghost",
               },
