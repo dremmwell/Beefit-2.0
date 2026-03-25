@@ -35,15 +35,17 @@ model Session {
 }
 
 model Ingredient {
-  id           String @id @unique @default(uuid())
-  name         String
-  unit         String
-  gramsPerUnit Float
-  calories     Int
-  proteins     Float
-  carbs        Float
-  fats         Float
-  userId       String
+  id            String @id @unique @default(uuid())
+  name          String
+  unit          String
+  gramsPerUnit  Float
+  calories      Int
+  proteins      Float
+  carbs         Float
+  fats          Float
+  saturatedFats Float  @default(0)
+  fiber         Float  @default(0)
+  userId        String
 
   bookmarked Boolean @default(false)
   customMeal Boolean @default(false)
