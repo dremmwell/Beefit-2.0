@@ -5,7 +5,6 @@ import { ArchivedMeal, Ingredient, Objective } from "@prisma/client";
 
 import { getRecipesAndIngredients, getVariantRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
 import { getIngredients } from "@/app/actions/db.actions/ingredient.actions";
-import { getMealsByDate } from "@/app/actions/db.actions/meal.actions";
 import { getLatestObjective } from "@/app/actions/db.actions/objective.actions";
 import { getMealsByPeriod, getArchivedMealsByPeriod } from "@/app/actions/db.actions/meal.actions";
 

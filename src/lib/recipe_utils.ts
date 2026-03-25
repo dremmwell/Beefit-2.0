@@ -58,6 +58,25 @@ export function getRecipeValues(recipe: RecipeAndIngredients) {
         }
     }
 
+        let saturatedFats : number = 0;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        if(recipe.ingredients[i].unit === "grams"){
+            saturatedFats += +recipe.ingredients[i].ingredient.saturatedFats*recipe.ingredients[i].quantity/ +recipe.ingredients[i].ingredient.gramsPerUnit       
+        }
+        else{
+            saturatedFats += +recipe.ingredients[i].ingredient.saturatedFats*recipe.ingredients[i].quantity
+        }
+    }
+
+        let fibers : number = 0;
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        if(recipe.ingredients[i].unit === "grams"){
+            fibers += +recipe.ingredients[i].ingredient.fibers*recipe.ingredients[i].quantity/ +recipe.ingredients[i].ingredient.gramsPerUnit       
+        }
+        else{
+            fibers += +recipe.ingredients[i].ingredient.fibers*recipe.ingredients[i].quantity
+        }
+    }
     // Returns the nutritional values of the recipe //
 
     const recipeValues: RecipeValues = {
@@ -67,6 +86,8 @@ export function getRecipeValues(recipe: RecipeAndIngredients) {
         proteins: parseFloat(proteins.toFixed(1)),
         carbs: parseFloat(carbs.toFixed(1)),
         fats: parseFloat(fats.toFixed(1)),
+        saturatedFats: parseFloat(saturatedFats.toFixed(1)),
+        fibers: parseFloat(fibers.toFixed(1)),
     }
 
     return recipeValues
@@ -83,6 +104,9 @@ export function convertTo100g(recipeValues: RecipeValues){
         proteins: parseFloat((recipeValues.proteins * ratio).toFixed(1)),
         carbs: parseFloat((recipeValues.carbs * ratio).toFixed(1)),
         fats: parseFloat((recipeValues.fats * ratio).toFixed(1)),
+        saturatedFats: parseFloat((recipeValues.saturatedFats * ratio).toFixed(1)),
+        fibers: parseFloat((recipeValues.fibers * ratio).toFixed(1)),
+
     }
     return convertedRecipeValues
 }
@@ -98,6 +122,9 @@ export function convertToGrams(recipeValues: RecipeValues, grams: number){
         proteins: parseFloat((recipeValues.proteins * ratio).toFixed(1)),
         carbs: parseFloat((recipeValues.carbs * ratio).toFixed(1)),
         fats: parseFloat((recipeValues.fats * ratio).toFixed(1)),
+        saturatedFats: parseFloat((recipeValues.saturatedFats * ratio).toFixed(1)),
+        fibers: parseFloat((recipeValues.fibers * ratio).toFixed(1)),
+
     }
     return convertedRecipeValues
 }
@@ -111,6 +138,8 @@ export function convertRecipeFraction(recipeValues: RecipeValues, ratio : number
         proteins: parseFloat((recipeValues.proteins * ratio).toFixed(1)),
         carbs: parseFloat((recipeValues.carbs * ratio).toFixed(1)),
         fats: parseFloat((recipeValues.fats * ratio).toFixed(1)),
+        saturatedFats: parseFloat((recipeValues.saturatedFats * ratio).toFixed(1)),
+        fibers: parseFloat((recipeValues.fibers * ratio).toFixed(1)),
     }
     return convertedRecipeValues
 }

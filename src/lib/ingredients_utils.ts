@@ -15,6 +15,8 @@ export function convertTo100g(ingredient: Ingredient){
         proteins: parseFloat((ingredient.proteins * ratio).toFixed(1)),
         carbs: parseFloat((ingredient.carbs * ratio).toFixed(1)),
         fats: parseFloat((ingredient.fats * ratio).toFixed(1)),
+        saturatedFats: parseFloat((ingredient.saturatedFats * ratio).toFixed(1)),
+        fiber: parseFloat((ingredient.fiber * ratio).toFixed(1)),
         userId: ingredient.userId,
         bookmarked: ingredient.bookmarked,
         createdAt: ingredient.createdAt,

@@ -4,12 +4,13 @@ import { useEffect, useState, createRef } from "react";
 import { MealData, MealValues } from "@/app/types/definitions";
 import { Objective } from "@prisma/client";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
+import { FormField } from "@/components/ui/form";
 
 export default function MacroChart({ values, objective } : { values : MealValues, objective : Objective}) {
 
@@ -142,7 +143,10 @@ export default function MacroChart({ values, objective } : { values : MealValues
               </div>
             </div>
             <div className="flex flex-col">
-              <p className="text-sm font-semibold text-foreground mb-1">Fats</p>
+              <div className="flex">
+                <p className="text-sm font-semibold text-foreground mb-1">Fats</p>
+                <p className="text-muted-foreground ml-auto">(Saturated Fats: {values.saturatedFats}g)</p>
+              </div>
               <div className="flex flex-col h-3" >
                 <svg>
                   <rect 
@@ -289,11 +293,12 @@ export default function MacroChart({ values, objective } : { values : MealValues
                   />
                 </svg>
               </div>
+              <p className="text-muted-foreground">(Saturated Fats: {values.saturatedFats}g)</p>
             </div>
           </div>
         </>
         }
-      </div>
+      </div>  
     </>
   )
 }

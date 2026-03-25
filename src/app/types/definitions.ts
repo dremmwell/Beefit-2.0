@@ -7,6 +7,8 @@ export type RecipeValues = {
     proteins: number;
     carbs: number;
     fats: number;
+    saturedFats: number;
+    fibers: number;
 }
 
 export type RecipeAndIngredients = {
@@ -57,7 +59,9 @@ export type MealValues = {
     proteins: number;
     carbs: number;
     fats: number;   
-    description: string ;
+    saturatedFats: number;
+    fibers: number;
+    description: string ;  
     userId : string;
     createdAt : Date;
 }

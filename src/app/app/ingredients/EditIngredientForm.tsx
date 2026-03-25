@@ -177,7 +177,6 @@ export function EditIngredientForm ( {
             />
             {measureType === "custom" && 
               <div className="flex gap-4">
-              <div className="w-5/6">
                   <FormField
                   control={form.control}
                   name="customMeasureName"
@@ -195,7 +194,6 @@ export function EditIngredientForm ( {
                   </FormItem>
                   )}
               />
-              </div>
                   <FormField
                   control={form.control}
                   name="measureWeight"
@@ -208,7 +206,7 @@ export function EditIngredientForm ( {
                       placeholder="in grams..." />
                       </FormControl>
                       <FormDescription>
-                      Please indicate how many grams your custom measure weights.
+                      Please indicate how many grams <br/> your custom measure weights.
                       </FormDescription>
                       <FormMessage />
                   </FormItem>

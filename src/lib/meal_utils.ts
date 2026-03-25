@@ -14,6 +14,8 @@ export function getMealValues(meals : Array<MealData>){
             proteins : 0,
             carbs: 0,
             fats: 0,
+            saturatedFats: 0,
+            fibers: 0,
             description: "",
             userId: "",
             mealId: "",
@@ -32,6 +34,8 @@ export function getMealValues(meals : Array<MealData>){
                 mealValues.proteins = recipeValues.proteins;
                 mealValues.carbs = recipeValues.carbs;
                 mealValues.fats = recipeValues.fats;
+                mealValues.saturatedFats = recipeValues.saturatedFats;
+                mealValues.fibers = recipeValues.fibers;
                 mealValues.description = `${meal.recipe[index].quantity} grams of ${meal.recipe[index].recipe.name}`;
             }
             else{
@@ -42,6 +46,8 @@ export function getMealValues(meals : Array<MealData>){
                 mealValues.proteins = recipeValues.proteins;
                 mealValues.carbs = recipeValues.carbs;
                 mealValues.fats = recipeValues.fats;
+                mealValues.saturatedFats = recipeValues.saturatedFats;
+                mealValues.fibers = recipeValues.fibers;
                 mealValues.description = `${meal.recipe[index].quantity} portion(s) of ${meal.recipe[index].unit} recipe of ${meal.recipe[index].recipe.name}`
             }
         }
@@ -51,6 +57,8 @@ export function getMealValues(meals : Array<MealData>){
                 mealValues.calories += +meal.ingredients[index].ingredient.calories * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
                 mealValues.proteins += +meal.ingredients[index].ingredient.proteins * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
                 mealValues.carbs += +meal.ingredients[index].ingredient.carbs * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
+                mealValues.saturatedFats += +meal.ingredients[index].ingredient.saturatedFats * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
+                mealValues.fibers += +meal.ingredients[index].ingredient.fibers * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
                 mealValues.fats += +meal.ingredients[index].ingredient.fats * meal.ingredients[index].quantity/ +meal.ingredients[index].ingredient.gramsPerUnit;
                 mealValues.description += `${meal.ingredients[index].quantity} ${meal.ingredients[index].unit} of ${meal.ingredients[index].ingredient.name} \n` 
             }
@@ -60,6 +68,8 @@ export function getMealValues(meals : Array<MealData>){
                 mealValues.proteins += +meal.ingredients[index].ingredient.proteins * meal.ingredients[index].quantity;
                 mealValues.carbs += +meal.ingredients[index].ingredient.carbs * meal.ingredients[index].quantity;
                 mealValues.fats += +meal.ingredients[index].ingredient.fats * meal.ingredients[index].quantity;
+                mealValues.saturatedFats += +meal.ingredients[index].ingredient.saturatedFats * meal.ingredients[index].quantity;
+                mealValues.fibers += +meal.ingredients[index].ingredient.fibers * meal.ingredients[index].quantity;
                 mealValues.description += `${meal.ingredients[index].quantity} ${meal.ingredients[index].unit}(s) of ${meal.ingredients[index].ingredient.name} \n` 
             }
         }
@@ -82,6 +92,8 @@ export function getArchivedMealsValues(archivedMeals : ArchivedMeal[]){
             mealId: "",
             mealType: "",
             createdAt: "",
+            saturatedFats: 0,
+            fibers: 0,
         };
         mealValues.mealId = meal.id;
         mealValues.description = `${meal.description} \n`
@@ -90,9 +102,10 @@ export function getArchivedMealsValues(archivedMeals : ArchivedMeal[]){
         mealValues.proteins = meal.proteins;
         mealValues.carbs = meal.carbs;
         mealValues.fats = meal.fats;
+        mealValues.saturatedFats = meal.saturedFats;
+        mealValues.fibers = meal.fibers;
         mealValues.userId = meal.userId;
         mealValues.createdAt = meal.createdAt;
-
         mealsValues.push(mealValues);
     })
     return mealsValues
@@ -106,6 +119,8 @@ export function sumMealValues(mealArray: MealValues[]) {
         proteins: 0,
         carbs: 0,
         fats: 0,   
+        saturatedFats: 0,
+        fibers: 0,
         description: "",
         userId :"",
         createdAt: "",
@@ -116,6 +131,8 @@ export function sumMealValues(mealArray: MealValues[]) {
         totalMeal.proteins += meal.proteins;
         totalMeal.carbs += meal.carbs;
         totalMeal.fats += meal.fats;
+        totalMeal.saturatedFats += meal.saturatedFats;
+        totalMeal.fibers += meal.fibers;;
         totalMeal.userId = meal.userId
     });
 
