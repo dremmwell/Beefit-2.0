@@ -74,6 +74,7 @@ export function DataTable<TData, TValue>({
       carbs: !isShorted,
       proteins: !isShorted,
       fats: !isShorted,
+      saturatedFats: !isShorted,
     });
  }, [isShorted, table]);
 

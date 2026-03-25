@@ -17,6 +17,8 @@ export const AddIngredientSchema = z.object({
   proteins: z.coerce.number().positive({message: "must be positive",}),
   carbs: z.coerce.number().positive({message: "must be positive",}),
   fats: z.coerce.number().positive({message: "must be positive",}),
+  saturatedFats: z.coerce.number().optional(),
+  fibers: z.coerce.number().optional(),
 }).refine((data) => {
   if(data.measureType === "custom") {
     return !!data.customMeasureName;
@@ -55,6 +57,8 @@ export const EditIngredientFormSchema = z.object({
   proteins: z.coerce.number().positive({message: "must be positive",}),
   carbs: z.coerce.number().positive({message: "must be positive",}),
   fats: z.coerce.number().positive({message: "must be positive",}),
+  saturatedFats: z.coerce.number().optional(),
+  fibers: z.coerce.number().optional(),
 })
 .refine((data) => {
   if(data.measureType === "custom") {

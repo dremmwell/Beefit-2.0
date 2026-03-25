@@ -9,6 +9,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -61,6 +67,10 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
           proteins: data.proteins,
           carbs: data.carbs,
           fats: data.fats,
+          //@ts-ignore
+          saturatedFats: data.saturatedFats,
+          //@ts-ignore
+          fiber: data.fiber,
           userId: "",
           bookmarked: false,
           customMeal: false,
@@ -78,6 +88,10 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
           proteins: data.proteins,
           carbs: data.carbs,
           fats: data.fats,
+          //@ts-ignore
+          saturatedFats: data.saturatedFats,
+          //@ts-ignore
+          fiber: data.fiber,
           userId: "",
           bookmarked: false,
           customMeal: false,
@@ -148,8 +162,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
               )}
             />
             {measureType === "custom" && 
-              <div className="flex gap-4">
-              <div className="w-5/6">
+              <div className="flex gap-4 justify-between">
                   <FormField
                   control={form.control}
                   name="customMeasureName"
@@ -167,7 +180,6 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                   </FormItem>
                   )}
               />
-              </div>
                   <FormField
                   control={form.control}
                   name="measureWeight"
@@ -181,7 +193,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                       placeholder="in grams..." />
                       </FormControl>
                       <FormDescription>
-                      Please indicate how many grams your custom measure weights.
+                      Please indicate how many grams <br /> your custom measure weighs.
                       </FormDescription>
                       <FormMessage />
                   </FormItem>
@@ -300,7 +312,74 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
                       </FormItem>
                     )}
                   />
-              </div>
+                  </div>
+                  <Accordion
+                  type="single"
+                  collapsible
+                  className="max-w-lg mt-0"
+                >
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger >Optional</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex gap-4 justify-between">
+                          <FormField
+                            control={form.control}
+                            name="fibers"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Fibers (g)</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                  placeholder="in grams..."
+                                  type="number"
+                                  step="any"
+                                  {...field} />
+                                </FormControl>
+                                {measureType === "100g" &&
+                                <FormDescription>
+                                    per 100g of ingredient
+                                </FormDescription>
+                                }
+                                {measureType === "custom" &&
+                                <FormDescription>
+                                    per measure
+                                </FormDescription>
+                                }
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="saturatedFats"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Saturated Fats (g)</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                  placeholder="in grams..."
+                                  type="number"
+                                  step="any"
+                                  {...field} />
+                                </FormControl>
+                                {measureType === "100g" &&
+                                <FormDescription>
+                                    per 100g of ingredient
+                                </FormDescription>
+                                }
+                                {measureType === "custom" &&
+                                <FormDescription>
+                                    per measure
+                                </FormDescription>
+                                }
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
           <Button  disabled={isSubmitting} className="mb-4 md:mb-0 w-full" type="submit">
             {isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />

@@ -24,6 +24,8 @@ model User {
 
   archivedMeal   ArchivedMeal[]
   archivedRecipe ArchivedRecipe[]
+  labels         Labels[]
+  foci           Focus[]
 }
 
 model Session {
@@ -176,4 +178,33 @@ model ArchivedRecipe {
 
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
+}
+
+//--------------- Workouts ----------------//
+
+model Labels {
+  id    String @id @default(uuid())
+  name  String
+  color String
+
+  createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  focusId String
+  Focus   Focus  @relation(fields: [focusId], references: [id], onDelete: Cascade)
+}
+
+model Focus {
+  id       String @id @default(uuid())
+  name     String
+  priority String
+
+  createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  labels Labels[]
 }

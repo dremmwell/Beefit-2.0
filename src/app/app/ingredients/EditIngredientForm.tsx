@@ -14,6 +14,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { updateIngredient } from "../../actions/db.actions/ingredient.actions"
@@ -40,6 +46,10 @@ export function editIngredient(data: z.infer<typeof AddIngredientSchema>, ingred
       proteins: data.proteins,
       carbs: data.carbs,
       fats: data.fats,
+      //@ts-ignore
+      saturatedFats: data.saturatedFats,
+      //@ts-ignore
+      fiber: data.fiber,
       userId: ingredient.userId,
       bookmarked: ingredient.bookmarked,
       customMeal: ingredient.customMeal,
@@ -57,6 +67,10 @@ export function editIngredient(data: z.infer<typeof AddIngredientSchema>, ingred
       proteins: data.proteins,
       carbs: data.carbs,
       fats: data.fats,
+      //@ts-ignore
+      saturatedFats: data.saturatedFats,
+      //@ts-ignore
+      fiber: data.fiber,
       userId: ingredient.userId,
       bookmarked: ingredient.bookmarked,
       customMeal: ingredient.customMeal,
@@ -93,6 +107,8 @@ export function EditIngredientForm ( {
         measureWeight: ingredient.gramsPerUnit,
         calories: ingredient.calories,
         proteins: ingredient.proteins,
+        saturatedFats: ingredient.saturatedFats,
+        fibers: ingredient.fiber,
         carbs: ingredient.carbs,
         fats: ingredient.fats,
       }
@@ -308,6 +324,73 @@ export function EditIngredientForm ( {
                     )}
                   />
               </div>
+                <Accordion
+                type="single"
+                collapsible
+                className="max-w-lg mt-0"
+              >
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger >Optional</AccordionTrigger>
+                    <AccordionContent>
+                      <div className="flex gap-4 justify-between">
+                        <FormField
+                          control={form.control}
+                          name="fibers"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Fibers (g)</FormLabel>
+                              <FormControl>
+                                <Input 
+                                placeholder="in grams..."
+                                type="number"
+                                step="any"
+                                {...field} />
+                              </FormControl>
+                              {measureType === "100g" &&
+                              <FormDescription>
+                                  per 100g of ingredient
+                              </FormDescription>
+                              }
+                              {measureType === "custom" &&
+                              <FormDescription>
+                                  per measure
+                              </FormDescription>
+                              }
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="saturatedFats"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Saturated Fats (g)</FormLabel>
+                              <FormControl>
+                                <Input 
+                                placeholder="in grams..."
+                                type="number"
+                                step="any"
+                                {...field} />
+                              </FormControl>
+                              {measureType === "100g" &&
+                              <FormDescription>
+                                  per 100g of ingredient
+                              </FormDescription>
+                              }
+                              {measureType === "custom" &&
+                              <FormDescription>
+                                  per measure
+                              </FormDescription>
+                              }
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+              </Accordion>
           <Button  disabled={isSubmitting} className="mb-4 md:mb-0 w-full" type="submit">
             {isSubmitting && (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
