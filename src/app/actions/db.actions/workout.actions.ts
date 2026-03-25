@@ -26,3 +26,7 @@ export async function getFocus(userId: UserId) {
     const focusItems = JSON.parse(JSON.stringify(data));
     return focusItems
 }
+
+export async function updateLabel(userId: UserId, label : Labels, focusId: string) {
+    console.log(focusId);
+}
