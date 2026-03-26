@@ -28,6 +28,11 @@ export default function TimelineWeekday({
     const timeLineItem : TimeLineMeal = {
         title: "",
         calories: 0,
+        proteins: 0,
+        fats: 0,
+        carbs: 0,
+        saturatedFats: 0,
+        fibers: 0,
         description: "",
         mealId: "",
         userId:"",
@@ -46,9 +51,13 @@ export default function TimelineWeekday({
     // Sorts the timelineitems by mealtype (title) and merges their properties
     timeLineItems.reduce((acc, item) =>{
         if(!groupedItems[item.title]) {
-            groupedItems[item.title] = { title : item.title, calories : 0, mealId : "", description : ""}
+            groupedItems[item.title] = { title : item.title, calories : 0, proteins: 0, fats: 0, carbs: 0, saturatedFats: 0, fibers: 0, mealId : "", description : ""}
         }
         groupedItems[item.title].calories += +item.calories;
+        groupedItems[item.title].proteins += +item.proteins;
+        groupedItems[item.title].fats += +item.fats;
+        groupedItems[item.title].carbohydrates += +item.carbs;
+        groupedItems[item.title].saturatedFats += +item.saturatedFats;
         groupedItems[item.title].mealId += item.mealId + "/";
         groupedItems[item.title].description += item.description + "\n";
         groupedItems[item.title].userId = item.userId;
@@ -59,6 +68,11 @@ export default function TimelineWeekday({
         title: item.title,
         mealId: item.mealId,
         calories: item.calories,
+        proteins: item.proteins,
+        fats: item.fats,
+        carbs: item.carbohydrates,
+        saturatedFats: item.saturatedFats,
+        fibers: item.fibers,
         description: item.description,
         userId: item.userId,
     }));
