@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/db/db";
-import { Ingredient, Recipe, RecipeIngredient, MealIngredient, Meal, MealRecipe, Objective, ArchivedMeal } from '@prisma/client';
+import { Ingredient } from '@prisma/client';
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
@@ -31,6 +31,8 @@ export async function createIngredient(ingredient: Ingredient) {
         proteins: ingredient.proteins,
         carbs: ingredient.carbs,
         fats: ingredient.fats,
+        saturatedFats: ingredient.saturatedFats,
+        fibers: ingredient.fibers,
         userId: user.id,
       }
     });
@@ -52,6 +54,8 @@ export async function updateIngredient(ingredient:Ingredient) {
         proteins: ingredient.proteins,
         carbs: ingredient.carbs,
         fats: ingredient.fats,
+        saturatedFats: ingredient.saturatedFats,
+        fibers: ingredient.fibers,
         userId: ingredient.userId,
         updatedAt: new Date()
       }

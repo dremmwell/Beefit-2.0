@@ -46,7 +46,7 @@ model Ingredient {
   carbs         Float
   fats          Float
   saturatedFats Float  @default(0)
-  fiber         Float  @default(0)
+  fibers        Float  @default(0)
   userId        String
 
   bookmarked Boolean @default(false)
