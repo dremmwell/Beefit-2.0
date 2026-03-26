@@ -167,5 +167,7 @@ export const CustomMealSchema = z.object({
   calories:  z.coerce.number().positive({message: "must be positive"}),
   proteins: z.coerce.number().positive({message: "must be positive"}),
   carbs: z.coerce.number().positive({message: "must be positive"}),
-  fats:  z.coerce.number().positive({message: "must be positive"})
+  fats:  z.coerce.number().positive({message: "must be positive"}),
+  saturatedFats: z.coerce.number().optional(),
+  fibers: z.coerce.number().optional(),
 })

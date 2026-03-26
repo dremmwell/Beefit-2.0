@@ -17,6 +17,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import * as React from "react"
@@ -58,6 +64,10 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
       proteins: values.proteins,
       carbs: values.carbs,
       fats: values.fats,
+      //@ts-ignore
+      saturatedFats: values.saturatedFats,
+      //@ts-ignore
+      fibers: values.fibers,
       createdAt: new Date(),
       userId: "",
     }
@@ -209,6 +219,57 @@ export default function CustomMealForm({onSave} : {onSave : Function}) {
               )}
             />
           </div>
+          <Accordion
+            type="single"
+            collapsible
+            className="max-w-lg mt-0"
+          >
+              <AccordionItem value="item-1">
+                <AccordionTrigger >Optional</AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex gap-4 justify-between">
+                                              <FormField
+                        control={form.control}
+                        name="fibers"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Fibers (g)</FormLabel>
+                            <FormControl>
+                              <Input 
+                              placeholder="in grams..."
+                              type="number"
+                              {...field} />
+                            </FormControl>
+                            <FormDescription>
+                              Fibers in your meal
+                            </FormDescription>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    <FormField
+                      control={form.control}
+                      name="saturatedFats"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Saturated Fats (g)</FormLabel>
+                          <FormControl>
+                            <Input 
+                            placeholder="in grams..."
+                            type="number"
+                            {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            Saturated fats in your meal
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+          </Accordion>
         <Button  disabled={isSubmitting} className="mb-4 md:mb-0 w-full" type="submit">
           {isSubmitting && (
             <Loader2 className="h-4 w-4 animate-spin mr-2" />

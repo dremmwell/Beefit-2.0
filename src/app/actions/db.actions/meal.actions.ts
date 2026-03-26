@@ -154,6 +154,8 @@ export async function getMealsByDate(userId: UserId, date : Date) {
           proteins: meal.proteins,
           carbs : meal.carbs,
           fats : meal.fats,
+          saturatedFats : meal.saturatedFats,
+          fibers : meal.fibers,
           createdAt : meal.createdAt,
           userId : user.id,
         }

@@ -7,7 +7,7 @@ export type RecipeValues = {
     proteins: number;
     carbs: number;
     fats: number;
-    saturedFats: number;
+    saturatedFats: number;
     fibers: number;
 }
 
