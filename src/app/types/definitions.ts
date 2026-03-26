@@ -37,6 +37,11 @@ export type IngredientInRecipe = {
 export type TimeLineMeal = {
     title: string,
     calories: number,
+    proteins: number;
+    carbs: number;
+    fats: number;   
+    saturatedFats: number;
+    fibers: number;
     description: string,
     mealId: string,
     userId: string,

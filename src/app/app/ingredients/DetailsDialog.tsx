@@ -39,7 +39,7 @@ export default function DetailsDialog({
             <DialogTitle className="scroll-m-20 border-b pb-2 text-2xl font-semibold tracking-tight first:mt-0 mb-3">{ingredient.name}</DialogTitle>
             <DialogDescription></DialogDescription>
               <div className="space-y-4">
-                <div className="flex flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
+                <div className="flex flex-col sm:flex-row flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
                   <div>
                     <h1 className="text-lg text-muted-foreground">Calories</h1>
                     <h2 className="text-lg font-semibold">{ingredient.calories} cal</h2>
@@ -56,8 +56,8 @@ export default function DetailsDialog({
                   </div>
                   <Separator orientation="vertical" />
                   <div>
-                    <h1 className="text-lg text-muted-foreground">Fats</h1>
-                    <h2 className="text-lg font-semibold">{ingredient.fats} g</h2>
+                    <h1 className="text-lg text-muted-foreground">Fats (Saturated)</h1>
+                    <h2 className="text-lg font-semibold">{ingredient.fats} g ({ingredient.saturatedFats} g)</h2>
                   </div>
                 </div>
                 <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per 100g</span></h2>
@@ -70,7 +70,7 @@ export default function DetailsDialog({
             {converted ?
               <>
               <div className="space-y-4">
-                <div className="flex flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
+                <div className="flex flex-wrap flex-col sm:flex-row sm:items-center space-x-4 text-sm mt-8 mb-8">
                   <div>
                     <h1 className="text-lg text-muted-foreground">Calories</h1>
                     <h2 className="text-lg font-semibold">{convertedIngredient.calories} cal</h2>
@@ -87,8 +87,8 @@ export default function DetailsDialog({
                   </div>
                   <Separator orientation="vertical" />
                   <div>
-                    <h1 className="text-lg text-muted-foreground">Fats</h1>
-                    <h2 className="text-lg font-semibold">{convertedIngredient.fats} g</h2>
+                    <h1 className="text-lg text-muted-foreground">Fats (Saturated)</h1>
+                    <h2 className="text-lg font-semibold">{convertedIngredient.fats} g ({convertedIngredient.saturatedFats} g)</h2>
                   </div>
                 </div>
                 <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per 100g</span></h2>
@@ -97,7 +97,7 @@ export default function DetailsDialog({
             :
             <>
               <div className="space-y-4">
-                <div className="flex flex-wrap items-center space-x-4 text-sm mt-8 mb-8">
+                <div className="flex flex-wrap flex-col sm:flex-row sm:items-center space-x-4 text-sm mt-8 mb-8">
                   <div>
                     <h1 className="text-lg text-muted-foreground">Calories</h1>
                     <h2 className="text-lg font-semibold">{ingredient.calories} cal</h2>
@@ -114,15 +114,15 @@ export default function DetailsDialog({
                   </div>
                   <Separator orientation="vertical" />
                   <div>
-                    <h1 className="text-lg text-muted-foreground">Fats</h1>
-                    <h2 className="text-lg font-semibold">{ingredient.fats} g</h2>
+                    <h1 className="text-lg text-muted-foreground">Fats (Saturated)</h1>
+                    <h2 className="text-lg font-semibold">{ingredient.fats} g ({ingredient.saturatedFats} g)</h2>
                   </div>
                 </div>
                 <h2 className="text-sm text-muted-foreground">Nutritional information <span className="text-foreground font-semibold">per {ingredient.unit}</span></h2>
               </div>
             </>
             }
-              <div className="flex items-center space-x-2 mt-4 text-muted-foreground">
+              <div className="flex sm:items-center space-x-2 mt-4 text-muted-foreground">
                 {converted ? 
                     <>
                         <Switch checked={converted} onCheckedChange={setConverted} />

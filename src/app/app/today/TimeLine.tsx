@@ -14,12 +14,22 @@ export default function Timeline({ meals, isGrouped }:{ meals : Array<MealValues
     const timeLineItem : TimeLineMeal = {
         title: "",
         calories: 0,
+        proteins: 0,
+        carbs: 0,
+        fats: 0,
+        saturatedFats: 0,
+        fibers: 0,
         description: "",
         mealId: "",
         userId:"",
     };
     timeLineItem.title = meal.mealType;
     timeLineItem.calories = meal.calories;
+    timeLineItem.proteins = meal.proteins;
+    timeLineItem.carbs = meal.carbs;
+    timeLineItem.fats = meal.fats;
+    timeLineItem.saturatedFats = meal.saturatedFats;
+    timeLineItem.fibers = meal.fibers;
     timeLineItem.mealId = meal.mealId;
     timeLineItem.description = meal.description;
     timeLineItem.userId = meal.userId;
@@ -32,19 +42,30 @@ export default function Timeline({ meals, isGrouped }:{ meals : Array<MealValues
     // Sorts the timelineitems by mealtype (title) and merges their properties
     timeLineItems.reduce((acc, item) =>{
         if(!groupedItems[item.title]) {
-            groupedItems[item.title] = { title : item.title, calories : 0, mealId : "", description : ""}
+            groupedItems[item.title] = { title : item.title, calories : 0, proteins: 0, carbs: 0, fats: 0, saturatedFats: 0, fibers: 0, mealId : "", description : ""};
         }
         groupedItems[item.title].calories += +item.calories;
+        groupedItems[item.title].proteins += +item.proteins;
+        groupedItems[item.title].carbs += +item.carbs;
+        groupedItems[item.title].fats += +item.fats;
+        groupedItems[item.title].saturatedFats += +item.saturatedFats;
+        groupedItems[item.title].fibers += +item.fibers;
         groupedItems[item.title].mealId += item.mealId + "/";
         groupedItems[item.title].description += item.description + "\n";
         groupedItems[item.title].userId = item.userId;
         return acc;
     }, {});
+    
     // Create a timeline array from the sorted object //
     const timelineItemsGrouped : Array<TimeLineMeal> = Object.values(groupedItems).map((item : any) => ({
         title: item.title,
         mealId: item.mealId,
         calories: item.calories,
+        proteins: item.proteins,
+        carbs: item.carbs,
+        fats: item.fats,
+        saturatedFats: item.saturatedFats,
+        fibers: item.fibers,
         description: item.description,
         userId: item.userId,
     }));
