@@ -70,7 +70,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
           //@ts-ignore
           saturatedFats: data.saturatedFats,
           //@ts-ignore
-          fiber: data.fiber,
+          fibers: data.fibers,
           userId: "",
           bookmarked: false,
           customMeal: false,
@@ -91,7 +91,7 @@ function createNewIngredient(data: z.infer<typeof AddIngredientSchema>) {
           //@ts-ignore
           saturatedFats: data.saturatedFats,
           //@ts-ignore
-          fiber: data.fiber,
+          fibers: data.fibers,
           userId: "",
           bookmarked: false,
           customMeal: false,

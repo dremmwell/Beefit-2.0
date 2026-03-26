@@ -11,7 +11,6 @@ import MacroChart from "./MacroChart";
 
 
 export default function ChartsCards({ values, objective, date} : { values : MealValues, objective : Objective, date : Date}) {
-    console.log(values)
     return(
         <Card className="overflow-scroll no-scrollbar xl:min-w-80 min-h-56">
             <CardHeader className="pb-2 md:text-center display hidden md:block font-semibold">

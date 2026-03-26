@@ -19,7 +19,6 @@ function  HeatmapCalender ({startDate, endDate, dataValues} : {startDate : any, 
     const getColorFromIntensity = (intensity : any) => {
         const colorCodes = ['#FFEEEE', '#FFCCCC', '#FFAAAA', '#FF8888', '#FF6666', '#FF4444'];
         const colorIndex = Math.min(Math.floor((intensity * colorCodes.length)), colorCodes.length - 1)
-        // console.log(colorIndex, ' color index here')
         return colorCodes[colorIndex]
     }
   return (

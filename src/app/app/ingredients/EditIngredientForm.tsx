@@ -49,7 +49,7 @@ export function editIngredient(data: z.infer<typeof AddIngredientSchema>, ingred
       //@ts-ignore
       saturatedFats: data.saturatedFats,
       //@ts-ignore
-      fiber: data.fiber,
+      fibers: data.fibers,
       userId: ingredient.userId,
       bookmarked: ingredient.bookmarked,
       customMeal: ingredient.customMeal,
@@ -70,7 +70,7 @@ export function editIngredient(data: z.infer<typeof AddIngredientSchema>, ingred
       //@ts-ignore
       saturatedFats: data.saturatedFats,
       //@ts-ignore
-      fiber: data.fiber,
+      fibers: data.fibers,
       userId: ingredient.userId,
       bookmarked: ingredient.bookmarked,
       customMeal: ingredient.customMeal,
@@ -108,7 +108,7 @@ export function EditIngredientForm ( {
         calories: ingredient.calories,
         proteins: ingredient.proteins,
         saturatedFats: ingredient.saturatedFats,
-        fibers: ingredient.fiber,
+        fibers: ingredient.fibers,
         carbs: ingredient.carbs,
         fats: ingredient.fats,
       }
