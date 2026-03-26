@@ -40,7 +40,7 @@ export default function DetailsDialog({
             {recipe.ingredients.map((ingredient: any) => 
                 <div
                 key={ingredient.ingredient.id}
-                className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
+                className="grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0"
               >
                   <span className="flex h-2 w-2 translate-y-1 rounded-full bg-primary" />
                   <div className="space-y-1">
@@ -51,7 +51,7 @@ export default function DetailsDialog({
                       </>
                       :
                       <>
-                      {ingredient.quantity} {ingredient.ingredient.unit}(s) of {ingredient.ingredient.name} ({ingredient.quantity*ingredient.ingredient.gramsPerUnit}g)
+                      {ingredient.quantity} {ingredient.ingredient.unit}(s) of {ingredient.ingredient.name} ({(ingredient.quantity*ingredient.ingredient.gramsPerUnit).toFixed(1)}g)
                       </>
                       }
                     </span>
