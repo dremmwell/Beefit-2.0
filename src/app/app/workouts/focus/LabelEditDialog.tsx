@@ -95,7 +95,7 @@ export default function LabelEditDialog({ open, onOpenChange, onSave, label }: L
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="flex gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>

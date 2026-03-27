@@ -90,7 +90,7 @@ export default function LabelCreationDialog({ open, onOpenChange, onSave }: Labe
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="flex gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
