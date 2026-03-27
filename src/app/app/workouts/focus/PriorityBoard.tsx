@@ -8,11 +8,22 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { FocusLabels } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { updateLabel, createFocus, deleteFocus, updateFocus } from "@/app/actions/db.actions/workout.actions"
+import { updateLabel, createFocus, deleteFocus, updateFocus, createLabel as createLabelAction, deleteLabel } from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
-import { Focus } from "@prisma/client"
+import { Focus, Labels } from "@prisma/client"
+import LabelCreationDialog from "./LabelDialog"
 
 export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels>, userId: string}, ) {
 
@@ -33,6 +44,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
   const touchStartPosRef = useRef<{ x: number; y: number } | null>(null)
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map())
   const draggedLabelRef = useRef<string>("")
+  const [activeCreationCardId, setActiveCreationCardId] = useState<string | null>(null)
 
   const LONG_PRESS_DURATION = 400
   const MOVE_THRESHOLD = 10
@@ -83,12 +95,13 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     setCards((prev) => prev.filter((card) => card.id !== cardId))
   }
 
-  const deleteItem = (cardId: string, itemId: string) => {
+  const deleteItem = (cardId: string, itemId: string, userId: string) => {
     setCards((prev) =>
       prev.map((card) =>
-        card.id === cardId ? { ...card, label: card.labels.filter((label) => label.id !== itemId) } : card,
+        card.id === cardId ? { ...card, labels: card.labels.filter((label) => label.id !== itemId) } : card,
       ),
     )
+    deleteLabel(userId, itemId)
   }
 
   const handleDragStart = (e: React.DragEvent, itemId: string, fromCardId: string) => {
@@ -325,6 +338,27 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
 
+  const createLabel = (label: { name: string; color: string }) => {
+    if (!activeCreationCardId) return
+    const newLabel: Labels = {
+      id: uuidv4(),
+      name: label.name,
+      color: label.color,
+      userId: userId,
+      focusId: activeCreationCardId,
+      createdAt: new Date(),
+    }
+    createLabelAction(userId, newLabel)
+    setCards((prev) =>
+      prev.map((card) =>
+        card.id === activeCreationCardId
+          ? { ...card, labels: [...card.labels, newLabel] }
+          : card,
+      ),
+    )
+    setActiveCreationCardId(null)
+  }
+
   return (
     <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-scroll lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
         {cards && cards.map((card) => {
@@ -453,17 +487,44 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                           <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
                           <div className="h-5 w-5 rounded-full mr-2 flex-shrink-0" style={{ backgroundColor: label.color }} />
                           <span className="text-sm flex-1">{label.name}</span>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 shrink-0 group/itemdelete"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              deleteItem(card.id, label.id)
-                            }}
-                          >
-                            <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
-                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-6 w-6 shrink-0 group/itemdelete"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                }}
+                              >
+                                <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete this label?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete &quot;{label.name}&quot;?
+                                </AlertDialogDescription>
+                                <AlertDialogDescription>
+                                  This action will affect all the exercises using this label.<br /> You can edit the label instead of deleting it if you want to keep the exercises organized.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <div className="flex">
+                                  <Button
+                                    type="button"
+                                    variant="default"
+                                    className="flex-grow"
+                                    onClick={() => deleteItem(card.id, label.id, userId)}
+                                  >
+                                    Delete label
+                                  </Button>
+                                </div>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
                         </li>
                       ))}
                     </ul>
@@ -471,7 +532,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                   <Button
                     variant="ghost"
                     className="w-full justify-center text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 mt-2"
-                    onClick={()=>{}}
+                    onClick={() => setActiveCreationCardId(card.id)}
                   >
                     <PlusCircle className="h-4 w-4 mr-1" />
                     Add Label
@@ -487,6 +548,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
             Add Group
           </Button>
 
+
       {touchDragItem && touchDragPosition && isDragReady && (
         <div
           className="fixed pointer-events-none z-50 flex items-center gap-2 p-3 bg-secondary rounded-lg shadow-lg border"
@@ -500,6 +562,14 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
           <span className="text-sm">{draggedLabelRef.current}</span>
         </div>
       )}
+
+      <LabelCreationDialog
+        open={!!activeCreationCardId}
+        onOpenChange={(open) => { if (!open) setActiveCreationCardId(null) }}
+        onSave={createLabel}
+      />
+
     </div>
+    
   )
 }

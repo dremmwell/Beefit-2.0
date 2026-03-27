@@ -73,7 +73,16 @@ export async function getLabels(userId: UserId) {
 export async function createLabel(userId: UserId, label :Labels) {
     const { user } = await validateRequest()
     if(user) {
-        console.log(userId,label)
+        await db.labels.create({
+            data: {
+                id: label.id,
+                name: label.name,
+                color: label.color,
+                userId: userId,
+                focusId: label.focusId,
+                createdAt: label.createdAt,
+            },
+        })
     }
 }
 
@@ -91,4 +100,17 @@ export async function updateLabel(userId: UserId, label : Labels, focusId: strin
     }
     revalidatePath('/app/ingredients')
     return
+}
+
+export async function deleteLabel(userId: UserId, labelId: string) {
+    const { user } = await validateRequest()
+    if(user){
+        if(user.id === userId){ 
+            await db.labels.delete({
+                where: {
+                    id: labelId,
+                }
+            })
+        }
+    }
 }
