@@ -28,7 +28,7 @@ function Diary({
     <div className='flex flex-col min-h-0 w-full'>
         <div className='flex items-center justify-between mb-4'>
           <div className='ml-4 pr-4 flex flex-col lg:flex-row gap-1 lg:gap-2'>
-            <h3 className='font-semibold leading-none tracking-tight pt-2 px-2'>Meal Diary - <span className='text-sm text-muted-foreground font-normal'>{today.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</span></h3>
+            <h1 className='font-semibold leading-none tracking-tight pt-2 px-2'>Meal Diary - <span className='text-sm text-muted-foreground font-normal'>{today.toLocaleString("en-GB", {month : 'long', day : 'numeric', year : 'numeric'})}</span></h1>
             <div className='text-sm text-muted-foreground flex items-center'>
                 <Switch checked={isGrouped} onCheckedChange={setIsGrouped} className='mt-2'/>
                 <Label htmlFor="converted"className="ml-2 mt-2">group meals</Label>

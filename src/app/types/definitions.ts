@@ -79,7 +79,7 @@ export type StreakData = {
 export type FocusLabels = {
   id: string
   name: string
-  createdAt: string,
+  createdAt: Date,
   userId: string,
   priority: string
   labels: Array<Labels>

@@ -10,7 +10,9 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FocusLabels } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { updateLabel } from "@/app/actions/db.actions/workout.actions"
+import { updateLabel, createFocus } from "@/app/actions/db.actions/workout.actions"
+import { v4 as uuidv4 } from 'uuid';
+import { Focus } from "@prisma/client"
 
 export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels>, userId: string}, ) {
 
@@ -302,13 +304,21 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
 
   const addNewCard = () => {
     const newCard: FocusLabels = {
-      createdAt: new Date().toISOString(),
-      userId: "user123",
-      id: `card-${Date.now()}`,
+      createdAt: new Date(),
+      userId: userId,
+      id: uuidv4(),
       name: "New Group",
-      priority: (cards.length + 1).toString(),
+      priority: "6",
       labels: [],
     }
+    const newFocus: Focus = {
+      id: newCard.id,
+      name: newCard.name,
+      priority: newCard.priority,
+      userId: newCard.userId,
+      createdAt: newCard.createdAt,
+    }
+    createFocus(userId, newFocus)
     setCards((prev) => [...prev, newCard])
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
@@ -327,7 +337,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
               if (el) cardRefs.current.set(card.id, el)
               else cardRefs.current.delete(card.id)
             }}
-            className={cn("transition-all duration-200 flex-1 lg:max-w-80 group py-1", isDragOver && "border-primary")}
+            className={cn("transition-all duration-200 flex-1 lg:max-w-80 group py-1 bg-background", isDragOver && "border-primary")}
             onDragOver={(e) => handleDragOver(e, card.id)}
             onDragLeave={(e) => handleDragLeave(e, card.id)}
             onDrop={(e) => handleDrop(e, card.id)}
@@ -434,7 +444,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                           onTouchEnd={handleTouchEnd}
                           onTouchCancel={handleTouchCancel}
                           className={cn(
-                            "flex items-center gap-2 lg:p-3 p-2 bg-secondary rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
+                            "flex items-center gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
                             (draggedItem?.itemId === label.id || touchDragItem?.itemId === label.id) && "opacity-50",
                           )}
                         >
