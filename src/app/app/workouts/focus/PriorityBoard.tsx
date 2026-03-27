@@ -25,9 +25,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { Focus, Labels } from "@prisma/client"
 import LabelCreationDialog from "./LabelDialog"
 
+const sortCardsByPriority = (cards: FocusLabels[]) => {
+  return [...cards].sort((leftCard, rightCard) => Number(rightCard.priority) - Number(leftCard.priority))
+}
+
 export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels>, userId: string}, ) {
 
-  const [cards, setCards] = useState<FocusLabels[]>(focus)
+  const [cards, setCards] = useState<FocusLabels[]>(() => sortCardsByPriority(focus))
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(["card-1"]))
   const [draggedItem, setDraggedItem] = useState<{ itemId: string; fromCardId: string } | null>(null)
   const [dragOverCardId, setDragOverCardId] = useState<string | null>(null)
@@ -74,10 +78,12 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     if (!editingCardId) return
 
     setCards((prev : any) =>
-      prev.map((card : FocusLabels) =>
-        card.id === editingCardId
-          ? { ...card, name: editTitle || card.name, priority: Number.parseInt(editPriority) || card.priority }
-          : card,
+      sortCardsByPriority(
+        prev.map((card : FocusLabels) =>
+          card.id === editingCardId
+            ? { ...card, name: editTitle || card.name, priority: Number.parseInt(editPriority) || card.priority }
+            : card,
+        ),
       ),
     )
     updateFocus(userId, editingCardId, editTitle, editPriority)
@@ -334,7 +340,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
       createdAt: newCard.createdAt,
     }
     createFocus(userId, newFocus)
-    setCards((prev) => [...prev, newCard])
+    setCards((prev) => sortCardsByPriority([...prev, newCard]))
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
 
