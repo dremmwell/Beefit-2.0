@@ -102,6 +102,23 @@ export async function updateLabel(userId: UserId, label : Labels, focusId: strin
     return
 }
 
+export async function editLabel(userId: UserId, labelId: string, name: string, color: string) {
+    const { user } = await validateRequest()
+    if(user) {
+        await db.labels.update({
+            where: {
+                id: labelId,
+            },
+            data: {
+                name: name,
+                color: color,
+            },
+        })
+    }
+    revalidatePath('/app/ingredients')
+    return
+}
+
 export async function deleteLabel(userId: UserId, labelId: string) {
     const { user } = await validateRequest()
     if(user){

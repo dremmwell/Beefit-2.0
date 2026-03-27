@@ -20,10 +20,11 @@ import {
 } from "@/components/ui/alert-dialog"
 import { FocusLabels } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { updateLabel, createFocus, deleteFocus, updateFocus, createLabel as createLabelAction, deleteLabel } from "@/app/actions/db.actions/workout.actions"
+import { updateLabel, createFocus, deleteFocus, updateFocus, createLabel as createLabelAction, deleteLabel, editLabel } from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { Focus, Labels } from "@prisma/client"
 import LabelCreationDialog from "./LabelDialog"
+import LabelEditDialog from "./LabelEditDialog"
 
 const sortCardsByPriority = (cards: FocusLabels[]) => {
   return [...cards].sort((leftCard, rightCard) => Number(rightCard.priority) - Number(leftCard.priority))
@@ -49,6 +50,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map())
   const draggedLabelRef = useRef<string>("")
   const [activeCreationCardId, setActiveCreationCardId] = useState<string | null>(null)
+  const [activeEditLabel, setActiveEditLabel] = useState<Labels | null>(null)
 
   const LONG_PRESS_DURATION = 400
   const MOVE_THRESHOLD = 10
@@ -365,6 +367,24 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     setActiveCreationCardId(null)
   }
 
+  const saveEditedLabel = (updatedLabel: { name: string; color: string }) => {
+    if (!activeEditLabel) return
+
+    setCards((prev) =>
+      prev.map((card) => ({
+        ...card,
+        labels: card.labels.map((label) =>
+          label.id === activeEditLabel.id
+            ? { ...label, name: updatedLabel.name, color: updatedLabel.color }
+            : label,
+        ),
+      })),
+    )
+
+    editLabel(userId, activeEditLabel.id, updatedLabel.name, updatedLabel.color)
+    setActiveEditLabel(null)
+  }
+
   return (
     <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-scroll lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
         {cards && cards.map((card) => {
@@ -486,19 +506,30 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                           onTouchEnd={handleTouchEnd}
                           onTouchCancel={handleTouchCancel}
                           className={cn(
-                            "flex items-center gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
+                            "group/labelitem flex items-center gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
                             (draggedItem?.itemId === label.id || touchDragItem?.itemId === label.id) && "opacity-50",
                           )}
                         >
                           <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
                           <div className="h-5 w-5 rounded-full mr-2 flex-shrink-0" style={{ backgroundColor: label.color }} />
                           <span className="text-sm flex-1">{label.name}</span>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActiveEditLabel(label)
+                            }}
+                          >
+                            <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                          </Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button
                                 size="icon"
                                 variant="ghost"
-                                className="h-6 w-6 shrink-0 group/itemdelete"
+                                className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
                                 onClick={(e) => {
                                   e.stopPropagation()
                                 }}
@@ -574,6 +605,17 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
         onOpenChange={(open) => { if (!open) setActiveCreationCardId(null) }}
         onSave={createLabel}
       />
+
+      {activeEditLabel && (
+        <LabelEditDialog
+          open={!!activeEditLabel}
+          onOpenChange={(open) => {
+            if (!open) setActiveEditLabel(null)
+          }}
+          onSave={saveEditedLabel}
+          label={activeEditLabel}
+        />
+      )}
 
     </div>
     
