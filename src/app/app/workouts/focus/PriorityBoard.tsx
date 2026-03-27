@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FocusLabels } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { updateLabel, createFocus } from "@/app/actions/db.actions/workout.actions"
+import { updateLabel, createFocus, deleteFocus, updateFocus } from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { Focus } from "@prisma/client"
 
@@ -68,6 +68,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
           : card,
       ),
     )
+    updateFocus(userId, editingCardId, editTitle, editPriority)
     setEditingCardId(null)
   }
 
@@ -78,6 +79,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
 
   const deleteCard = (e: React.MouseEvent, cardId: string) => {
     e.stopPropagation()
+    deleteFocus(userId, cardId)
     setCards((prev) => prev.filter((card) => card.id !== cardId))
   }
 
@@ -352,7 +354,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                     <div className="space-y-1">
                       <div className="flex">
                         <Label htmlFor={`title-${card.id}`} className="text-xs text-muted-foreground">
-                          Focus Name
+                          Focus Group
                         </Label>
                         <Button size="icon" variant="ghost" className="h-6 w-6 -mt-1 -mr-2 ml-auto" onClick={cancelEdit}>
                           <X className="h-4 w-4 text-muted-foreground" />

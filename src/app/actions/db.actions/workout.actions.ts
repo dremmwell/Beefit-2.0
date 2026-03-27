@@ -30,6 +30,34 @@ export async function createFocus(userId: UserId, focus : Focus) {
     }
 }
 
+export async function deleteFocus(userId: UserId, focusId: string) {
+    const { user } = await validateRequest()
+    if(user){
+        if(user.id === userId){ 
+            await db.focus.delete({
+                where: {
+                    id: focusId,
+                }
+            })
+        }
+    } 
+}
+
+export async function updateFocus(userId: UserId, focusId: string, focusName: string, focusPriority: string) {
+    const { user } = await validateRequest()
+    if(user) {
+        await db.focus.update({
+            where: {
+                id: focusId,
+            },
+            data: {
+                name: focusName,
+                priority: focusPriority,
+            },
+        })
+    }
+}
+
 //------------------- Labels Actions -------------------//
 
 export async function getLabels(userId: UserId) {
