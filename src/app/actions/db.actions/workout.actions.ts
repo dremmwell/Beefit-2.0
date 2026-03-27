@@ -3,6 +3,8 @@
 import db from "@/db/db";
 import { Labels } from "@prisma/client";
 import { UserId } from "lucia";
+import { validateRequest } from "@/lib/auth";
+import { revalidatePath } from 'next/cache'
 
 export async function getLabels(userId: UserId) {
     const data = await db.labels.findMany({
@@ -28,5 +30,17 @@ export async function getFocus(userId: UserId) {
 }
 
 export async function updateLabel(userId: UserId, label : Labels, focusId: string) {
-    console.log(focusId);
+    const { user } = await validateRequest()
+    if(user) {
+        await db.labels.update({
+            where: {
+                id: label.id,
+            },
+            data: {
+                focusId: focusId,
+            },
+        })
+    }
+    revalidatePath('/app/ingredients')
+    return
 }

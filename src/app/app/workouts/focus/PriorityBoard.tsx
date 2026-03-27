@@ -12,7 +12,7 @@ import { FocusLabels } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
 import { updateLabel } from "@/app/actions/db.actions/workout.actions"
 
-export default function PriorityBoard({focus}: {focus: Array<FocusLabels>}) {
+export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels>, userId: string}, ) {
 
   const [cards, setCards] = useState<FocusLabels[]>(focus)
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(["card-1"]))

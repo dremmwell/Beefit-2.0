@@ -18,7 +18,7 @@ export default async function Page() {
   
   return (
     <Suspense fallback={<FocusSkeleton />}>
-      <PriorityBoard focus={focus} />
+      <PriorityBoard focus={focus} userId={user.id} />
     </Suspense>
   )
 }
