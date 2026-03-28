@@ -27,6 +27,7 @@ model User {
   labels         Labels[]
   foci           Focus[]
   exercices      Exercice[]
+  exerciceGroups ExerciceGroup[]
 }
 
 model Session {
@@ -38,15 +39,17 @@ model Session {
 }
 
 model Ingredient {
-  id           String @id @unique @default(uuid())
-  name         String
-  unit         String
-  gramsPerUnit Float
-  calories     Int
-  proteins     Float
-  carbs        Float
-  fats         Float
-  userId       String
+  id            String @id @unique @default(uuid())
+  name          String
+  unit          String
+  gramsPerUnit  Float
+  calories      Int
+  proteins      Float
+  carbs         Float
+  fats          Float
+  saturatedFats Float  @default(0)
+  fibers        Float  @default(0)
+  userId        String
 
   bookmarked Boolean @default(false)
   customMeal Boolean @default(false)
@@ -153,10 +156,12 @@ model ArchivedMeal {
   description String
   mealType    String
 
-  calories Float
-  proteins Float
-  carbs    Float
-  fats     Float
+  calories      Float
+  proteins      Float
+  carbs         Float
+  fats          Float
+  saturatedFats Float @default(0)
+  fibers        Float @default(0)
 
   createdAt DateTime @default(now())
 
@@ -165,13 +170,15 @@ model ArchivedMeal {
 }
 
 model ArchivedRecipe {
-  id           String @id @default(uuid())
-  name         String
-  instructions String
-  calories     Float
-  proteins     Float
-  carbs        Float
-  fats         Float
+  id            String @id @default(uuid())
+  name          String
+  instructions  String
+  calories      Float
+  proteins      Float
+  carbs         Float
+  fats          Float
+  saturatedFats Float  @default(0)
+  fibers        Float  @default(0)
 
   createdAt DateTime @default(now())
 
@@ -220,8 +227,10 @@ model Exercice {
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  perfs         ExercicePerfs[]
-  execiceLabels ExeciceLabels[]
+  perfs           ExercicePerfs[]
+  execiceLabels   ExeciceLabels[]
+  exerciceGroup   ExerciceGroup?  @relation(fields: [exerciceGroupId], references: [id])
+  exerciceGroupId String?
 }
 
 model ExercicePerfs {
@@ -247,4 +256,17 @@ model ExeciceLabels {
 
   Labels   Labels   @relation(fields: [labelId], references: [id], onDelete: Cascade)
   Exercice Exercice @relation(fields: [exerciceId], references: [id], onDelete: Cascade)
+}
+
+model ExerciceGroup {
+  id    String @id @default(uuid())
+  name  String
+  order Int
+
+  createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  exercices Exercice[]
 }
