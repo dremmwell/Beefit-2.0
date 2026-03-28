@@ -1,8 +1,9 @@
+import Board from "./board";
 
 
 export default async function Page() { 
 
   return (
-    <div>Progress Page</div>
+    <Board labels={[]} />
   )
 }

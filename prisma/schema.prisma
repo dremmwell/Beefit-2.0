@@ -26,6 +26,7 @@ model User {
   archivedRecipe ArchivedRecipe[]
   labels         Labels[]
   foci           Focus[]
+  exercices      Exercice[]
 }
 
 model Session {
@@ -192,6 +193,8 @@ model Labels {
 
   focusId String
   Focus   Focus  @relation(fields: [focusId], references: [id], onDelete: Cascade)
+
+  execiceLabels ExeciceLabels[]
 }
 
 model Focus {
@@ -205,4 +208,43 @@ model Focus {
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   labels Labels[]
+}
+
+model Exercice {
+  id          String @id @default(uuid())
+  name        String
+  description String
+
+  createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  perfs         ExercicePerfs[]
+  execiceLabels ExeciceLabels[]
+}
+
+model ExercicePerfs {
+  id      String @id @default(uuid())
+  weights Float
+  unit    String
+  reps    Int
+  notes   String
+
+  createdAt DateTime @default(now())
+
+  exerciceId String
+  Exercice   Exercice @relation(fields: [exerciceId], references: [id], onDelete: Cascade)
+}
+
+model ExeciceLabels {
+  id         String @id @default(uuid())
+  labelId    String
+  exerciceId String
+  value      String
+
+  createdAt DateTime @default(now())
+
+  Labels   Labels   @relation(fields: [labelId], references: [id], onDelete: Cascade)
+  Exercice Exercice @relation(fields: [exerciceId], references: [id], onDelete: Cascade)
 }
