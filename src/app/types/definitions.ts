@@ -1,4 +1,4 @@
-import { Ingredient, Recipe, RecipeIngredient, Meal, Objective } from "@prisma/client";
+import { Ingredient, Recipe, RecipeIngredient, Meal, Objective, ExerciceGroup } from "@prisma/client";
 import { Labels } from "@prisma/client";
 
 export type RecipeValues = {
@@ -83,4 +83,24 @@ export type FocusLabels = {
   userId: string,
   priority: string
   labels: Array<Labels>
+}
+
+
+export type ExerciceData = {
+    id: string,
+    name: string,
+    userId: string,
+    description: string,
+    createdAt: Date,
+    exerciceGroupId: string,
+    LabelsExercice: LabelExercices[],
+}
+
+export type LabelExercices = {
+    id : string,
+    createdAt: Date,
+    value: string,
+    labelId: string,
+    exerciceId: string,
+    labels: Labels
 }

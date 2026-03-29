@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -19,24 +20,37 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { FocusLabels } from "@/app/types/definitions"
+
+import { ExerciceData, FocusLabels, RecipeAndIngredients } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
 import { updateLabel, createFocus, deleteFocus, updateFocus, createLabel as createLabelAction, deleteLabel, editLabel } from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
-import { Focus, Labels } from "@prisma/client"
+import { ExerciceGroup, Focus, Labels } from "@prisma/client"
 import ExerciceCreationDialog from "./ExerciceDialog"
 import ExerciceEditDialog from "./ExerciceEditDialog"
 
-const sortCardsByPriority = (cards: FocusLabels[]) => {
-  return [...cards].sort((leftCard, rightCard) => Number(rightCard.priority) - Number(leftCard.priority))
+const sortCardsByOrder = (cards: ExerciceGroup[]) => {
+  return [...cards].sort((leftCard, rightCard) => Number(leftCard.order) - Number(rightCard.order))
 }
 
-export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels>, userId: string}, ) {
+const TOP_DROP_PREFIX = "top-drop-"
 
-  const [cards, setCards] = useState<FocusLabels[]>(() => sortCardsByPriority(focus))
+export default function ExerciceBoard({
+    groups,
+    exercicesData,
+    userId 
+  }: {
+    groups : Array<ExerciceGroup>,
+    exercicesData: Array<ExerciceData>,
+    userId: string}, 
+  ) {
+
+  const [cards, setCards] = useState<ExerciceGroup[]>(() => sortCardsByOrder(groups))
+  const [exercices, setExercices] = useState<ExerciceData[]>(exercicesData)
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(["card-1"]))
   const [draggedItem, setDraggedItem] = useState<{ itemId: string; fromCardId: string } | null>(null)
   const [dragOverCardId, setDragOverCardId] = useState<string | null>(null)
+  const [dropIndicatorItemId, setDropIndicatorItemId] = useState<string | null>(null)
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const [editingCardId, setEditingCardId] = useState<string | null>(null)
@@ -49,9 +63,27 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
   const longPressTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const touchStartPosRef = useRef<{ x: number; y: number } | null>(null)
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map())
-  const draggedLabelRef = useRef<string>("")
+  const itemRefs = useRef<Map<string, HTMLLIElement>>(new Map())
+  const topDropRefs = useRef<Map<string, HTMLLIElement>>(new Map())
+  const draggedExerciceRef = useRef<string>("")
+  const dropIndicatorClearTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  const setDropIndicatorDebounced = (id: string | null) => {
+    if (id !== null) {
+      if (dropIndicatorClearTimeoutRef.current) {
+        clearTimeout(dropIndicatorClearTimeoutRef.current)
+        dropIndicatorClearTimeoutRef.current = null
+      }
+      setDropIndicatorItemId(id)
+    } else {
+      dropIndicatorClearTimeoutRef.current = setTimeout(() => {
+        setDropIndicatorItemId(null)
+        dropIndicatorClearTimeoutRef.current = null
+      }, 60)
+    }
+  }
   const [activeCreationCardId, setActiveCreationCardId] = useState<string | null>(null)
-  const [activeEditLabel, setActiveEditLabel] = useState<Labels | null>(null)
+  const [activeEditExercice, setActiveEditExercice] = useState<ExerciceData | null>(null)
 
   const LONG_PRESS_DURATION = 400
   const MOVE_THRESHOLD = 10
@@ -69,12 +101,11 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     })
   }
 
-  const startEditing = (e: React.MouseEvent, card: FocusLabels) => {
+  const startEditing = (e: React.MouseEvent, card: ExerciceGroup) => {
     e.stopPropagation()
     setEditingCardId(card.id)
     setEditTitle(card.name)
-    const currentPosition = cards.findIndex((currentCard) => currentCard.id === card.id) + 1
-    setEditPosition(currentPosition.toString())
+    setEditPosition(card.order.toString())
   }
 
   const saveEdit = (e: React.MouseEvent) => {
@@ -98,14 +129,13 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
         name: editTitle || editingCard.name,
       })
 
-      const totalCards = nextCards.length
       const reorderedCards = nextCards.map((card, index) => ({
         ...card,
-        priority: String(totalCards - index),
+        order: index + 1,
       }))
 
       reorderedCards.forEach((card) => {
-/*         void updateFocus(userId, card.id, card.name, card.priority) */
+/*         void updateExerciceGroup(userId, card.id, card.name, card.order) */
       })
 
       return reorderedCards
@@ -126,24 +156,64 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
   }
 
   const deleteItem = (cardId: string, itemId: string, userId: string) => {
-    setCards((prev) =>
-      prev.map((card) =>
-        card.id === cardId ? { ...card, labels: card.labels.filter((label) => label.id !== itemId) } : card,
-      ),
-    )
-/*     deleteLabel(userId, itemId) */
+    setExercices((prev) => prev.filter((exercice) => exercice.id !== itemId))
+/*     deleteExercice(userId, itemId) */
+  }
+
+  const moveExercice = (
+    currentExercices: ExerciceData[],
+    draggedItemId: string,
+    toCardId: string,
+    toItemId?: string,
+  ) => {
+    const draggedExercice = currentExercices.find((exercice) => exercice.id === draggedItemId)
+    if (!draggedExercice) return currentExercices
+
+    const nextExercices = currentExercices.filter((exercice) => exercice.id !== draggedItemId)
+    const movedExercice: ExerciceData = {
+      ...draggedExercice,
+      exerciceGroupId: toCardId,
+    }
+
+    if (toItemId) {
+      const targetIndex = nextExercices.findIndex((exercice) => exercice.id === toItemId)
+      if (targetIndex === -1) return [...nextExercices, movedExercice]
+      nextExercices.splice(targetIndex, 0, movedExercice)
+      return nextExercices
+    }
+
+    let lastIndexInTargetGroup = -1
+    nextExercices.forEach((exercice, index) => {
+      if (exercice.exerciceGroupId === toCardId) {
+        lastIndexInTargetGroup = index
+      }
+    })
+
+    if (lastIndexInTargetGroup === -1) {
+      nextExercices.push(movedExercice)
+    } else {
+      nextExercices.splice(lastIndexInTargetGroup + 1, 0, movedExercice)
+    }
+
+    return nextExercices
   }
 
   const handleDragStart = (e: React.DragEvent, itemId: string, fromCardId: string) => {
     setDraggedItem({ itemId, fromCardId })
+    setDropIndicatorItemId(null)
     e.dataTransfer.effectAllowed = "move"
   }
 
   const handleDragEnd = () => {
     setDraggedItem(null)
     setDragOverCardId(null)
+    setDropIndicatorItemId(null)
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current)
+    }
+    if (dropIndicatorClearTimeoutRef.current) {
+      clearTimeout(dropIndicatorClearTimeoutRef.current)
+      dropIndicatorClearTimeoutRef.current = null
     }
   }
 
@@ -183,36 +253,64 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
   const handleDrop = (e: React.DragEvent, toCardId: string) => {
     e.preventDefault()
 
-    if (!draggedItem || draggedItem.fromCardId === toCardId) {
+    if (!draggedItem) {
       setDraggedItem(null)
       setDragOverCardId(null)
+      setDropIndicatorItemId(null)
       return
     }
 
-    setCards((prevCards) => {
-      const newCards = prevCards.map((card) => ({ ...card, labels: [...card.labels] }))
-
-      const fromCard = newCards.find((c) => c.id === draggedItem.fromCardId)
-      const toCard = newCards.find((c) => c.id === toCardId)
-
-      if (!fromCard || !toCard) return prevCards
-
-      const itemIndex = fromCard.labels.findIndex((label) => label.id === draggedItem.itemId)
-      if (itemIndex === -1) return prevCards
-
-      const [movedItem] = fromCard.labels.splice(itemIndex, 1)
-      toCard.labels.push(movedItem)
-
-      // Call updateLabel when the destination group is different from the source group
-      if (draggedItem.fromCardId !== toCardId) {
-/*         updateLabel(movedItem.userId, movedItem, toCardId) */
-      }
-
-      return newCards
-    })
+    setExercices((prev) => moveExercice(prev, draggedItem.itemId, toCardId))
+    // TODO: Persist moving exercice between groups
+/*     moveExerciceToGroup(draggedItem.itemId, toCardId) */
 
     setDraggedItem(null)
     setDragOverCardId(null)
+    setDropIndicatorItemId(null)
+  }
+
+  const handleDropOnItem = (e: React.DragEvent, toCardId: string, toItemId: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!draggedItem || draggedItem.itemId === toItemId) {
+      setDropIndicatorItemId(null)
+      return
+    }
+
+    setExercices((prev) => moveExercice(prev, draggedItem.itemId, toCardId, toItemId))
+
+    // TODO: Persist reorder/move for dropped exercice
+/*     moveExerciceToGroup(draggedItem.itemId, toCardId, toItemId) */
+
+    setDraggedItem(null)
+    setDragOverCardId(null)
+    setDropIndicatorItemId(null)
+  }
+
+  const handleDropOnTop = (e: React.DragEvent, toCardId: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!draggedItem) {
+      setDropIndicatorItemId(null)
+      return
+    }
+
+    setExercices((prev) => {
+      const firstInGroup = prev.find((exercice) => exercice.exerciceGroupId === toCardId)
+      if (firstInGroup && firstInGroup.id !== draggedItem.itemId) {
+        return moveExercice(prev, draggedItem.itemId, toCardId, firstInGroup.id)
+      }
+      return moveExercice(prev, draggedItem.itemId, toCardId)
+    })
+
+    // TODO: Persist reorder/move for dropped exercice at top
+/*     moveExerciceToGroup(draggedItem.itemId, toCardId) */
+
+    setDraggedItem(null)
+    setDragOverCardId(null)
+    setDropIndicatorItemId(null)
   }
 
   useEffect(() => {
@@ -232,14 +330,35 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     return null
   }, [])
 
-  const handleTouchStart = useCallback((e: React.TouchEvent, itemId: string, fromCardId: string, label: string) => {
+  const getItemUnderTouch = useCallback((x: number, y: number): string | null => {
+    for (const [itemId, element] of itemRefs.current) {
+      const rect = element.getBoundingClientRect()
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        return itemId
+      }
+    }
+    return null
+  }, [])
+
+  const getTopDropCardUnderTouch = useCallback((x: number, y: number): string | null => {
+    for (const [cardId, element] of topDropRefs.current) {
+      const rect = element.getBoundingClientRect()
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        return cardId
+      }
+    }
+    return null
+  }, [])
+
+  const handleTouchStart = useCallback((e: React.TouchEvent, itemId: string, fromCardId: string, exerciceName: string) => {
     const touch = e.touches[0]
     touchStartPosRef.current = { x: touch.clientX, y: touch.clientY }
-    draggedLabelRef.current = label
+    draggedExerciceRef.current = exerciceName
 
     longPressTimeoutRef.current = setTimeout(() => {
       setIsDragReady(true)
       setTouchDragItem({ itemId, fromCardId })
+      setDropIndicatorItemId(null)
       setTouchDragPosition({ x: touch.clientX, y: touch.clientY })
       if (navigator.vibrate) navigator.vibrate(50)
     }, LONG_PRESS_DURATION)
@@ -263,10 +382,15 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
 
       if (!touchDragItem || !isDragReady) return
 
-      e.preventDefault()
+      if (e.cancelable) {
+        e.preventDefault()
+      }
       setTouchDragPosition({ x: touch.clientX, y: touch.clientY })
 
+      const itemUnder = getItemUnderTouch(touch.clientX, touch.clientY)
+      const topDropCardUnder = getTopDropCardUnderTouch(touch.clientX, touch.clientY)
       const cardUnder = getCardUnderTouch(touch.clientX, touch.clientY)
+      setDropIndicatorItemId(topDropCardUnder ? `${TOP_DROP_PREFIX}${topDropCardUnder}` : itemUnder)
 
       if (cardUnder !== dragOverCardId) {
         if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current)
@@ -280,7 +404,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
         }
       }
     },
-    [touchDragItem, isDragReady, dragOverCardId, expandedCards, getCardUnderTouch],
+    [touchDragItem, isDragReady, dragOverCardId, expandedCards, getCardUnderTouch, getItemUnderTouch, getTopDropCardUnderTouch],
   )
 
   const handleTouchEnd = useCallback(
@@ -299,34 +423,38 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
       }
 
       const touch = e.changedTouches[0]
+      const targetItemId = getItemUnderTouch(touch.clientX, touch.clientY)
+      const targetTopCardId = getTopDropCardUnderTouch(touch.clientX, touch.clientY)
       const targetCardId = getCardUnderTouch(touch.clientX, touch.clientY)
 
-      if (targetCardId && targetCardId !== touchDragItem.fromCardId) {
-        setCards((prevCards) => {
-          const newCards = prevCards.map((card) => ({ ...card, labels: [...card.labels] }))
-          const fromCard = newCards.find((c) => c.id === touchDragItem.fromCardId)
-          const toCard = newCards.find((c) => c.id === targetCardId)
-
-          if (!fromCard || !toCard) return prevCards
-
-          const itemIndex = fromCard.labels.findIndex((label) => label.id === touchDragItem.itemId)
-          if (itemIndex === -1) return prevCards
-
-          const [movedItem] = fromCard.labels.splice(itemIndex, 1)
-          toCard.labels.push(movedItem)
-
-          // Call updateLabel when the destination group is different from the source group
-          if (touchDragItem.fromCardId !== targetCardId) {
-/*             updateLabel(movedItem.userId, movedItem, targetCardId) */
-          }
-
-          return newCards
+      if (targetItemId && targetItemId !== touchDragItem.itemId) {
+        setExercices((prev) => {
+          const targetExercice = prev.find((exercice) => exercice.id === targetItemId)
+          if (!targetExercice) return prev
+          return moveExercice(prev, touchDragItem.itemId, targetExercice.exerciceGroupId, targetItemId)
         })
+        // TODO: Persist reorder/move for dropped exercice on touch
+/*         moveExerciceToGroup(touchDragItem.itemId, targetCardId, targetItemId) */
+      } else if (targetTopCardId) {
+        setExercices((prev) => {
+          const firstInGroup = prev.find((exercice) => exercice.exerciceGroupId === targetTopCardId)
+          if (firstInGroup && firstInGroup.id !== touchDragItem.itemId) {
+            return moveExercice(prev, touchDragItem.itemId, targetTopCardId, firstInGroup.id)
+          }
+          return moveExercice(prev, touchDragItem.itemId, targetTopCardId)
+        })
+        // TODO: Persist moving/reordering exercice at top on touch
+/*         moveExerciceToGroup(touchDragItem.itemId, targetTopCardId) */
+      } else if (targetCardId && targetCardId !== touchDragItem.fromCardId) {
+        setExercices((prev) => moveExercice(prev, touchDragItem.itemId, targetCardId))
+        // TODO: Persist moving exercice between groups on touch
+/*         moveExerciceToGroup(touchDragItem.itemId, targetCardId) */
       }
 
       setTouchDragItem(null)
       setTouchDragPosition(null)
       setDragOverCardId(null)
+      setDropIndicatorItemId(null)
       setIsDragReady(false)
       touchStartPosRef.current = null
 
@@ -334,7 +462,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
         clearTimeout(hoverTimeoutRef.current)
       }
     },
-    [touchDragItem, isDragReady, getCardUnderTouch],
+    [touchDragItem, isDragReady, getCardUnderTouch, getItemUnderTouch, getTopDropCardUnderTouch],
   )
 
   const handleTouchCancel = useCallback(() => {
@@ -343,72 +471,41 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     setTouchDragItem(null)
     setTouchDragPosition(null)
     setDragOverCardId(null)
+    setDropIndicatorItemId(null)
     setIsDragReady(false)
     touchStartPosRef.current = null
   }, [])
 
   const addNewCard = () => {
-    const newCard: FocusLabels = {
-      createdAt: new Date(),
-      userId: userId,
+    const newOrder = Math.max(...cards.map(c => c.order), 0) + 1
+    const newCard: ExerciceGroup = {
       id: uuidv4(),
       name: "New Group",
-      priority: "6",
-      labels: [],
+      order: newOrder,
+      userId: userId,
+      createdAt: new Date(),
     }
-    const newFocus: Focus = {
-      id: newCard.id,
-      name: newCard.name,
-      priority: newCard.priority,
-      userId: newCard.userId,
-      createdAt: newCard.createdAt,
-    }
-/*     createFocus(userId, newFocus) */
-    setCards((prev) => sortCardsByPriority([...prev, newCard]))
+/*     createExerciceGroup(userId, newCard) */
+    setCards((prev) => sortCardsByOrder([...prev, newCard]))
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
 
   const createLabel = (label: { name: string; color: string }) => {
     if (!activeCreationCardId) return
-    const newLabel: Labels = {
-      id: uuidv4(),
-      name: label.name,
-      color: label.color,
-      userId: userId,
-      focusId: activeCreationCardId,
-      createdAt: new Date(),
-    }
-/*     createLabelAction(userId, newLabel) */
-    setCards((prev) =>
-      prev.map((card) =>
-        card.id === activeCreationCardId
-          ? { ...card, labels: [...card.labels, newLabel] }
-          : card,
-      ),
-    )
+    // TODO: Create new exercice in active group
+/*     createExerciceInGroup(userId, activeCreationCardId, label) */
     setActiveCreationCardId(null)
   }
 
   const saveEditedLabel = (updatedLabel: { name: string; color: string }) => {
-    if (!activeEditLabel) return
-
-    setCards((prev) =>
-      prev.map((card) => ({
-        ...card,
-        labels: card.labels.map((label) =>
-          label.id === activeEditLabel.id
-            ? { ...label, name: updatedLabel.name, color: updatedLabel.color }
-            : label,
-        ),
-      })),
-    )
-
-/*     editLabel(userId, activeEditLabel.id, updatedLabel.name, updatedLabel.color) */
-    setActiveEditLabel(null)
+    if (!activeEditExercice) return
+    // TODO: Update exercice name/details
+/*     updateExercice(userId, activeEditExercice.id, updatedLabel) */
+    setActiveEditExercice(null)
   }
 
   return (
-    <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-scroll lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
+    <div className="flex flex-col gap-2 overflow-y-scroll pb-4 no-scrollbar lg:flex-row">
         {cards && cards.map((card) => {
         const isExpanded = expandedCards.has(card.id)
         const isDragOver = dragOverCardId === card.id
@@ -436,7 +533,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                     <div className="space-y-1">
                       <div className="flex">
                         <Label htmlFor={`title-${card.id}`} className="text-xs text-muted-foreground">
-                          Focus Group
+                          Exercice Group
                         </Label>
                         <Button size="icon" variant="ghost" className="h-6 w-6 -mt-1 -mr-2 ml-auto" onClick={cancelEdit}>
                           <X className="h-4 w-4 text-muted-foreground" />
@@ -455,21 +552,21 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                       <Label htmlFor={`position-${card.id}`} className="text-xs text-muted-foreground">
                         Position
                       </Label>
-                      <select
-                        id={`position-${card.id}`}
-                        value={editPosition}
-                        onChange={(e) => setEditPosition(e.target.value)}
-                        className="h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm"
-                      >
-                        {cards.map((_, index) => {
-                          const position = index + 1
-                          return (
-                            <option key={position} value={position.toString()}>
-                              {position}
-                            </option>
-                          )
-                        })}
-                      </select>
+                      <Select value={editPosition} onValueChange={setEditPosition}>
+                        <SelectTrigger id={`position-${card.id}`} className="h-9 w-full">
+                          <SelectValue placeholder="Select position" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {cards.map((_, index) => {
+                            const position = (index + 1).toString()
+                            return (
+                              <SelectItem key={position} value={position}>
+                                {position}
+                              </SelectItem>
+                            )
+                          })}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <Button size="sm" className="w-full mt-1" onClick={saveEdit}>
                       Save changes
@@ -480,7 +577,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                     <CardTitle className="text-base flex items-center gap-2">
                       {card.name}
                       <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                        {card.priority}
+                        {card.order}
                       </span>
                     </CardTitle>
                     <div className="flex items-center gap-1">
@@ -492,14 +589,10 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                         variant="ghost"
                         className="h-8 w-8 group/delete"
                         onClick={(e) => deleteCard(e, card.id)}
-                        disabled={card.labels.length > 0}
                       >
                         <Trash2
                           className={cn(
-                            "h-4 w-4 transition-colors",
-                            card.labels.length > 0
-                              ? "text-muted-foreground/40"
-                              : "text-muted-foreground group-hover/delete:text-red-500",
+                            "h-4 w-4 transition-colors text-muted-foreground group-hover/delete:text-red-500",
                           )}
                         />
                       </Button>
@@ -518,81 +611,131 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
             <div className={cn("grid transition-all duration-200 lg:grid-rows-[1fr]", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
               <div className="overflow-hidden">
                 <CardContent className="pt-0 pb-3">
-                  {card.labels.length === 0 ? (
+                  {exercices.filter((ex) => ex.exerciceGroupId === card.id).length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4 border-2 border-dashed rounded-lg">
-                      Drop items here
+                      No exercices in this group
                     </p>
                   ) : (
                     <ul className="space-y-2">
-                      {card.labels.map((label) => (
-                        <li
-                          key={label.id}
-                          draggable
-                          onDragStart={(e) => handleDragStart(e, label.id, card.id)}
-                          onDragEnd={handleDragEnd}
-                          onTouchStart={(e) => handleTouchStart(e, label.id, card.id, label.name)}
-                          onTouchMove={handleTouchMove}
-                          onTouchEnd={handleTouchEnd}
-                          onTouchCancel={handleTouchCancel}
-                          className={cn(
-                            "group/labelitem flex items-center gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
-                            (draggedItem?.itemId === label.id || touchDragItem?.itemId === label.id) && "opacity-50",
-                          )}
-                        >
-                          <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
-                          <div className="h-5 w-5 rounded-full mr-2 flex-shrink-0" style={{ backgroundColor: label.color }} />
-                          <span className="text-sm flex-1">{label.name}</span>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setActiveEditLabel(label)
+                      <li
+                        ref={(el) => {
+                          if (el) topDropRefs.current.set(card.id, el)
+                          else topDropRefs.current.delete(card.id)
+                        }}
+                        onDragOver={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          e.dataTransfer.dropEffect = "move"
+                          setDropIndicatorDebounced(`${TOP_DROP_PREFIX}${card.id}`)
+                        }}
+                        onDragLeave={(e) => {
+                          const relatedTarget = e.relatedTarget as Node | null
+                          if (!e.currentTarget.contains(relatedTarget)) {
+                            setDropIndicatorDebounced(null)
+                          }
+                        }}
+                        onDrop={(e) => handleDropOnTop(e, card.id)}
+                        className={cn(
+                          "h-2 rounded-md border transition-colors",
+                          dropIndicatorItemId === `${TOP_DROP_PREFIX}${card.id}`
+                            ? "bg-primary/20 border-primary/30"
+                            : "bg-transparent border-transparent",
+                        )}
+                      />
+                      {exercices.filter((ex) => ex.exerciceGroupId === card.id).flatMap((exercice) => {
+                        const currentDraggedItemId = draggedItem?.itemId ?? touchDragItem?.itemId
+                        const showDropIndicator =
+                          dropIndicatorItemId === exercice.id && currentDraggedItemId !== exercice.id
+
+                        return [
+                          showDropIndicator ? (
+                            <li
+                              key={`drop-indicator-${exercice.id}`}
+                              className="h-2 rounded-md bg-primary/20 border border-primary/30"
+                            />
+                          ) : null,
+                          <li
+                            key={exercice.id}
+                            ref={(el) => {
+                              if (el) itemRefs.current.set(exercice.id, el)
+                              else itemRefs.current.delete(exercice.id)
                             }}
+                            draggable
+                            onDragStart={(e) => handleDragStart(e, exercice.id, card.id)}
+                            onDragOver={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              e.dataTransfer.dropEffect = "move"
+                              setDropIndicatorDebounced(exercice.id)
+                            }}
+                            onDragLeave={(e) => {
+                              const relatedTarget = e.relatedTarget as Node | null
+                              if (!e.currentTarget.contains(relatedTarget)) {
+                                setDropIndicatorDebounced(null)
+                              }
+                            }}
+                            onDrop={(e) => handleDropOnItem(e, card.id, exercice.id)}
+                            onDragEnd={handleDragEnd}
+                            onTouchStart={(e) => handleTouchStart(e, exercice.id, card.id, exercice.name)}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
+                            onTouchCancel={handleTouchCancel}
+                            className={cn(
+                              "group/labelitem flex items-center gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
+                              (draggedItem?.itemId === exercice.id || touchDragItem?.itemId === exercice.id) && "opacity-50",
+                            )}
                           >
-                            <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
-                          </Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                }}
-                              >
-                                <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>Delete this label?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  Are you sure you want to delete &quot;{label.name}&quot;?
-                                </AlertDialogDescription>
-                                <AlertDialogDescription>
-                                  This action will affect all the exercises using this label.<br /> You can edit the label instead of deleting it if you want to keep the exercises organized.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <div className="flex">
-                                  <Button
-                                    type="button"
-                                    variant="default"
-                                    className="flex-grow"
-                                    onClick={() => deleteItem(card.id, label.id, userId)}
-                                  >
-                                    Delete label
-                                  </Button>
-                                </div>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </li>
-                      ))}
+                            <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
+                            <span className="text-sm flex-1">{exercice.name}</span>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setActiveEditExercice(exercice)
+                              }}
+                            >
+                              <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                  }}
+                                >
+                                  <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Delete this exercice?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Are you sure you want to delete &quot;{exercice.name}&quot;?
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <div className="flex">
+                                    <Button
+                                      type="button"
+                                      variant="default"
+                                      className="flex-grow"
+                                      onClick={() => deleteItem(card.id, exercice.id, userId)}
+                                    >
+                                      Delete exercice
+                                    </Button>
+                                  </div>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </li>,
+                        ]
+                      })}
                     </ul>
                   )}
                   <Button
@@ -601,7 +744,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                     onClick={() => setActiveCreationCardId(card.id)}
                   >
                     <PlusCircle className="h-4 w-4 mr-1" />
-                    Add Label
+                    Add Exercice
                   </Button>
                 </CardContent>
               </div>
@@ -625,7 +768,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
           }}
         >
           <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="text-sm">{draggedLabelRef.current}</span>
+          <span className="text-sm">{draggedExerciceRef.current}</span>
         </div>
       )}
 
@@ -635,14 +778,21 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
         onSave={createLabel}
       />
 
-      {activeEditLabel && (
+      {activeEditExercice && (
         <ExerciceEditDialog
-          open={!!activeEditLabel}
+          open={!!activeEditExercice}
           onOpenChange={(open) => {
-            if (!open) setActiveEditLabel(null)
+            if (!open) setActiveEditExercice(null)
           }}
           onSave={saveEditedLabel}
-          label={activeEditLabel}
+          label={{
+            id: activeEditExercice.id,
+            name: activeEditExercice.name,
+            color: "#000000",
+            createdAt: activeEditExercice.createdAt,
+            userId: activeEditExercice.userId,
+            focusId: "",
+          }}
         />
       )}
 

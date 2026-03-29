@@ -1,10 +1,11 @@
 "use server"
 
 import db from "@/db/db";
-import { Focus, Labels } from "@prisma/client";
+import { ExerciceGroup, Focus, Labels } from "@prisma/client";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
+import { ExerciceData } from "@/app/types/definitions";
 
 //------------------- Focus Actions -------------------//
 
@@ -130,4 +131,33 @@ export async function deleteLabel(userId: UserId, labelId: string) {
             })
         }
     }
+}
+
+//------------------- Exercice Actions -------------------//
+
+export async function getExerciceGroups(userId: UserId) {
+    const data = await db.exerciceGroup.findMany({
+        where: {
+            userId: userId,
+        },
+    });
+    const exerciceGroups : Array<ExerciceGroup>= JSON.parse(JSON.stringify(data));
+    return exerciceGroups
+}
+
+export async function getExerciceData(userId: UserId) {
+    const data = await db.exercice.findMany({
+        where: {
+            userId: userId,
+        },
+        include: {
+            execiceLabels: {
+                include: {
+                    Labels: true,
+                }
+            },
+        },
+    });
+    const exercices : ExerciceData[] = JSON.parse(JSON.stringify(data));
+    return exercices    
 }
