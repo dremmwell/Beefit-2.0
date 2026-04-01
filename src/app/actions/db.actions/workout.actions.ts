@@ -1,11 +1,17 @@
 "use server"
 
 import db from "@/db/db";
-import { ExerciceGroup, Focus, Labels } from "@prisma/client";
+import { ExerciceGroup, Focus, Labels, Prisma } from "@prisma/client";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
 import { ExerciceData } from "@/app/types/definitions";
+
+type ExercicePositionUpdate = {
+    exerciceId: string
+    groupOrder: number
+    groupId: string
+}
 
 //------------------- Focus Actions -------------------//
 
@@ -89,17 +95,17 @@ export async function createLabel(userId: UserId, label :Labels) {
 
 export async function updateLabel(userId: UserId, label : Labels, focusId: string) {
     const { user } = await validateRequest()
-    if(user) {
-        await db.labels.update({
-            where: {
-                id: label.id,
-            },
-            data: {
-                focusId: focusId,
-            },
-        })
+    if(user) 
+        if(user.id === userId){
+            await db.labels.update({
+                where: {
+                    id: label.id,
+                },
+                data: {
+                    focusId: focusId,
+                },
+            })
     }
-    revalidatePath('/app/ingredients')
     return
 }
 
@@ -116,7 +122,6 @@ export async function editLabel(userId: UserId, labelId: string, name: string, c
             },
         })
     }
-    revalidatePath('/app/ingredients')
     return
 }
 
@@ -160,4 +165,29 @@ export async function getExerciceData(userId: UserId) {
     });
     const exercices : ExerciceData[] = JSON.parse(JSON.stringify(data));
     return exercices    
+}
+
+export async function updateExercicePosition(userId: UserId, updates: ExercicePositionUpdate[]) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return
+    }
+
+    if (updates.length === 0) {
+        return
+    }
+
+    await db.$executeRaw`
+        UPDATE "Exercice" AS e
+        SET
+            "groupOrder" = v."groupOrder",
+            "exerciceGroupId" = v."groupId"
+        FROM (
+            VALUES ${Prisma.join(
+                updates.map((item) => Prisma.sql`(${item.exerciceId}::text, ${item.groupOrder}::int, ${item.groupId}::text)`),
+            )}
+        ) AS v("id", "groupOrder", "groupId")
+        WHERE e."id" = v."id"
+          AND e."userId" = ${userId}
+    `
 }

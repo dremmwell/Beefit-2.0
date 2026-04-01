@@ -2,8 +2,7 @@ import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import type React from "react"
 import NavTabs from "../../../components/nav-tab"
-import { Suspense } from "react";
-import FocusSkeleton from "./focus/FocusSkeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const workoutTabs = [
   { label: "Focus", href: "/app/workouts/focus" },
@@ -29,11 +28,10 @@ export default async function Layout({
           <h1 className="scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0">Workouts</h1>
           <NavTabs tabs={workoutTabs} className="w-full lg:w-1/3" />
         </div>
-        <div className="flex flex-col max-h-fit min-h-0 mt-4 lg:mt-6">
-          <Suspense fallback={<FocusSkeleton />}>
-            {children}
-          </Suspense>
+        <div className="overflow-scroll no-scrollbar mt-3">
+          {children}
         </div>
+        <div className="h-2 lg:hidden"></div>
       </div>
     )
 }

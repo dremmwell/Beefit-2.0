@@ -224,6 +224,8 @@ model Exercice {
 
   createdAt DateTime @default(now())
 
+  groupOrder Int @default(0)
+
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 

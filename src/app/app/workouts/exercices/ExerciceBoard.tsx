@@ -20,10 +20,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollBar } from "@/components/ui/scroll-area"
 import { ExerciceData, FocusLabels, RecipeAndIngredients } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { updateLabel, createFocus, deleteFocus, updateFocus, createLabel as createLabelAction, deleteLabel, editLabel } from "@/app/actions/db.actions/workout.actions"
+import { updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { ExerciceGroup, Focus, Labels } from "@prisma/client"
 import ExerciceCreationDialog from "./ExerciceDialog"
@@ -33,7 +34,37 @@ const sortCardsByOrder = (cards: ExerciceGroup[]) => {
   return [...cards].sort((leftCard, rightCard) => Number(leftCard.order) - Number(rightCard.order))
 }
 
+const sortExercicesByGroupOrder = (items: ExerciceData[]) => {
+  return [...items].sort((leftItem, rightItem) => Number(leftItem.groupOrder) - Number(rightItem.groupOrder))
+}
+
+const normalizeExerciceGroupOrder = (items: ExerciceData[]) => {
+  const groupOrderMap = new Map<string, number>()
+
+  return items.map((exercice) => {
+    const nextGroupOrder = (groupOrderMap.get(exercice.exerciceGroupId) ?? 0) + 1
+    groupOrderMap.set(exercice.exerciceGroupId, nextGroupOrder)
+
+    if (Number(exercice.groupOrder) === nextGroupOrder) {
+      return exercice
+    }
+
+    return {
+      ...exercice,
+      groupOrder: nextGroupOrder,
+    }
+  })
+}
+
 const TOP_DROP_PREFIX = "top-drop-"
+
+type ExerciceMoveContext = {
+  exerciceId: string
+  startGroupId: string
+  destinationGroupId: string
+  startPosition: number
+  destinationPosition: number
+}
 
 export default function ExerciceBoard({
     groups,
@@ -166,8 +197,25 @@ export default function ExerciceBoard({
     toCardId: string,
     toItemId?: string,
   ) => {
+    const { nextExercices } = moveExerciceWithContext(currentExercices, draggedItemId, toCardId, toItemId)
+    return nextExercices
+  }
+
+  const moveExerciceWithContext = (
+    currentExercices: ExerciceData[],
+    draggedItemId: string,
+    toCardId: string,
+    toItemId?: string,
+  ): { nextExercices: ExerciceData[]; moveContext: ExerciceMoveContext | null } => {
     const draggedExercice = currentExercices.find((exercice) => exercice.id === draggedItemId)
-    if (!draggedExercice) return currentExercices
+    if (!draggedExercice) {
+      return { nextExercices: currentExercices, moveContext: null }
+    }
+
+    const startGroupExercices = sortExercicesByGroupOrder(
+      currentExercices.filter((exercice) => exercice.exerciceGroupId === draggedExercice.exerciceGroupId),
+    )
+    const startPosition = startGroupExercices.findIndex((exercice) => exercice.id === draggedItemId) + 1
 
     const nextExercices = currentExercices.filter((exercice) => exercice.id !== draggedItemId)
     const movedExercice: ExerciceData = {
@@ -177,9 +225,41 @@ export default function ExerciceBoard({
 
     if (toItemId) {
       const targetIndex = nextExercices.findIndex((exercice) => exercice.id === toItemId)
-      if (targetIndex === -1) return [...nextExercices, movedExercice]
+      if (targetIndex === -1) {
+        const fallbackExercices = normalizeExerciceGroupOrder([...nextExercices, movedExercice])
+        const destinationPosition =
+          sortExercicesByGroupOrder(fallbackExercices.filter((exercice) => exercice.exerciceGroupId === toCardId)).findIndex(
+            (exercice) => exercice.id === draggedItemId,
+          ) + 1
+
+        return {
+          nextExercices: fallbackExercices,
+          moveContext: {
+            exerciceId: draggedItemId,
+            startGroupId: draggedExercice.exerciceGroupId,
+            destinationGroupId: toCardId,
+            startPosition,
+            destinationPosition,
+          },
+        }
+      }
       nextExercices.splice(targetIndex, 0, movedExercice)
-      return nextExercices
+      const normalizedExercices = normalizeExerciceGroupOrder(nextExercices)
+      const destinationPosition =
+        sortExercicesByGroupOrder(normalizedExercices.filter((exercice) => exercice.exerciceGroupId === toCardId)).findIndex(
+          (exercice) => exercice.id === draggedItemId,
+        ) + 1
+
+      return {
+        nextExercices: normalizedExercices,
+        moveContext: {
+          exerciceId: draggedItemId,
+          startGroupId: draggedExercice.exerciceGroupId,
+          destinationGroupId: toCardId,
+          startPosition,
+          destinationPosition,
+        },
+      }
     }
 
     let lastIndexInTargetGroup = -1
@@ -195,8 +275,52 @@ export default function ExerciceBoard({
       nextExercices.splice(lastIndexInTargetGroup + 1, 0, movedExercice)
     }
 
-    return nextExercices
+    const normalizedExercices = normalizeExerciceGroupOrder(nextExercices)
+    const destinationPosition =
+      sortExercicesByGroupOrder(normalizedExercices.filter((exercice) => exercice.exerciceGroupId === toCardId)).findIndex(
+        (exercice) => exercice.id === draggedItemId,
+      ) + 1
+
+    return {
+      nextExercices: normalizedExercices,
+      moveContext: {
+        exerciceId: draggedItemId,
+        startGroupId: draggedExercice.exerciceGroupId,
+        destinationGroupId: toCardId,
+        startPosition,
+        destinationPosition,
+      },
+    }
   }
+
+  const onExerciceMoved = useCallback(
+    async (
+      moveContext: ExerciceMoveContext | null,
+      nextExercicesSnapshot: ExerciceData[] | null,
+    ) => {
+      if (!moveContext || !nextExercicesSnapshot) return
+
+      const impactedGroupIds = [moveContext.startGroupId, moveContext.destinationGroupId]
+      const uniqueImpactedGroupIds = Array.from(new Set(impactedGroupIds))
+
+      const updates = uniqueImpactedGroupIds.flatMap((groupId) => {
+        const groupExercices = sortExercicesByGroupOrder(
+          nextExercicesSnapshot.filter((exercice) => exercice.exerciceGroupId === groupId),
+        )
+
+        return groupExercices.map((exercice, index) => {
+          return {
+            exerciceId: exercice.id,
+            groupOrder: index + 1,
+            groupId,
+          }
+        })
+      })
+
+      await updateExercicePosition(userId, updates)
+    },
+    [userId],
+  )
 
   const handleDragStart = (e: React.DragEvent, itemId: string, fromCardId: string) => {
     setDraggedItem({ itemId, fromCardId })
@@ -260,9 +384,17 @@ export default function ExerciceBoard({
       return
     }
 
-    setExercices((prev) => moveExercice(prev, draggedItem.itemId, toCardId))
+    let moveContext: ExerciceMoveContext | null = null
+    let nextExercicesSnapshot: ExerciceData[] | null = null
+    setExercices((prev) => {
+      const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId)
+      moveContext = moveResult.moveContext
+      nextExercicesSnapshot = moveResult.nextExercices
+      return moveResult.nextExercices
+    })
+    void onExerciceMoved(moveContext, nextExercicesSnapshot)
     // TODO: Persist moving exercice between groups
-/*     moveExerciceToGroup(draggedItem.itemId, toCardId) */
+/*     moveExerciceToGroup(moveContext) */
 
     setDraggedItem(null)
     setDragOverCardId(null)
@@ -278,10 +410,18 @@ export default function ExerciceBoard({
       return
     }
 
-    setExercices((prev) => moveExercice(prev, draggedItem.itemId, toCardId, toItemId))
+    let moveContext: ExerciceMoveContext | null = null
+    let nextExercicesSnapshot: ExerciceData[] | null = null
+    setExercices((prev) => {
+      const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId, toItemId)
+      moveContext = moveResult.moveContext
+      nextExercicesSnapshot = moveResult.nextExercices
+      return moveResult.nextExercices
+    })
+    void onExerciceMoved(moveContext, nextExercicesSnapshot)
 
     // TODO: Persist reorder/move for dropped exercice
-/*     moveExerciceToGroup(draggedItem.itemId, toCardId, toItemId) */
+/*     if (moveContext) moveExerciceToGroup(moveContext) */
 
     setDraggedItem(null)
     setDragOverCardId(null)
@@ -297,16 +437,25 @@ export default function ExerciceBoard({
       return
     }
 
+    let moveContext: ExerciceMoveContext | null = null
+    let nextExercicesSnapshot: ExerciceData[] | null = null
     setExercices((prev) => {
       const firstInGroup = prev.find((exercice) => exercice.exerciceGroupId === toCardId)
       if (firstInGroup && firstInGroup.id !== draggedItem.itemId) {
-        return moveExercice(prev, draggedItem.itemId, toCardId, firstInGroup.id)
+        const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId, firstInGroup.id)
+        moveContext = moveResult.moveContext
+        nextExercicesSnapshot = moveResult.nextExercices
+        return moveResult.nextExercices
       }
-      return moveExercice(prev, draggedItem.itemId, toCardId)
+      const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId)
+      moveContext = moveResult.moveContext
+      nextExercicesSnapshot = moveResult.nextExercices
+      return moveResult.nextExercices
     })
+    void onExerciceMoved(moveContext, nextExercicesSnapshot)
 
     // TODO: Persist reorder/move for dropped exercice at top
-/*     moveExerciceToGroup(draggedItem.itemId, toCardId) */
+/*     if (moveContext) moveExerciceToGroup(moveContext) */
 
     setDraggedItem(null)
     setDragOverCardId(null)
@@ -428,27 +577,50 @@ export default function ExerciceBoard({
       const targetCardId = getCardUnderTouch(touch.clientX, touch.clientY)
 
       if (targetItemId && targetItemId !== touchDragItem.itemId) {
+        let moveContext: ExerciceMoveContext | null = null
+        let nextExercicesSnapshot: ExerciceData[] | null = null
         setExercices((prev) => {
           const targetExercice = prev.find((exercice) => exercice.id === targetItemId)
           if (!targetExercice) return prev
-          return moveExercice(prev, touchDragItem.itemId, targetExercice.exerciceGroupId, targetItemId)
+          const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetExercice.exerciceGroupId, targetItemId)
+          moveContext = moveResult.moveContext
+          nextExercicesSnapshot = moveResult.nextExercices
+          return moveResult.nextExercices
         })
+        void onExerciceMoved(moveContext, nextExercicesSnapshot)
         // TODO: Persist reorder/move for dropped exercice on touch
-/*         moveExerciceToGroup(touchDragItem.itemId, targetCardId, targetItemId) */
+/*         if (moveContext) moveExerciceToGroup(moveContext) */
       } else if (targetTopCardId) {
+        let moveContext: ExerciceMoveContext | null = null
+        let nextExercicesSnapshot: ExerciceData[] | null = null
         setExercices((prev) => {
           const firstInGroup = prev.find((exercice) => exercice.exerciceGroupId === targetTopCardId)
           if (firstInGroup && firstInGroup.id !== touchDragItem.itemId) {
-            return moveExercice(prev, touchDragItem.itemId, targetTopCardId, firstInGroup.id)
+            const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetTopCardId, firstInGroup.id)
+            moveContext = moveResult.moveContext
+            nextExercicesSnapshot = moveResult.nextExercices
+            return moveResult.nextExercices
           }
-          return moveExercice(prev, touchDragItem.itemId, targetTopCardId)
+          const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetTopCardId)
+          moveContext = moveResult.moveContext
+          nextExercicesSnapshot = moveResult.nextExercices
+          return moveResult.nextExercices
         })
+        void onExerciceMoved(moveContext, nextExercicesSnapshot)
         // TODO: Persist moving/reordering exercice at top on touch
-/*         moveExerciceToGroup(touchDragItem.itemId, targetTopCardId) */
+/*         if (moveContext) moveExerciceToGroup(moveContext) */
       } else if (targetCardId && targetCardId !== touchDragItem.fromCardId) {
-        setExercices((prev) => moveExercice(prev, touchDragItem.itemId, targetCardId))
+        let moveContext: ExerciceMoveContext | null = null
+        let nextExercicesSnapshot: ExerciceData[] | null = null
+        setExercices((prev) => {
+          const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetCardId)
+          moveContext = moveResult.moveContext
+          nextExercicesSnapshot = moveResult.nextExercices
+          return moveResult.nextExercices
+        })
+        void onExerciceMoved(moveContext, nextExercicesSnapshot)
         // TODO: Persist moving exercice between groups on touch
-/*         moveExerciceToGroup(touchDragItem.itemId, targetCardId) */
+/*         if (moveContext) moveExerciceToGroup(moveContext) */
       }
 
       setTouchDragItem(null)
@@ -462,7 +634,7 @@ export default function ExerciceBoard({
         clearTimeout(hoverTimeoutRef.current)
       }
     },
-    [touchDragItem, isDragReady, getCardUnderTouch, getItemUnderTouch, getTopDropCardUnderTouch],
+    [touchDragItem, isDragReady, getCardUnderTouch, getItemUnderTouch, getTopDropCardUnderTouch, onExerciceMoved],
   )
 
   const handleTouchCancel = useCallback(() => {
@@ -504,13 +676,14 @@ export default function ExerciceBoard({
     setActiveEditExercice(null)
   }
 
+
   return (
-    <div className="flex flex-col gap-2 overflow-y-scroll pb-4 no-scrollbar lg:flex-row">
+    <ScrollArea>
         {cards && cards.map((card) => {
         const isExpanded = expandedCards.has(card.id)
         const isDragOver = dragOverCardId === card.id
         const isEditing = editingCardId === card.id
-
+        const groupExercices = sortExercicesByGroupOrder(exercices.filter((exercice) => exercice.exerciceGroupId === card.id))
         return (
           <Card
             key={card.id}
@@ -518,7 +691,7 @@ export default function ExerciceBoard({
               if (el) cardRefs.current.set(card.id, el)
               else cardRefs.current.delete(card.id)
             }}
-            className={cn("transition-all duration-200 flex-1 lg:max-w-80 group py-1 bg-background", isDragOver && "border-primary")}
+            className={cn("transition-all duration-200 flex-1 min-w-60 lg:max-w-80 group py-1 bg-background", isDragOver && "border-primary")}
             onDragOver={(e) => handleDragOver(e, card.id)}
             onDragLeave={(e) => handleDragLeave(e, card.id)}
             onDrop={(e) => handleDrop(e, card.id)}
@@ -589,6 +762,7 @@ export default function ExerciceBoard({
                         variant="ghost"
                         className="h-8 w-8 group/delete"
                         onClick={(e) => deleteCard(e, card.id)}
+                        disabled={exercices.filter((ex) => ex.exerciceGroupId === card.id).length > 0}
                       >
                         <Trash2
                           className={cn(
@@ -611,7 +785,7 @@ export default function ExerciceBoard({
             <div className={cn("grid transition-all duration-200 lg:grid-rows-[1fr]", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
               <div className="overflow-hidden">
                 <CardContent className="pt-0 pb-3">
-                  {exercices.filter((ex) => ex.exerciceGroupId === card.id).length === 0 ? (
+                  {groupExercices.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4 border-2 border-dashed rounded-lg">
                       No exercices in this group
                     </p>
@@ -642,7 +816,7 @@ export default function ExerciceBoard({
                             : "bg-transparent border-transparent",
                         )}
                       />
-                      {exercices.filter((ex) => ex.exerciceGroupId === card.id).flatMap((exercice) => {
+                      {groupExercices.flatMap((exercice) => {
                         const currentDraggedItemId = draggedItem?.itemId ?? touchDragItem?.itemId
                         const showDropIndicator =
                           dropIndicatorItemId === exercice.id && currentDraggedItemId !== exercice.id
@@ -687,52 +861,6 @@ export default function ExerciceBoard({
                           >
                             <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
                             <span className="text-sm flex-1">{exercice.name}</span>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setActiveEditExercice(exercice)
-                              }}
-                            >
-                              <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
-                            </Button>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                  }}
-                                >
-                                  <Trash2 className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
-                                </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete this exercice?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    Are you sure you want to delete &quot;{exercice.name}&quot;?
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <div className="flex">
-                                    <Button
-                                      type="button"
-                                      variant="default"
-                                      className="flex-grow"
-                                      onClick={() => deleteItem(card.id, exercice.id, userId)}
-                                    >
-                                      Delete exercice
-                                    </Button>
-                                  </div>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
                           </li>,
                         ]
                       })}
@@ -795,7 +923,7 @@ export default function ExerciceBoard({
           }}
         />
       )}
-
-    </div>
+      <ScrollBar orientation="horizontal" />
+    </ScrollArea>
   )
 }

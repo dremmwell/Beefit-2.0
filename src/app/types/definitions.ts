@@ -89,6 +89,7 @@ export type FocusLabels = {
 export type ExerciceData = {
     id: string,
     name: string,
+    groupOrder: number,
     userId: string,
     description: string,
     createdAt: Date,
