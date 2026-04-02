@@ -10,18 +10,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { ScrollBar } from "@/components/ui/scroll-area"
 import { ExerciceData, FocusLabels, RecipeAndIngredients } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
 import { updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
@@ -384,15 +372,9 @@ export default function ExerciceBoard({
       return
     }
 
-    let moveContext: ExerciceMoveContext | null = null
-    let nextExercicesSnapshot: ExerciceData[] | null = null
-    setExercices((prev) => {
-      const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId)
-      moveContext = moveResult.moveContext
-      nextExercicesSnapshot = moveResult.nextExercices
-      return moveResult.nextExercices
-    })
-    void onExerciceMoved(moveContext, nextExercicesSnapshot)
+    const moveResult = moveExerciceWithContext(exercices, draggedItem.itemId, toCardId)
+    setExercices(moveResult.nextExercices)
+    void onExerciceMoved(moveResult.moveContext, moveResult.nextExercices)
     // TODO: Persist moving exercice between groups
 /*     moveExerciceToGroup(moveContext) */
 
@@ -410,15 +392,9 @@ export default function ExerciceBoard({
       return
     }
 
-    let moveContext: ExerciceMoveContext | null = null
-    let nextExercicesSnapshot: ExerciceData[] | null = null
-    setExercices((prev) => {
-      const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId, toItemId)
-      moveContext = moveResult.moveContext
-      nextExercicesSnapshot = moveResult.nextExercices
-      return moveResult.nextExercices
-    })
-    void onExerciceMoved(moveContext, nextExercicesSnapshot)
+    const moveResult = moveExerciceWithContext(exercices, draggedItem.itemId, toCardId, toItemId)
+    setExercices(moveResult.nextExercices)
+    void onExerciceMoved(moveResult.moveContext, moveResult.nextExercices)
 
     // TODO: Persist reorder/move for dropped exercice
 /*     if (moveContext) moveExerciceToGroup(moveContext) */
@@ -437,22 +413,13 @@ export default function ExerciceBoard({
       return
     }
 
-    let moveContext: ExerciceMoveContext | null = null
-    let nextExercicesSnapshot: ExerciceData[] | null = null
-    setExercices((prev) => {
-      const firstInGroup = prev.find((exercice) => exercice.exerciceGroupId === toCardId)
-      if (firstInGroup && firstInGroup.id !== draggedItem.itemId) {
-        const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId, firstInGroup.id)
-        moveContext = moveResult.moveContext
-        nextExercicesSnapshot = moveResult.nextExercices
-        return moveResult.nextExercices
-      }
-      const moveResult = moveExerciceWithContext(prev, draggedItem.itemId, toCardId)
-      moveContext = moveResult.moveContext
-      nextExercicesSnapshot = moveResult.nextExercices
-      return moveResult.nextExercices
-    })
-    void onExerciceMoved(moveContext, nextExercicesSnapshot)
+    const firstInGroup = exercices.find((exercice) => exercice.exerciceGroupId === toCardId)
+    const moveResult = firstInGroup && firstInGroup.id !== draggedItem.itemId
+      ? moveExerciceWithContext(exercices, draggedItem.itemId, toCardId, firstInGroup.id)
+      : moveExerciceWithContext(exercices, draggedItem.itemId, toCardId)
+
+    setExercices(moveResult.nextExercices)
+    void onExerciceMoved(moveResult.moveContext, moveResult.nextExercices)
 
     // TODO: Persist reorder/move for dropped exercice at top
 /*     if (moveContext) moveExerciceToGroup(moveContext) */
@@ -577,48 +544,28 @@ export default function ExerciceBoard({
       const targetCardId = getCardUnderTouch(touch.clientX, touch.clientY)
 
       if (targetItemId && targetItemId !== touchDragItem.itemId) {
-        let moveContext: ExerciceMoveContext | null = null
-        let nextExercicesSnapshot: ExerciceData[] | null = null
-        setExercices((prev) => {
-          const targetExercice = prev.find((exercice) => exercice.id === targetItemId)
-          if (!targetExercice) return prev
-          const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetExercice.exerciceGroupId, targetItemId)
-          moveContext = moveResult.moveContext
-          nextExercicesSnapshot = moveResult.nextExercices
-          return moveResult.nextExercices
-        })
-        void onExerciceMoved(moveContext, nextExercicesSnapshot)
+        const targetExercice = exercices.find((exercice) => exercice.id === targetItemId)
+        if (targetExercice) {
+          const moveResult = moveExerciceWithContext(exercices, touchDragItem.itemId, targetExercice.exerciceGroupId, targetItemId)
+          setExercices(moveResult.nextExercices)
+          void onExerciceMoved(moveResult.moveContext, moveResult.nextExercices)
+        }
         // TODO: Persist reorder/move for dropped exercice on touch
 /*         if (moveContext) moveExerciceToGroup(moveContext) */
       } else if (targetTopCardId) {
-        let moveContext: ExerciceMoveContext | null = null
-        let nextExercicesSnapshot: ExerciceData[] | null = null
-        setExercices((prev) => {
-          const firstInGroup = prev.find((exercice) => exercice.exerciceGroupId === targetTopCardId)
-          if (firstInGroup && firstInGroup.id !== touchDragItem.itemId) {
-            const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetTopCardId, firstInGroup.id)
-            moveContext = moveResult.moveContext
-            nextExercicesSnapshot = moveResult.nextExercices
-            return moveResult.nextExercices
-          }
-          const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetTopCardId)
-          moveContext = moveResult.moveContext
-          nextExercicesSnapshot = moveResult.nextExercices
-          return moveResult.nextExercices
-        })
-        void onExerciceMoved(moveContext, nextExercicesSnapshot)
+        const firstInGroup = exercices.find((exercice) => exercice.exerciceGroupId === targetTopCardId)
+        const moveResult = firstInGroup && firstInGroup.id !== touchDragItem.itemId
+          ? moveExerciceWithContext(exercices, touchDragItem.itemId, targetTopCardId, firstInGroup.id)
+          : moveExerciceWithContext(exercices, touchDragItem.itemId, targetTopCardId)
+
+        setExercices(moveResult.nextExercices)
+        void onExerciceMoved(moveResult.moveContext, moveResult.nextExercices)
         // TODO: Persist moving/reordering exercice at top on touch
 /*         if (moveContext) moveExerciceToGroup(moveContext) */
       } else if (targetCardId && targetCardId !== touchDragItem.fromCardId) {
-        let moveContext: ExerciceMoveContext | null = null
-        let nextExercicesSnapshot: ExerciceData[] | null = null
-        setExercices((prev) => {
-          const moveResult = moveExerciceWithContext(prev, touchDragItem.itemId, targetCardId)
-          moveContext = moveResult.moveContext
-          nextExercicesSnapshot = moveResult.nextExercices
-          return moveResult.nextExercices
-        })
-        void onExerciceMoved(moveContext, nextExercicesSnapshot)
+        const moveResult = moveExerciceWithContext(exercices, touchDragItem.itemId, targetCardId)
+        setExercices(moveResult.nextExercices)
+        void onExerciceMoved(moveResult.moveContext, moveResult.nextExercices)
         // TODO: Persist moving exercice between groups on touch
 /*         if (moveContext) moveExerciceToGroup(moveContext) */
       }
@@ -634,7 +581,7 @@ export default function ExerciceBoard({
         clearTimeout(hoverTimeoutRef.current)
       }
     },
-    [touchDragItem, isDragReady, getCardUnderTouch, getItemUnderTouch, getTopDropCardUnderTouch, onExerciceMoved],
+    [touchDragItem, isDragReady, exercices, getCardUnderTouch, getItemUnderTouch, getTopDropCardUnderTouch, onExerciceMoved],
   )
 
   const handleTouchCancel = useCallback(() => {
@@ -678,7 +625,7 @@ export default function ExerciceBoard({
 
 
   return (
-    <ScrollArea>
+    <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-scroll lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
         {cards && cards.map((card) => {
         const isExpanded = expandedCards.has(card.id)
         const isDragOver = dragOverCardId === card.id
@@ -727,7 +674,7 @@ export default function ExerciceBoard({
                       </Label>
                       <Select value={editPosition} onValueChange={setEditPosition}>
                         <SelectTrigger id={`position-${card.id}`} className="h-9 w-full">
-                          <SelectValue placeholder="Select position" />
+                          <SelectValue placeholder={(card.order + 1).toString()} />
                         </SelectTrigger>
                         <SelectContent>
                           {cards.map((_, index) => {
@@ -749,9 +696,6 @@ export default function ExerciceBoard({
                   <>
                     <CardTitle className="text-base flex items-center gap-2">
                       {card.name}
-                      <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-                        {card.order}
-                      </span>
                     </CardTitle>
                     <div className="flex items-center gap-1">
                       <Button size="icon" variant="ghost" className="h-8 w-8" onClick={(e) => startEditing(e, card)}>
@@ -854,6 +798,7 @@ export default function ExerciceBoard({
                             onTouchMove={handleTouchMove}
                             onTouchEnd={handleTouchEnd}
                             onTouchCancel={handleTouchCancel}
+                            onClick={() => {console.log(exercice)}}
                             className={cn(
                               "group/labelitem flex items-center gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
                               (draggedItem?.itemId === exercice.id || touchDragItem?.itemId === exercice.id) && "opacity-50",
@@ -935,7 +880,6 @@ export default function ExerciceBoard({
           }}
         />
       )}
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </div>
   )
 }
