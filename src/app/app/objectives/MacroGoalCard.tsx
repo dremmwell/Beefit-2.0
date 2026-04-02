@@ -91,7 +91,9 @@ function MacroGoalCard({objective} : {objective : any}) {
     <Card>
       <CardHeader className="md:pb-4 pb-2">
         <CardTitle className="text-base text-center md:text-left">Macronutriments Goal</CardTitle>
-        <CardDescription className="hidden md:block">Set your daily macronutriments goal.</CardDescription>
+        <CardDescription className="flex-col hidden md:block">
+            <div className="flex">Set your daily macronutriments goal. <span className="ml-auto">Macro Calories : {proteinsGoal * 4 + carbsGoal * 4 + fatsGoal * 9}</span></div>
+        </CardDescription>
       </CardHeader>
       <CardContent className="md:py-4 pb-4 flex flex-col md:flex-row md:justify-evenly gap-4 md:min-w-">
         <div className="flex flex-col gap-2">
