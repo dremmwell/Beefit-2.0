@@ -40,11 +40,11 @@ export default function ExercieCreationDialog({ open, onOpenChange, onSave }: Ex
   const handleSave = () => {
     if (name.trim()) {
 
-      const label : any = {
+      const exercice: any = {
         name: name.trim(),
         color
     }
-      onSave(label)
+      onSave(exercice)
       setName("")
       setColor(COLORS[0].value)
     }

@@ -26,7 +26,7 @@ import { ExerciceData, FocusLabels, RecipeAndIngredients } from "@/app/types/def
 import { PlusCircle } from "lucide-react"
 import { updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
-import { ExerciceGroup, Focus, Labels } from "@prisma/client"
+import { Exercice, ExerciceGroup, Focus, Labels } from "@prisma/client"
 import ExerciceCreationDialog from "./ExerciceDialog"
 import ExerciceEditDialog from "./ExerciceEditDialog"
 
@@ -662,17 +662,17 @@ export default function ExerciceBoard({
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
 
-  const createLabel = (label: { name: string; color: string }) => {
+  const createExercice = (exercice: Exercice) => {
     if (!activeCreationCardId) return
     // TODO: Create new exercice in active group
-/*     createExerciceInGroup(userId, activeCreationCardId, label) */
+/*     createExerciceInGroup(userId, activeCreationCardId, exercice) */
     setActiveCreationCardId(null)
   }
 
-  const saveEditedLabel = (updatedLabel: { name: string; color: string }) => {
+  const saveEditedExercice = ( updatedExercice: Exercice) => {
     if (!activeEditExercice) return
     // TODO: Update exercice name/details
-/*     updateExercice(userId, activeEditExercice.id, updatedLabel) */
+/*     updateExercice(userId, activeEditExercice.id, updatedExercice) */
     setActiveEditExercice(null)
   }
 
@@ -861,6 +861,17 @@ export default function ExerciceBoard({
                           >
                             <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
                             <span className="text-sm flex-1">{exercice.name}</span>
+                            <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActiveEditExercice(exercice)
+                            }}
+                          >
+                            <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                          </Button>
                           </li>,
                         ]
                       })}
@@ -903,7 +914,7 @@ export default function ExerciceBoard({
       <ExerciceCreationDialog
         open={!!activeCreationCardId}
         onOpenChange={(open) => { if (!open) setActiveCreationCardId(null) }}
-        onSave={createLabel}
+        onSave={createExercice}
       />
 
       {activeEditExercice && (
@@ -912,14 +923,15 @@ export default function ExerciceBoard({
           onOpenChange={(open) => {
             if (!open) setActiveEditExercice(null)
           }}
-          onSave={saveEditedLabel}
-          label={{
+          onSave={saveEditedExercice}
+          exercice={{
             id: activeEditExercice.id,
             name: activeEditExercice.name,
-            color: "#000000",
+            description: activeEditExercice.description,
+            groupOrder: activeEditExercice.groupOrder,
             createdAt: activeEditExercice.createdAt,
             userId: activeEditExercice.userId,
-            focusId: "",
+            exerciceGroupId: activeEditExercice.exerciceGroupId,
           }}
         />
       )}

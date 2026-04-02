@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Labels } from "@prisma/client"
+import { Exercice } from "@prisma/client"
 
 const COLORS = [
   { value: "#ef4444", name: "Red" },
@@ -30,27 +30,28 @@ const COLORS = [
 type ExerciceEditDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSave: (label: { name: string; color: string }) => void
-  label: Labels
+  onSave: (exercice: Exercice) => void
+  exercice: Exercice
 }
 
-export default function ExerciceEditDialog({ open, onOpenChange, onSave, label }: ExerciceEditDialogProps) {
-  const [name, setName] = useState(label.name)
-  const [color, setColor] = useState(label.color)
+export default function ExerciceEditDialog({ open, onOpenChange, onSave, exercice }: ExerciceEditDialogProps) {
+  const [name, setName] = useState(exercice.name)
+  const [description, setDescription] = useState(exercice.description)
 
   useEffect(() => {
-    setName(label.name)
-    setColor(label.color)
-  }, [label])
+    setName(exercice.name)
+    setDescription(exercice.description)
+  }, [exercice])
 
   const handleSave = () => {
     if (name.trim()) {
 
-      const label : any = {
+      const updatedExercice: Exercice = {
+        ...exercice,  
         name: name.trim(),
-        color
+        description
     }
-      onSave(label)
+      onSave(updatedExercice)
       onOpenChange(false)
     }
   }
@@ -71,27 +72,6 @@ export default function ExerciceEditDialog({ open, onOpenChange, onSave, label }
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-          </div>
-
-          <div className="grid gap-2">
-            <Label>Label Color</Label>
-            <RadioGroup value={color} onValueChange={setColor} className="flex flex-wrap gap-2 max-w-md">
-              {COLORS.map((colorOption) => (
-                <div key={colorOption.value} className="flex items-center">
-                  <RadioGroupItem value={colorOption.value} id={`color-${colorOption.value}`} className="sr-only" />
-                  <Label
-                    htmlFor={`color-${colorOption.value}`}
-                    className={`h-8 w-8 rounded-full cursor-pointer flex items-center justify-center border-2 ${
-                      color === colorOption.value ? "border-black dark:border-white" : "border-transparent"
-                    }`}
-                    style={{ backgroundColor: colorOption.value }}
-                    title={colorOption.name}
-                  >
-                    <span className="sr-only">{colorOption.name}</span>
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
           </div>
         </div>
 
