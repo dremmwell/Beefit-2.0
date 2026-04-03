@@ -4,18 +4,18 @@
 import type React from "react"
 import { useState, useRef, useCallback, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 import { ChevronDown, GripVertical, Pencil, Trash2, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ExerciceData, FocusLabels, RecipeAndIngredients } from "@/app/types/definitions"
+import { ExerciceData } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
 import { updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { Exercice, ExerciceGroup, Focus, Labels } from "@prisma/client"
-import ExerciceCreationDialog from "./ExerciceDialog"
 import ExerciceEditDialog from "./ExerciceEditDialog"
 
 const sortCardsByOrder = (cards: ExerciceGroup[]) => {
@@ -45,6 +45,42 @@ const normalizeExerciceGroupOrder = (items: ExerciceData[]) => {
 }
 
 const TOP_DROP_PREFIX = "top-drop-"
+
+const getNormalizedHexColor = (value: string) => {
+  const trimmedValue = value.trim().replace("#", "")
+
+  if (/^[0-9a-fA-F]{3}$/.test(trimmedValue)) {
+    return trimmedValue
+      .split("")
+      .map((character) => `${character}${character}`)
+      .join("")
+  }
+
+  if (/^[0-9a-fA-F]{6}$/.test(trimmedValue)) {
+    return trimmedValue
+  }
+
+  return null
+}
+
+const getReadableBadgeTextColor = (backgroundColor: string) => {
+  const normalizedHexColor = getNormalizedHexColor(backgroundColor)
+
+  if (!normalizedHexColor) {
+    return "#ffffff"
+  }
+
+  const red = Number.parseInt(normalizedHexColor.slice(0, 2), 16)
+  const green = Number.parseInt(normalizedHexColor.slice(2, 4), 16)
+  const blue = Number.parseInt(normalizedHexColor.slice(4, 6), 16)
+  const luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255
+
+  return luminance > 0.62 ? "#111827" : "#ffffff"
+}
+
+const getExerciceLabels = (exercice: ExerciceData) => {
+  return exercice.execiceLabels ?? exercice.LabelsExercice ?? []
+}
 
 type ExerciceMoveContext = {
   exerciceId: string
@@ -764,6 +800,7 @@ export default function ExerciceBoard({
                         const currentDraggedItemId = draggedItem?.itemId ?? touchDragItem?.itemId
                         const showDropIndicator =
                           dropIndicatorItemId === exercice.id && currentDraggedItemId !== exercice.id
+                        const exerciceLabels = getExerciceLabels(exercice)
 
                         return [
                           showDropIndicator ? (
@@ -800,23 +837,57 @@ export default function ExerciceBoard({
                             onTouchCancel={handleTouchCancel}
                             onClick={() => {console.log(exercice)}}
                             className={cn(
-                              "group/labelitem flex items-center gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-opacity touch-none",
+                              "group/labelitem flex items-start gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-all duration-200 touch-none",
                               (draggedItem?.itemId === exercice.id || touchDragItem?.itemId === exercice.id) && "opacity-50",
                             )}
                           >
-                            <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
-                            <span className="text-sm flex-1">{exercice.name}</span>
-                            <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setActiveEditExercice(exercice)
-                            }}
-                          >
-                            <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
-                          </Button>
+                            <GripVertical className="mt-0.5 h-4 w-4 text-muted-foreground shrink-0" />
+                            <div className="min-w-0 flex-1">
+                              <div className="flex flex-row">
+                                <span className="block text-sm truncate">{exercice.name}</span>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="ml-auto h-6 w-6 shrink-0 opacity-0 pointer-events-none transition-opacity group-hover/labelitem:opacity-100 group-hover/labelitem:pointer-events-auto group-focus-within/labelitem:opacity-100 group-focus-within/labelitem:pointer-events-auto"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    setActiveEditExercice(exercice)
+                                  }}
+                                >
+                                  <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                                </Button>
+                              </div>
+                              {exerciceLabels.length > 0 ? (
+                                <div className="mt-1 max-h-8 overflow-hidden opacity-100 transition-all duration-600 ease-out group-hover/labelitem:mt-2 group-hover/labelitem:max-h-32 group-focus-within/labelitem:mt-2 group-focus-within/labelitem:max-h-32">
+                                  <div className="flex w-full flex-row flex-wrap content-start items-center gap-1">
+                                    {exerciceLabels.map((exerciceLabel) => {
+                                      const label = exerciceLabel.Labels ?? exerciceLabel.labels
+
+                                      if (!label) {
+                                        return null
+                                      }
+
+                                      return (
+                                        <Badge
+                                          key={exerciceLabel.id}
+                                          variant="outline"
+                                          className="h-3 min-w-7 max-w-7 grow-0 shrink-0 basis-auto justify-center overflow-hidden rounded-full border-transparent px-1 shadow-sm transition-all duration-200 ease-out group-hover/labelitem:h-6 group-hover/labelitem:max-w-32 group-hover/labelitem:px-2.5 group-focus-within/labelitem:h-6 group-focus-within/labelitem:max-w-32 group-focus-within/labelitem:px-2.5"
+                                          style={{
+                                            backgroundColor: label.color,
+                                            color: getReadableBadgeTextColor(label.color),
+                                          }}
+                                          title={label.name}
+                                        >
+                                          <span className="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-600 ease-out group-hover/labelitem:max-w-24 group-hover/labelitem:opacity-100 group-focus-within/labelitem:max-w-24 group-focus-within/labelitem:opacity-100">
+                                            {label.name}
+                                          </span>
+                                        </Badge>
+                                      )
+                                    })}
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
                           </li>,
                         ]
                       })}
@@ -855,12 +926,6 @@ export default function ExerciceBoard({
           <span className="text-sm">{draggedExerciceRef.current}</span>
         </div>
       )}
-
-      <ExerciceCreationDialog
-        open={!!activeCreationCardId}
-        onOpenChange={(open) => { if (!open) setActiveCreationCardId(null) }}
-        onSave={createExercice}
-      />
 
       {activeEditExercice && (
         <ExerciceEditDialog

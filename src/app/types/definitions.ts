@@ -94,7 +94,8 @@ export type ExerciceData = {
     description: string,
     createdAt: Date,
     exerciceGroupId: string,
-    LabelsExercice: LabelExercices[],
+    execiceLabels: LabelExercices[],
+    LabelsExercice?: LabelExercices[],
 }
 
 export type LabelExercices = {
@@ -103,5 +104,6 @@ export type LabelExercices = {
     value: string,
     labelId: string,
     exerciceId: string,
-    labels: Labels
+    Labels: Labels,
+    labels?: Labels,
 }
