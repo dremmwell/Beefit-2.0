@@ -1,17 +1,24 @@
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { Dumbbell, Tag, BarChart } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Link from "next/link";
+import { Toaster } from "@/components/ui/toaster";
+import { Suspense } from "react";
+import FocusSkeleton from "../focus/FocusSkeleton";
 
 export default async function Page() { 
 
-  const { user } = await validateRequest()
-
-  if(!user) {
-    return redirect("/")
-  }
-  else {
-    redirect("/app/workouts/progress")
-  }
+      // Validating Path if valid user // 
+    const { user } = await validateRequest()
+      if(!user) {
+        return redirect("/")
+      }
+    
+    return (
+      <div className="container sm:my-10 my-2 flex flex-col max-h-fit min-h-0 px-3 sm:px-10">
+        <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2">Workouts</h1>
+          <Suspense fallback={<FocusSkeleton />}>
+              Workouts
+          </Suspense>
+          <Toaster />
+      </div>
+    )
 }
