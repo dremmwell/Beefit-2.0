@@ -239,6 +239,7 @@ model ExercicePerfs {
   id      String @id @default(uuid())
   weights Float
   unit    String
+  sets    Int    @default(1)
   reps    Int
   notes   String
 

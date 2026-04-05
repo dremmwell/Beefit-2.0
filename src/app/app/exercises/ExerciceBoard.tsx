@@ -11,9 +11,9 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ExerciceData } from "@/app/types/definitions"
+import { ExerciceData, ExercicePerfInput } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
+import { createExercicePerformance, updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { Exercice, ExerciceGroup, Focus, Labels } from "@prisma/client"
 import ExerciceEditDialog from "./ExerciceEditDialog"
@@ -666,10 +666,6 @@ export default function ExerciceBoard({
     setActiveEditExercice(null)
   }
   
-  const saveExerciseToWorkout = (exercice: ExerciceData) => {
-    console.log("Saving exercice to workout:", exercice)
-  }
-
   const handleExerciceCardClick = (exercice: ExerciceData) => {
     const isMobileTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches
 
@@ -957,7 +953,6 @@ export default function ExerciceBoard({
             if (!open) setActiveExercice(null)
             if (!open) setPendingTapExerciceId(null)
           }}
-          onSave={saveExerciseToWorkout}
           exercice={activeExercice}
         />
       )}

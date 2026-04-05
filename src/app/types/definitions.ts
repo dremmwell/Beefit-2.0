@@ -98,6 +98,13 @@ export type ExerciceData = {
     LabelsExercice?: LabelExercices[],
 }
 
+export type ExercicePerfInput = {
+    sets: number,
+    reps: number,
+    weight: number,
+    notes: string,
+}
+
 export type LabelExercices = {
     id : string,
     createdAt: Date,

@@ -5,7 +5,7 @@ import { ExerciceGroup, Focus, Labels, Prisma } from "@prisma/client";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
-import { ExerciceData } from "@/app/types/definitions";
+import { ExerciceData, ExercicePerfInput } from "@/app/types/definitions";
 
 type ExercicePositionUpdate = {
     exerciceId: string
@@ -190,4 +190,20 @@ export async function updateExercicePosition(userId: UserId, updates: ExercicePo
         WHERE e."id" = v."id"
           AND e."userId" = ${userId}
     `
+}
+
+export async function createExercicePerformance(perfData: ExercicePerfInput, exerciceId: string) {
+
+    await db.exercicePerfs.create({
+        data: {
+            exerciceId: exerciceId,
+            sets: perfData.sets,
+            reps: perfData.reps,
+            weights: perfData.weight,
+            notes: perfData.notes.trim(),
+            unit: "kg",
+        },
+    })
+
+    revalidatePath("/app/exercises")
 }
