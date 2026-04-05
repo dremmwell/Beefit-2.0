@@ -196,11 +196,11 @@ export async function createExercicePerformance(perfData: ExercicePerfInput, exe
 
     await db.exercicePerfs.create({
         data: {
-            exerciceId: exerciceId,
-            sets: perfData.sets,
-            reps: perfData.reps,
             weights: perfData.weight,
+            reps: perfData.reps,
+            sets: perfData.sets,
             notes: perfData.notes.trim(),
+            exerciceId: exerciceId,
             unit: "kg",
         },
     })

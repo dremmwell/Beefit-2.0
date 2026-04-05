@@ -45,14 +45,14 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
       }, exercice.id);
 
       toast({
-        title: `${exercice.name} added to your workout!`,
+        title: `${exercice.name} sets added to your workout!`,
     });
       onOpenChange(false);
     }
     catch(error){
       console.log(error)
       toast({
-        title: `Failed to add ${exercice.name} to your workout. Please try again.`,
+        title: `Failed to add ${exercice.name} sets to your workout. Please try again.`,
       });
     }
   };
@@ -117,12 +117,12 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
 
         <DialogFooter className="flex gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleSave} disabled={isSaving}>
             {isSaving && (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             )}
-            Cancel
-          </Button>
-          <Button onClick={handleSave}>
             Add to workout
           </Button>
         </DialogFooter>
