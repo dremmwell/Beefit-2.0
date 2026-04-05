@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useRef, useCallback, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ChevronDown, GripVertical, Pencil, Trash2, X } from "lucide-react"
+import { ChevronDown, GripVertical, MessageSquareText, Pencil, Trash2, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -819,6 +819,7 @@ export default function ExerciceBoard({
                         const showDropIndicator =
                           dropIndicatorItemId === exercice.id && currentDraggedItemId !== exercice.id
                         const exerciceLabels = getExerciceLabels(exercice)
+                        const isPendingTapActive = pendingTapExerciceId === exercice.id
 
                         return [
                           showDropIndicator ? (
@@ -877,12 +878,14 @@ export default function ExerciceBoard({
                               </div>
                               {exercice.exercicePerfs && exercice.exercicePerfs.length > 0 ? (() => {
                                 const lastPerf = exercice.exercicePerfs[exercice.exercicePerfs.length - 1]
+                                const hasNotes = Boolean(lastPerf.notes?.trim())
                                 return (
                                   <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-200 ease-out group-hover/labelitem:mt-1.5 group-hover/labelitem:max-h-12 group-hover/labelitem:opacity-100 group-focus-within/labelitem:mt-1.5 group-focus-within/labelitem:max-h-12 group-focus-within/labelitem:opacity-100">
                                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                                       <span className="font-medium text-foreground">{lastPerf.sets} × {lastPerf.reps}</span>
                                       <span>@</span>
                                       <span className="font-medium text-foreground">{lastPerf.weights} {lastPerf.unit}</span>
+                                      {hasNotes ? <MessageSquareText className="h-3 w-3 text-foreground/80" /> : null}
                                     </div>
                                   </div>
                                 )
