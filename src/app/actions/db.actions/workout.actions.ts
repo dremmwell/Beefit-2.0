@@ -161,9 +161,22 @@ export async function getExerciceData(userId: UserId) {
                     Labels: true,
                 }
             },
+            perfs: {
+                orderBy: {
+                    createdAt: "desc",
+                },
+                take: 1,
+            },
         },
     });
-    const exercices : ExerciceData[] = JSON.parse(JSON.stringify(data));
+
+    const exercices : ExerciceData[] = JSON.parse(JSON.stringify(
+        data.map((exercice) => ({
+            ...exercice,
+            exercicePerfs: exercice.perfs,
+        })),
+    ));
+
     return exercices    
 }
 

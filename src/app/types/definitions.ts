@@ -1,4 +1,4 @@
-import { Ingredient, Recipe, RecipeIngredient, Meal, Objective, ExerciceGroup } from "@prisma/client";
+import { Ingredient, Recipe, RecipeIngredient, Meal, Objective, ExerciceGroup, ExercicePerfs } from "@prisma/client";
 import { Labels } from "@prisma/client";
 
 export type RecipeValues = {
@@ -96,6 +96,7 @@ export type ExerciceData = {
     exerciceGroupId: string,
     execiceLabels: LabelExercices[],
     LabelsExercice?: LabelExercices[],
+    exercicePerfs: ExercicePerfs[],
 }
 
 export type ExercicePerfInput = {

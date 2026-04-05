@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ExerciceData, ExercicePerfInput } from "@/app/types/definitions"
 import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
+import { Badge} from "@/components/ui/badge"
 import { createExercicePerformance } from "@/app/actions/db.actions/workout.actions"
 
 type ExerciceDialogProps = {
@@ -18,21 +19,45 @@ type ExerciceDialogProps = {
 }
 
 export default function ExerciceDialog({ open, onOpenChange, exercice}: ExerciceDialogProps) {
-  const [sets, setSets] = useState<number>(1)
-  const [reps, setReps] = useState<number>(8)
-  const [weight, setWeight] = useState<number>(0)
-  const [notes, setNotes] = useState<string>("")
+  const [sets, setSets] = useState<number>(exercice.exercicePerfs[0]?.sets || 4)
+  const [reps, setReps] = useState<number>(exercice.exercicePerfs[0]?.reps || 8)
+  const [weight, setWeight] = useState<number>(exercice.exercicePerfs[0]?.weights || 20)
+  const [notes, setNotes] = useState<string>(exercice.exercicePerfs[0]?.notes || "")
   const [isSaving, setIsSaving] = useState(false)
 
-  const { toast } = useToast()
+  const getNormalizedHexColor = (value: string) => {
+  const trimmedValue = value.trim().replace("#", "")
 
-  useEffect(() => {
-    if (!open) return
-    setSets(4)
-    setReps(8)
-    setWeight(0)
-    setNotes("")
-  }, [open, exercice.id])
+  if (/^[0-9a-fA-F]{3}$/.test(trimmedValue)) {
+    return trimmedValue
+      .split("")
+      .map((character) => `${character}${character}`)
+      .join("")
+  }
+
+  if (/^[0-9a-fA-F]{6}$/.test(trimmedValue)) {
+    return trimmedValue
+  }
+
+  return null
+  }
+
+  const getReadableBadgeTextColor = (backgroundColor: string) => {
+  const normalizedHexColor = getNormalizedHexColor(backgroundColor)
+
+  if (!normalizedHexColor) {
+    return "#ffffff"
+  }
+
+  const red = Number.parseInt(normalizedHexColor.slice(0, 2), 16)
+  const green = Number.parseInt(normalizedHexColor.slice(2, 4), 16)
+  const blue = Number.parseInt(normalizedHexColor.slice(4, 6), 16)
+  const luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255
+
+  return luminance > 0.62 ? "#111827" : "#ffffff"
+}
+
+  const { toast } = useToast()
 
   async function handleSave () {
     try{
@@ -63,7 +88,54 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
         <DialogHeader>
           <DialogTitle>Add {exercice.name} sets to your workout</DialogTitle>
         </DialogHeader>
+        <DialogDescription className="flex flex-col gap-2">
+          Fill in the details of your sets, and they will be added to your workout session.
+          <div className="flex flex-row flex-wrap gap-2">
+            {exercice.execiceLabels.map((exerciceLabel) => {
+            const label = exerciceLabel.Labels ?? exerciceLabel.labels
 
+            if (!label) {
+              return null
+            }
+
+            if(exerciceLabel.value === "full"){
+              return(
+              <Badge
+                key={exerciceLabel.id}
+                variant="outline"
+                className="min-w-10 grow-0 shrink-0 basis-auto justify-center overflow-hidden rounded-full border-transparent shadow-sm h-6 max-w-32 px-2.5"
+                style={{
+                  backgroundColor: label.color,
+                  color: getReadableBadgeTextColor(label.color),
+                }}
+                title={label.name}
+              >
+                <span className="overflow-hidden whitespace-nowrap max-w-24 opacity-100">
+                  {label.name}
+                </span>
+              </Badge>
+              )
+            }
+            if(exerciceLabel.value === "half"){
+            return (
+              <Badge
+                key={exerciceLabel.id}
+                variant="outline"
+                className="min-w-10 grow-0 shrink-0 basis-auto justify-center overflow-hidden rounded-full border-transparent shadow-sm h-6 max-w-32 px-2.5"
+                style={{
+                  backgroundColor: label.color,
+                  color: getReadableBadgeTextColor(label.color),
+                }}
+                title={label.name}
+              >
+                <span className="overflow-hidden whitespace-nowrap max-w-24 opacity-100">
+                  1/2 {label.name}
+                </span>
+              </Badge>
+            )
+          }})}
+          </div>
+        </DialogDescription>
         <div className="grid gap-4 py-1">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div className="grid gap-2">
