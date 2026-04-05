@@ -17,6 +17,7 @@ import { updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { Exercice, ExerciceGroup, Focus, Labels } from "@prisma/client"
 import ExerciceEditDialog from "./ExerciceEditDialog"
+import ExerciceDialog from "./ExerciseDialog"
 
 const sortCardsByOrder = (cards: ExerciceGroup[]) => {
   return [...cards].sort((leftCard, rightCard) => Number(leftCard.order) - Number(rightCard.order))
@@ -123,6 +124,12 @@ export default function ExerciceBoard({
   const draggedExerciceRef = useRef<string>("")
   const dropIndicatorClearTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
+  const [activeExercice, setActiveExercice] = useState<ExerciceData | null>(null)
+  const [pendingTapExerciceId, setPendingTapExerciceId] = useState<string | null>(null)
+
+  const [activeCreationCardId, setActiveCreationCardId] = useState<string | null>(null)
+  const [activeEditExercice, setActiveEditExercice] = useState<ExerciceData | null>(null)
+
   const setDropIndicatorDebounced = (id: string | null) => {
     if (id !== null) {
       if (dropIndicatorClearTimeoutRef.current) {
@@ -130,15 +137,15 @@ export default function ExerciceBoard({
         dropIndicatorClearTimeoutRef.current = null
       }
       setDropIndicatorItemId(id)
-    } else {
-      dropIndicatorClearTimeoutRef.current = setTimeout(() => {
-        setDropIndicatorItemId(null)
-        dropIndicatorClearTimeoutRef.current = null
-      }, 60)
-    }
+      } else {
+        dropIndicatorClearTimeoutRef.current = setTimeout(() => {
+          setDropIndicatorItemId(null)
+          dropIndicatorClearTimeoutRef.current = null
+        }, 60)
+      }
   }
-  const [activeCreationCardId, setActiveCreationCardId] = useState<string | null>(null)
-  const [activeEditExercice, setActiveEditExercice] = useState<ExerciceData | null>(null)
+
+
 
   const LONG_PRESS_DURATION = 400
   const MOVE_THRESHOLD = 10
@@ -658,7 +665,22 @@ export default function ExerciceBoard({
 /*     updateExercice(userId, activeEditExercice.id, updatedExercice) */
     setActiveEditExercice(null)
   }
+  
+  const saveExerciseToWorkout = (exercice: ExerciceData) => {
+    console.log("Saving exercice to workout:", exercice)
+  }
 
+  const handleExerciceCardClick = (exercice: ExerciceData) => {
+    const isMobileTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches
+
+    if (isMobileTouch && pendingTapExerciceId !== exercice.id) {
+      setPendingTapExerciceId(exercice.id)
+      return
+    }
+
+    setPendingTapExerciceId(null)
+    setActiveExercice(exercice)
+  }
 
   return (
     <div className="flex flex-col lg:gap-4 gap-2 lg:flex-row overflow-y-scroll lg:overflow-y-visible lg:overflow-x-auto pb-4 no-scrollbar lg:flex-wrap">
@@ -764,7 +786,7 @@ export default function ExerciceBoard({
 
             <div className={cn("grid transition-all duration-200 lg:grid-rows-[1fr]", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
               <div className="overflow-hidden">
-                <CardContent className="pt-0 pb-3">
+                <CardContent>
                   {groupExercices.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4 border-2 border-dashed rounded-lg">
                       No exercices in this group
@@ -835,13 +857,13 @@ export default function ExerciceBoard({
                             onTouchMove={handleTouchMove}
                             onTouchEnd={handleTouchEnd}
                             onTouchCancel={handleTouchCancel}
-                            onClick={() => {console.log(exercice)}}
+                            onClick={() => handleExerciceCardClick(exercice)}
                             className={cn(
-                              "group/labelitem flex items-start gap-2 lg:p-3 p-2 bg-card border rounded-lg cursor-move active:cursor-grabbing transition-all duration-200 touch-none",
+                              "group/labelitem flex items-start gap-2 lg:p-3 p-2 bg-card border rounded-lg active:cursor-grabbing cursor-pointer transition-all duration-200 touch-none",
                               (draggedItem?.itemId === exercice.id || touchDragItem?.itemId === exercice.id) && "opacity-50",
                             )}
                           >
-                            <GripVertical className="mt-0.5 h-4 w-4 text-muted-foreground shrink-0" />
+                            <GripVertical className="cursor-move mt-0.5 h-4 w-4 text-muted-foreground shrink-0" />
                             <div className="min-w-0 flex-1">
                               <div className="flex flex-row">
                                 <span className="block text-sm truncate">{exercice.name}</span>
@@ -927,6 +949,19 @@ export default function ExerciceBoard({
         </div>
       )}
 
+
+      {activeExercice && (
+        <ExerciceDialog
+          open={!!activeExercice}
+          onOpenChange={(open) => {
+            if (!open) setActiveExercice(null)
+            if (!open) setPendingTapExerciceId(null)
+          }}
+          onSave={saveExerciseToWorkout}
+          exercice={activeExercice}
+        />
+      )}
+
       {activeEditExercice && (
         <ExerciceEditDialog
           open={!!activeEditExercice}
@@ -934,15 +969,7 @@ export default function ExerciceBoard({
             if (!open) setActiveEditExercice(null)
           }}
           onSave={saveEditedExercice}
-          exercice={{
-            id: activeEditExercice.id,
-            name: activeEditExercice.name,
-            description: activeEditExercice.description,
-            groupOrder: activeEditExercice.groupOrder,
-            createdAt: activeEditExercice.createdAt,
-            userId: activeEditExercice.userId,
-            exerciceGroupId: activeEditExercice.exerciceGroupId,
-          }}
+          exercice={activeEditExercice}
         />
       )}
     </div>
