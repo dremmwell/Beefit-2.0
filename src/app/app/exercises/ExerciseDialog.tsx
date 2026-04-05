@@ -136,8 +136,8 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
           }})}
           </div>
         </DialogDescription>
-        <div className="grid gap-4 py-1">
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="flex flex-col gap-4 mt-4">
+          <div className="flex flex-row gap-4">
             <div className="grid gap-2">
               <Label htmlFor="exercice-sets">Sets</Label>
               <Input
@@ -151,7 +151,7 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="exercice-reps">Reps</Label>
+              <Label htmlFor="exercice-reps">Reps per set</Label>
               <Input
                 id="exercice-reps"
                 type="number"

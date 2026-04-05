@@ -782,13 +782,13 @@ export default function ExerciceBoard({
 
             <div className={cn("grid transition-all duration-200 lg:grid-rows-[1fr]", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
               <div className="overflow-hidden">
-                <CardContent>
+                <CardContent className="pb-1">
                   {groupExercices.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4 border-2 border-dashed rounded-lg">
                       No exercices in this group
                     </p>
                   ) : (
-                    <ul className="space-y-2">
+                    <ul className="grid grid-cols-2 gap-2 lg:grid-cols-1 lg:gap-y-2">
                       <li
                         ref={(el) => {
                           if (el) topDropRefs.current.set(card.id, el)
@@ -808,7 +808,7 @@ export default function ExerciceBoard({
                         }}
                         onDrop={(e) => handleDropOnTop(e, card.id)}
                         className={cn(
-                          "h-2 rounded-md border transition-colors",
+                          "col-span-2 lg:col-span-1 h-2 rounded-md border transition-colors",
                           dropIndicatorItemId === `${TOP_DROP_PREFIX}${card.id}`
                             ? "bg-primary/20 border-primary/30"
                             : "bg-transparent border-transparent",
@@ -824,7 +824,7 @@ export default function ExerciceBoard({
                           showDropIndicator ? (
                             <li
                               key={`drop-indicator-${exercice.id}`}
-                              className="h-2 rounded-md bg-primary/20 border border-primary/30"
+                              className="col-span-2 lg:col-span-1 h-2 rounded-md bg-primary/20 border border-primary/30"
                             />
                           ) : null,
                           <li
@@ -875,6 +875,18 @@ export default function ExerciceBoard({
                                   <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
                                 </Button>
                               </div>
+                              {exercice.exercicePerfs && exercice.exercicePerfs.length > 0 ? (() => {
+                                const lastPerf = exercice.exercicePerfs[exercice.exercicePerfs.length - 1]
+                                return (
+                                  <div className="max-h-0 overflow-hidden opacity-0 transition-all duration-200 ease-out group-hover/labelitem:mt-1.5 group-hover/labelitem:max-h-12 group-hover/labelitem:opacity-100 group-focus-within/labelitem:mt-1.5 group-focus-within/labelitem:max-h-12 group-focus-within/labelitem:opacity-100">
+                                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                                      <span className="font-medium text-foreground">{lastPerf.sets} × {lastPerf.reps}</span>
+                                      <span>@</span>
+                                      <span className="font-medium text-foreground">{lastPerf.weights} {lastPerf.unit}</span>
+                                    </div>
+                                  </div>
+                                )
+                              })() : null}
                               {exerciceLabels.length > 0 ? (
                                 <div className="mt-1 max-h-8 overflow-hidden opacity-100 transition-all duration-600 ease-out group-hover/labelitem:mt-2 group-hover/labelitem:max-h-32 group-focus-within/labelitem:mt-2 group-focus-within/labelitem:max-h-32">
                                   <div className="flex w-full flex-row flex-wrap content-start items-center gap-1">
@@ -889,7 +901,7 @@ export default function ExerciceBoard({
                                         <Badge
                                           key={exerciceLabel.id}
                                           variant="outline"
-                                          className="h-3 min-w-7 max-w-7 grow-0 shrink-0 basis-auto justify-center overflow-hidden rounded-full border-transparent px-1 shadow-sm transition-all duration-200 ease-out group-hover/labelitem:h-6 group-hover/labelitem:max-w-32 group-hover/labelitem:px-2.5 group-focus-within/labelitem:h-6 group-focus-within/labelitem:max-w-32 group-focus-within/labelitem:px-2.5"
+                                          className="h-3 min-w-7 max-w-7 grow-0 shrink-0 basis-auto justify-center overflow-hidden rounded-full border-transparent px-1 shadow-sm transition-all duration-200 ease-out group-hover/labelitem:h-4 group-hover/labelitem:max-w-32 group-hover/labelitem:px-2 group-focus-within/labelitem:h-4 group-focus-within/labelitem:max-w-32 group-focus-within/labelitem:px-2"
                                           style={{
                                             backgroundColor: label.color,
                                             color: getReadableBadgeTextColor(label.color),
