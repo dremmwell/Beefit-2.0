@@ -121,6 +121,7 @@ export async function createLabel(userId: UserId, label :Labels) {
                 createdAt: label.createdAt,
             },
         })
+        revalidatePath("/app/exercises")
     }
 }
 
@@ -136,6 +137,7 @@ export async function updateLabel(userId: UserId, label : Labels, focusId: strin
                     focusId: focusId,
                 },
             })
+            revalidatePath("/app/exercises")
     }
     return
 }
@@ -152,6 +154,7 @@ export async function editLabel(userId: UserId, labelId: string, name: string, c
                 color: color,
             },
         })
+        revalidatePath("/app/exercises")
     }
     return
 }
@@ -165,6 +168,7 @@ export async function deleteLabel(userId: UserId, labelId: string) {
                     id: labelId,
                 }
             })
+            revalidatePath("/app/exercises")
         }
     }
 }
