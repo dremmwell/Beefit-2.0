@@ -11,14 +11,16 @@ import { useToast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
 import { Badge} from "@/components/ui/badge"
 import { createExercicePerformance } from "@/app/actions/db.actions/workout.actions"
+import { Labels } from "@prisma/client"
 
 type ExerciceDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  exercice: ExerciceData
+  exercice: ExerciceData,
+  labels: Labels[]
 }
 
-export default function ExerciceDialog({ open, onOpenChange, exercice}: ExerciceDialogProps) {
+export default function ExerciceDialog({ open, onOpenChange, exercice, labels }: ExerciceDialogProps) {
   const [sets, setSets] = useState<number>(exercice.exercicePerfs[0]?.sets || 4)
   const [reps, setReps] = useState<number>(exercice.exercicePerfs[0]?.reps || 8)
   const [weight, setWeight] = useState<number>(exercice.exercicePerfs[0]?.weights || 20)
@@ -89,7 +91,7 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
           <DialogTitle>Add {exercice.name} sets to your workout</DialogTitle>
         </DialogHeader>
         <DialogDescription className="flex flex-col gap-2">
-          Fill in the details of your sets, and they will be added to your workout session.
+          {exercice.description}
           <div className="flex flex-row flex-wrap gap-2">
             {exercice.execiceLabels.map((exerciceLabel) => {
             const label = exerciceLabel.Labels ?? exerciceLabel.labels
@@ -98,7 +100,7 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
               return null
             }
 
-            if(exerciceLabel.value === "full"){
+            if(exerciceLabel.value === "primary"){
               return(
               <Badge
                 key={exerciceLabel.id}
@@ -116,7 +118,7 @@ export default function ExerciceDialog({ open, onOpenChange, exercice}: Exercice
               </Badge>
               )
             }
-            if(exerciceLabel.value === "half"){
+            if(exerciceLabel.value === "secondary"){
             return (
               <Badge
                 key={exerciceLabel.id}

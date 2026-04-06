@@ -19,6 +19,31 @@ type ExerciceGroupOrderUpdate = {
     order: number
 }
 
+type ExerciceLabelAssignmentInput = {
+    labelId: string
+    value: "primary" | "secondary"
+}
+
+type CreateExerciceInput = {
+    name: string
+    description: string
+    groupId: string
+    groupOrder: number
+    sets: number
+    reps: number
+    weight: number
+    labels: ExerciceLabelAssignmentInput[]
+}
+
+type UpdateExerciceInput = {
+    name: string
+    description: string
+    sets: number
+    reps: number
+    weight: number
+    labels: ExerciceLabelAssignmentInput[]
+}
+
 //------------------- Focus Actions -------------------//
 
 export async function getFocus(userId: UserId) {
@@ -244,6 +269,281 @@ export async function updateExerciceGroup(userId: UserId, updates: ExerciceGroup
         WHERE g."id" = v."id"
           AND g."userId" = ${userId}
     `
+}
+
+export async function createExercice(userId: UserId, exercice: CreateExerciceInput) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return null
+    }
+
+    const trimmedName = exercice.name.trim()
+    if (!trimmedName) {
+        return null
+    }
+
+    const targetGroup = await db.exerciceGroup.findFirst({
+        where: {
+            id: exercice.groupId,
+            userId: userId,
+        },
+        select: {
+            id: true,
+        },
+    })
+
+    if (!targetGroup) {
+        return null
+    }
+
+    const normalizedSets = Number.isFinite(exercice.sets) ? Math.max(1, Math.floor(exercice.sets)) : 1
+    const normalizedReps = Number.isFinite(exercice.reps) ? Math.max(1, Math.floor(exercice.reps)) : 1
+    const normalizedWeight = Number.isFinite(exercice.weight) ? Math.max(0, exercice.weight) : 0
+    const normalizedGroupOrder = Number.isFinite(exercice.groupOrder) ? Math.max(1, Math.floor(exercice.groupOrder)) : 1
+
+    const requestedLabels = Array.from(
+        new Map(
+            exercice.labels.map((label) => [label.labelId, label]),
+        ).values(),
+    )
+
+    const validLabelIds = requestedLabels.length
+        ? await db.labels.findMany({
+            where: {
+                id: {
+                    in: requestedLabels.map((label) => label.labelId),
+                },
+                userId: userId,
+            },
+            select: {
+                id: true,
+            },
+        })
+        : []
+
+    const validLabelIdSet = new Set(validLabelIds.map((label) => label.id))
+    const validLabelAssignments = requestedLabels.filter((label) => validLabelIdSet.has(label.labelId))
+
+    const createdExercice = await db.exercice.create({
+        data: {
+            name: trimmedName,
+            description: exercice.description.trim(),
+            userId: userId,
+            exerciceGroupId: exercice.groupId,
+            groupOrder: normalizedGroupOrder,
+            perfs: {
+                create: {
+                    sets: normalizedSets,
+                    reps: normalizedReps,
+                    weights: normalizedWeight,
+                    unit: "kg",
+                    notes: "",
+                },
+            },
+            execiceLabels: validLabelAssignments.length
+                ? {
+                    create: validLabelAssignments.map((label) => ({
+                        labelId: label.labelId,
+                        value: label.value,
+                    })),
+                }
+                : undefined,
+        },
+        include: {
+            execiceLabels: {
+                include: {
+                    Labels: true,
+                },
+            },
+            perfs: {
+                orderBy: {
+                    createdAt: "desc",
+                },
+                take: 1,
+            },
+        },
+    })
+
+    return {
+        ...createdExercice,
+        exerciceGroupId: createdExercice.exerciceGroupId ?? exercice.groupId,
+        exercicePerfs: createdExercice.perfs,
+    }
+}
+
+export async function updateExercice(userId: UserId, exerciceId: string, updates: UpdateExerciceInput) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return null
+    }
+
+    const existingExercice = await db.exercice.findFirst({
+        where: {
+            id: exerciceId,
+            userId: userId,
+        },
+        include: {
+            perfs: {
+                orderBy: {
+                    createdAt: "desc",
+                },
+                take: 1,
+            },
+            execiceLabels: true,
+        },
+    })
+
+    if (!existingExercice) {
+        return null
+    }
+
+    const trimmedName = updates.name.trim()
+    if (!trimmedName) {
+        return null
+    }
+
+    const normalizedSets = Number.isFinite(updates.sets) ? Math.max(1, Math.floor(updates.sets)) : 1
+    const normalizedReps = Number.isFinite(updates.reps) ? Math.max(1, Math.floor(updates.reps)) : 1
+    const normalizedWeight = Number.isFinite(updates.weight) ? Math.max(0, updates.weight) : 0
+
+    const requestedLabels = Array.from(
+        new Map(
+            updates.labels.map((label) => [label.labelId, label]),
+        ).values(),
+    )
+
+    const validLabelIds = requestedLabels.length
+        ? await db.labels.findMany({
+            where: {
+                id: {
+                    in: requestedLabels.map((label) => label.labelId),
+                },
+                userId: userId,
+            },
+            select: {
+                id: true,
+            },
+        })
+        : []
+
+    const validLabelIdSet = new Set(validLabelIds.map((label) => label.id))
+    const validLabelAssignments = requestedLabels.filter((label) => validLabelIdSet.has(label.labelId))
+
+    await db.$transaction(async (tx) => {
+        await tx.exercice.update({
+            where: {
+                id: exerciceId,
+            },
+            data: {
+                name: trimmedName,
+                description: updates.description.trim(),
+            },
+        })
+
+        if (existingExercice.perfs[0]) {
+            await tx.exercicePerfs.update({
+                where: {
+                    id: existingExercice.perfs[0].id,
+                },
+                data: {
+                    sets: normalizedSets,
+                    reps: normalizedReps,
+                    weights: normalizedWeight,
+                    unit: "kg",
+                },
+            })
+        } else {
+            await tx.exercicePerfs.create({
+                data: {
+                    exerciceId: exerciceId,
+                    sets: normalizedSets,
+                    reps: normalizedReps,
+                    weights: normalizedWeight,
+                    unit: "kg",
+                    notes: "",
+                },
+            })
+        }
+
+        const existingLabelsByLabelId = new Map(
+            existingExercice.execiceLabels.map((labelLink) => [labelLink.labelId, labelLink]),
+        )
+        const requestedLabelIdSet = new Set(validLabelAssignments.map((label) => label.labelId))
+
+        const labelLinkIdsToDelete = existingExercice.execiceLabels
+            .filter((labelLink) => !requestedLabelIdSet.has(labelLink.labelId))
+            .map((labelLink) => labelLink.id)
+
+        if (labelLinkIdsToDelete.length > 0) {
+            await tx.execiceLabels.deleteMany({
+                where: {
+                    id: {
+                        in: labelLinkIdsToDelete,
+                    },
+                },
+            })
+        }
+
+        for (const labelAssignment of validLabelAssignments) {
+            const existingLabelLink = existingLabelsByLabelId.get(labelAssignment.labelId)
+
+            if (!existingLabelLink) {
+                await tx.execiceLabels.create({
+                    data: {
+                        exerciceId: exerciceId,
+                        labelId: labelAssignment.labelId,
+                        value: labelAssignment.value,
+                    },
+                })
+                continue
+            }
+
+            if (existingLabelLink.value !== labelAssignment.value) {
+                await tx.execiceLabels.update({
+                    where: {
+                        id: existingLabelLink.id,
+                    },
+                    data: {
+                        value: labelAssignment.value,
+                    },
+                })
+            }
+        }
+    })
+
+    const updatedExercice = await db.exercice.findUnique({
+        where: {
+            id: exerciceId,
+        },
+        include: {
+            execiceLabels: {
+                include: {
+                    Labels: true,
+                },
+            },
+            perfs: {
+                orderBy: {
+                    createdAt: "desc",
+                },
+                take: 1,
+            },
+        },
+    })
+
+    if (!updatedExercice) {
+        return null
+    }
+
+    const resolvedGroupId = updatedExercice.exerciceGroupId ?? existingExercice.exerciceGroupId
+    if (!resolvedGroupId) {
+        return null
+    }
+
+    return {
+        ...updatedExercice,
+        exerciceGroupId: resolvedGroupId,
+        exercicePerfs: updatedExercice.perfs,
+    }
 }
 
 export async function createExercicePerformance(perfData: ExercicePerfInput, exerciceId: string) {

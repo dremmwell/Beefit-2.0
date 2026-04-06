@@ -11,13 +11,14 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { ExerciceData, ExercicePerfInput } from "@/app/types/definitions"
+import { ExerciceData } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { createExerciceGroup, deleteExerciceGroup, updateExerciceGroup, updateExercicePosition } from "@/app/actions/db.actions/workout.actions"
+import { createExercice, createExerciceGroup, deleteExerciceGroup, updateExercice, updateExerciceGroup, updateExercicePosition } from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
-import { Exercice, ExerciceGroup, Focus, Labels } from "@prisma/client"
-import ExerciceEditDialog from "./ExerciceEditDialog"
+import { ExerciceGroup, Labels } from "@prisma/client"
+import ExerciceEditDialog from "./EditExerciceDialog"
 import ExerciceDialog from "./ExerciseDialog"
+import AddExerciceDialog from "./AddExerciceDialog"
 
 const sortCardsByOrder = (cards: ExerciceGroup[]) => {
   return [...cards].sort((leftCard, rightCard) => Number(leftCard.order) - Number(rightCard.order))
@@ -94,10 +95,12 @@ type ExerciceMoveContext = {
 export default function ExerciceBoard({
     groups,
     exercicesData,
+    labels,
     userId 
   }: {
     groups : Array<ExerciceGroup>,
     exercicesData: Array<ExerciceData>,
+    labels: Labels[],
     userId: string}, 
   ) {
 
@@ -654,17 +657,79 @@ export default function ExerciceBoard({
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
 
-  const createExercice = (exercice: Exercice) => {
+  const saveNewExercice = async (payload: {
+    name: string
+    description: string
+    sets: number
+    reps: number
+    weight: number
+    labels: { labelId: string; value: "primary" | "secondary" }[]
+  }) => {
     if (!activeCreationCardId) return
-    // TODO: Create new exercice in active group
-/*     createExerciceInGroup(userId, activeCreationCardId, exercice) */
+
+    const targetGroupExercices = sortExercicesByGroupOrder(
+      exercices.filter((exercice) => exercice.exerciceGroupId === activeCreationCardId),
+    )
+
+    const createdExercice = await createExercice(userId, {
+      name: payload.name,
+      description: payload.description,
+      groupId: activeCreationCardId,
+      groupOrder: targetGroupExercices.length + 1,
+      sets: payload.sets,
+      reps: payload.reps,
+      weight: payload.weight,
+      labels: payload.labels,
+    })
+
+    if (createdExercice) {
+      setExercices((prev) => [...prev, createdExercice])
+    }
+
     setActiveCreationCardId(null)
   }
 
-  const saveEditedExercice = ( updatedExercice: Exercice) => {
+  const saveEditedExercice = async (payload: {
+    name: string
+    description: string
+    sets: number
+    reps: number
+    weight: number
+    labels: { labelId: string; value: "primary" | "secondary" }[]
+  }) => {
     if (!activeEditExercice) return
-    // TODO: Update exercice name/details
-/*     updateExercice(userId, activeEditExercice.id, updatedExercice) */
+
+    const exerciceId = activeEditExercice.id
+
+    setExercices((previous) => {
+      return previous.map((exercice) => {
+        if (exercice.id !== exerciceId) {
+          return exercice
+        }
+
+        return {
+          ...exercice,
+          name: payload.name,
+          description: payload.description,
+        }
+      })
+    })
+
+    const updatedExercice = await updateExercice(userId, exerciceId, payload)
+    if (updatedExercice) {
+      setExercices((previous) => {
+        return previous.map((exercice) => {
+          if (exercice.id !== exerciceId) {
+            return exercice
+          }
+
+          return {
+            ...updatedExercice,
+          }
+        })
+      })
+    }
+
     setActiveEditExercice(null)
   }
   
@@ -970,8 +1035,21 @@ export default function ExerciceBoard({
             if (!open) setPendingTapExerciceId(null)
           }}
           exercice={activeExercice}
+          labels={labels}
         />
       )}
+
+      <AddExerciceDialog
+        open={!!activeCreationCardId}
+        onOpenChange={(open) => {
+          if (!open) {
+            setActiveCreationCardId(null)
+          }
+        }}
+        onSave={saveNewExercice}
+        labels={labels}
+        groupName={cards.find((card) => card.id === activeCreationCardId)?.name}
+      />
 
       {activeEditExercice && (
         <ExerciceEditDialog
@@ -980,7 +1058,9 @@ export default function ExerciceBoard({
             if (!open) setActiveEditExercice(null)
           }}
           onSave={saveEditedExercice}
+          labels={labels}
           exercice={activeEditExercice}
+          groupName={cards.find((card) => card.id === activeEditExercice.exerciceGroupId)?.name}
         />
       )}
     </div>
