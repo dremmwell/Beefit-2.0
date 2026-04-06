@@ -592,13 +592,15 @@ export async function deleteExerciceGroup(userId: UserId, groupId: string) {
 
 export async function deleteExercice(userId: UserId, exerciceId: string) {
     const { user } = await validateRequest()
-    if(user){
-        if(user.id === userId){ 
-            await db.exercice.delete({
-                where: {
-                    id: exerciceId,
-                }
-            })
-        }
+    if (!user || user.id !== userId) {
+        return
     }
+
+    await db.exercice.delete({
+        where: {
+            id: exerciceId,
+        },
+    })
+
+    revalidatePath("/app/exercises")
 }

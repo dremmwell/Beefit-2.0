@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from "react"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -26,18 +26,21 @@ type EditExerciceDialogProps = {
     weight: number
     labels: { labelId: string; value: LabelRole }[]
   }) => Promise<void>
+  onDelete: () => Promise<void>
   labels: Labels[]
   exercice: ExerciceData
   groupName?: string
 }
 
-export default function EditExerciceDialog({ open, onOpenChange, onSave, labels, exercice, groupName }: EditExerciceDialogProps) {
+export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelete, labels, exercice, groupName }: EditExerciceDialogProps) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [sets, setSets] = useState<number>(4)
   const [reps, setReps] = useState<number>(8)
   const [weight, setWeight] = useState<number>(20)
   const [isSaving, setIsSaving] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [labelSelections, setLabelSelections] = useState<Record<string, LabelSelection>>({})
 
   const sortedLabels = useMemo(() => {
@@ -46,6 +49,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, labels,
 
   useEffect(() => {
     if (!open) {
+      setIsDeleteDialogOpen(false)
       return
     }
 
@@ -143,16 +147,68 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, labels,
     }
   }
 
+  const handleDelete = async () => {
+    setIsDeleting(true)
+    try {
+      await onDelete()
+      setIsDeleteDialogOpen(false)
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Edit Exercice{groupName ? ` in ${groupName}` : ""}</DialogTitle>
+        <DialogHeader className="gap-3">
+          <div className="flex items-start justify-between gap-3">
+            <DialogTitle>Edit Exercice{groupName ? ` in ${groupName}` : ""}</DialogTitle>
+          </div>
         </DialogHeader>
+
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete this exercice?</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. The exercice will be permanently deleted.
+              </DialogDescription>
+              <DialogDescription>
+                The performance history for this deleted exercice will be lost.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} disabled={isDeleting}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                disabled={isDeleting}
+                onClick={handleDelete}
+              >
+                {isDeleting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                Delete Exercice
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="add-exercice-name">Exercice Name</Label>
+            <div className="flex items-center gap-2">
+              <Label htmlFor="add-exercice-name">Exercice Name</Label>
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                className="ml-auto"
+                disabled={isSaving || isDeleting}
+                onClick={() => setIsDeleteDialogOpen(true)}
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete Exercice
+              </Button>
+            </div>
             <Input
               id="add-exercice-name"
               placeholder="e.g. Incline Dumbbell Press"
@@ -292,12 +348,11 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, labels,
             )}
           </div>
         </div>
-
         <DialogFooter className="flex gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving || isDeleting}>
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={!name.trim() || isSaving}>
+          <Button onClick={handleSave} disabled={!name.trim() || isSaving || isDeleting}>
             {isSaving && (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             )}

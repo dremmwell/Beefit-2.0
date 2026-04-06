@@ -126,15 +126,15 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Add Exercice{groupName ? ` to ${groupName}` : ""}</DialogTitle>
+          <DialogTitle>Add Exercise{groupName ? ` to ${groupName}` : ""}</DialogTitle>
         </DialogHeader>
 
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
-            <Label htmlFor="add-exercice-name">Exercice Name</Label>
+            <Label htmlFor="add-exercise-name">Exercise Name</Label>
             <Input
-              id="add-exercice-name"
-              placeholder="e.g. Incline Dumbbell Press"
+              id="add-exercise-name"
+              placeholder="e.g. Inclined Dumbbell Press"
               value={name}
               onChange={(event) => setName(event.target.value)}
             />
@@ -143,9 +143,9 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
           <div className="flex flex-col gap-4 mt-1">
             <div className="flex flex-row gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="add-exercice-sets">Sets</Label>
+                <Label htmlFor="add-exercise-sets">Sets</Label>
                 <Input
-                  id="add-exercice-sets"
+                  id="add-exercise-sets"
                   type="number"
                   min={1}
                   step={1}
@@ -155,9 +155,9 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="add-exercice-reps">Reps per set</Label>
+                <Label htmlFor="add-exercise-reps">Reps per set</Label>
                 <Input
-                  id="add-exercice-reps"
+                  id="add-exercise-reps"
                   type="number"
                   min={1}
                   step={1}
@@ -168,9 +168,9 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="add-exercice-weight">Weight (kg)</Label>
+              <Label htmlFor="add-exercise-weight">Weight (kg)</Label>
               <Input
-                id="add-exercice-weight"
+                id="add-exercise-weight"
                 type="number"
                 min={0}
                 step={0.5}
@@ -233,11 +233,12 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
             {sortedLabels.length === 0 ? (
               <p className="text-sm text-muted-foreground">No labels available. Create labels in the focus board first.</p>
             ) : (
-              <div className="max-h-56 space-y-2 overflow-y-auto rounded-md border p-2">
+              <div className="max-h-56 space-y-2 overflow-y-auto rounded-md border p-2 no-scrollbar">
                 {sortedLabels.map((label) => {
                   return (
                   <div key={label.id} className="grid grid-cols-[1fr_auto] items-center gap-3">
                     <div className="flex items-center gap-2 min-w-0">
+                      <div className="h-5 w-5 rounded-full mr-2 flex-shrink-0" style={{ backgroundColor: label.color }} />
                       <span className="text-sm truncate">{label.name}</span>
                     </div>
                     <div className="flex items-center gap-3">

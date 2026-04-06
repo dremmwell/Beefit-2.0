@@ -13,7 +13,15 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ExerciceData } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { createExercice, createExerciceGroup, deleteExerciceGroup, updateExercice, updateExerciceGroup, updateExercicePosition } from "@/app/actions/db.actions/workout.actions"
+import {
+  createExercice,
+  createExerciceGroup,
+  deleteExercice,
+  deleteExerciceGroup,
+  updateExercice,
+  updateExerciceGroup,
+  updateExercicePosition,
+} from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { ExerciceGroup, Labels } from "@prisma/client"
 import ExerciceEditDialog from "./EditExerciceDialog"
@@ -732,6 +740,23 @@ export default function ExerciceBoard({
 
     setActiveEditExercice(null)
   }
+
+  const deleteEditedExercice = async () => {
+    if (!activeEditExercice) return
+
+    const exerciceId = activeEditExercice.id
+    await deleteExercice(userId, exerciceId)
+
+    setExercices((previous) => previous.filter((exercice) => exercice.id !== exerciceId))
+    setActiveEditExercice(null)
+    setActiveExercice((previous) => {
+      if (!previous || previous.id !== exerciceId) {
+        return previous
+      }
+
+      return null
+    })
+  }
   
   const handleExerciceCardClick = (exercice: ExerciceData) => {
     const isMobileTouch = window.matchMedia("(hover: none) and (pointer: coarse)").matches
@@ -1058,6 +1083,7 @@ export default function ExerciceBoard({
             if (!open) setActiveEditExercice(null)
           }}
           onSave={saveEditedExercice}
+          onDelete={deleteEditedExercice}
           labels={labels}
           exercice={activeEditExercice}
           groupName={cards.find((card) => card.id === activeEditExercice.exerciceGroupId)?.name}
