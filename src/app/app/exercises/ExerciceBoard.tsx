@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ExerciceData, ExercicePerfInput } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { createExerciceGroup, updateExerciceGroup, updateExercicePosition } from "@/app/actions/db.actions/workout.actions"
+import { createExerciceGroup, deleteExerciceGroup, updateExerciceGroup, updateExercicePosition } from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { Exercice, ExerciceGroup, Focus, Labels } from "@prisma/client"
 import ExerciceEditDialog from "./ExerciceEditDialog"
@@ -215,7 +215,7 @@ export default function ExerciceBoard({
 
   const deleteCard = (e: React.MouseEvent, cardId: string) => {
     e.stopPropagation()
-/*     deleteFocus(userId, cardId) */
+    void deleteExerciceGroup(userId, cardId)
     setCards((prev) => prev.filter((card) => card.id !== cardId))
   }
 

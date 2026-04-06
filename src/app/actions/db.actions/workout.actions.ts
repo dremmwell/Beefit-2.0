@@ -261,3 +261,40 @@ export async function createExercicePerformance(perfData: ExercicePerfInput, exe
 
     revalidatePath("/app/exercises")
 }
+
+export async function deleteExerciceGroup(userId: UserId, groupId: string) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return
+    }
+
+    const exerciceCount = await db.exercice.count({
+        where: {
+            exerciceGroupId: groupId,
+            userId: userId,
+        },
+    })
+
+    if (exerciceCount > 0) {
+        return
+    }
+
+    await db.exerciceGroup.delete({
+        where: {
+            id: groupId,
+        },
+    })
+}
+
+export async function deleteExercice(userId: UserId, exerciceId: string) {
+    const { user } = await validateRequest()
+    if(user){
+        if(user.id === userId){ 
+            await db.exercice.delete({
+                where: {
+                    id: exerciceId,
+                }
+            })
+        }
+    }
+}
