@@ -13,6 +13,12 @@ type ExercicePositionUpdate = {
     groupId: string
 }
 
+type ExerciceGroupOrderUpdate = {
+    groupId: string
+    name: string
+    order: number
+}
+
 //------------------- Focus Actions -------------------//
 
 export async function getFocus(userId: UserId) {
@@ -180,6 +186,16 @@ export async function getExerciceData(userId: UserId) {
     return exercices    
 }
 
+export async function createExerciceGroup(userId: UserId, group : ExerciceGroup) {
+    const { user } = await validateRequest()
+    if(user) {
+        await db.exerciceGroup.create({
+            data: group,
+        })
+    }
+
+}
+
 export async function updateExercicePosition(userId: UserId, updates: ExercicePositionUpdate[]) {
     const { user } = await validateRequest()
     if (!user || user.id !== userId) {
@@ -202,6 +218,31 @@ export async function updateExercicePosition(userId: UserId, updates: ExercicePo
         ) AS v("id", "groupOrder", "groupId")
         WHERE e."id" = v."id"
           AND e."userId" = ${userId}
+    `
+}
+
+export async function updateExerciceGroup(userId: UserId, updates: ExerciceGroupOrderUpdate[]) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return
+    }
+
+    if (updates.length === 0) {
+        return
+    }
+
+    await db.$executeRaw`
+        UPDATE "ExerciceGroup" AS g
+        SET
+            "name" = v."name",
+            "order" = v."order"
+        FROM (
+            VALUES ${Prisma.join(
+                updates.map((item) => Prisma.sql`(${item.groupId}::text, ${item.name}::text, ${item.order}::int)`),
+            )}
+        ) AS v("id", "name", "order")
+        WHERE g."id" = v."id"
+          AND g."userId" = ${userId}
     `
 }
 

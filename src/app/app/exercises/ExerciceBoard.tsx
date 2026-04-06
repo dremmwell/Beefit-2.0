@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ExerciceData, ExercicePerfInput } from "@/app/types/definitions"
 import { PlusCircle } from "lucide-react"
-import { createExercicePerformance, updateExercicePosition} from "@/app/actions/db.actions/workout.actions"
+import { createExerciceGroup, updateExerciceGroup, updateExercicePosition } from "@/app/actions/db.actions/workout.actions"
 import { v4 as uuidv4 } from 'uuid';
 import { Exercice, ExerciceGroup, Focus, Labels } from "@prisma/client"
 import ExerciceEditDialog from "./ExerciceEditDialog"
@@ -174,34 +174,36 @@ export default function ExerciceBoard({
     e.stopPropagation()
     if (!editingCardId) return
 
-    setCards((prev) => {
-      const currentIndex = prev.findIndex((card) => card.id === editingCardId)
-      if (currentIndex === -1) return prev
+    const currentIndex = cards.findIndex((card) => card.id === editingCardId)
+    if (currentIndex === -1) return
 
-      const nextCards = [...prev]
-      const [editingCard] = nextCards.splice(currentIndex, 1)
+    const nextCards = [...cards]
+    const [editingCard] = nextCards.splice(currentIndex, 1)
 
-      const parsedPosition = Number.parseInt(editPosition, 10)
-      const destinationIndex = Number.isNaN(parsedPosition)
-        ? currentIndex
-        : Math.min(Math.max(parsedPosition - 1, 0), nextCards.length)
+    const parsedPosition = Number.parseInt(editPosition, 10)
+    const destinationIndex = Number.isNaN(parsedPosition)
+      ? currentIndex
+      : Math.min(Math.max(parsedPosition - 1, 0), nextCards.length)
 
-      nextCards.splice(destinationIndex, 0, {
-        ...editingCard,
-        name: editTitle || editingCard.name,
-      })
-
-      const reorderedCards = nextCards.map((card, index) => ({
-        ...card,
-        order: index + 1,
-      }))
-
-      reorderedCards.forEach((card) => {
-/*         void updateExerciceGroup(userId, card.id, card.name, card.order) */
-      })
-
-      return reorderedCards
+    nextCards.splice(destinationIndex, 0, {
+      ...editingCard,
+      name: editTitle || editingCard.name,
     })
+
+    const reorderedCards = nextCards.map((card, index) => ({
+      ...card,
+      order: index + 1,
+    }))
+
+    setCards(reorderedCards)
+
+    const updates = reorderedCards.map((card) => ({
+      groupId: card.id,
+      name: card.name,
+      order: card.order,
+    }))
+
+    void updateExerciceGroup(userId, updates)
 
     setEditingCardId(null)
   }
@@ -647,7 +649,7 @@ export default function ExerciceBoard({
       userId: userId,
       createdAt: new Date(),
     }
-/*     createExerciceGroup(userId, newCard) */
+    createExerciceGroup(userId, newCard)
     setCards((prev) => sortCardsByOrder([...prev, newCard]))
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
@@ -819,7 +821,6 @@ export default function ExerciceBoard({
                         const showDropIndicator =
                           dropIndicatorItemId === exercice.id && currentDraggedItemId !== exercice.id
                         const exerciceLabels = getExerciceLabels(exercice)
-                        const isPendingTapActive = pendingTapExerciceId === exercice.id
 
                         return [
                           showDropIndicator ? (
