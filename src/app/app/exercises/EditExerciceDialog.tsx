@@ -162,19 +162,19 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
       <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader className="gap-3">
           <div className="flex items-start justify-between gap-3">
-            <DialogTitle>Edit Exercice{groupName ? ` in ${groupName}` : ""}</DialogTitle>
+            <DialogTitle>Edit {exercice.name} exercise</DialogTitle>
           </div>
         </DialogHeader>
 
         <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Delete this exercice?</DialogTitle>
+              <DialogTitle>Delete your {exercice.name} exercise?</DialogTitle>
               <DialogDescription>
-                This action cannot be undone. The exercice will be permanently deleted.
+                This action cannot be undone. The exercise will be permanently deleted.
               </DialogDescription>
               <DialogDescription>
-                The performance history for this deleted exercice will be lost.
+                The performance history for this deleted exercise will be lost.
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
@@ -187,16 +187,15 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
                 onClick={handleDelete}
               >
                 {isDeleting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
-                Delete Exercice
+                Delete Exercise
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-
         <div className="grid gap-4 py-2">
           <div className="grid gap-2">
             <div className="flex items-center gap-2">
-              <Label htmlFor="add-exercice-name">Exercice Name</Label>
+              <Label htmlFor="add-exercice-name">Exercise Name</Label>
               <Button
                 type="button"
                 variant="destructive"
@@ -206,7 +205,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
-                Delete Exercice
+                Delete Exercise
               </Button>
             </div>
             <Input
@@ -216,7 +215,6 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
               onChange={(event) => setName(event.target.value)}
             />
           </div>
-
           <div className="flex flex-col gap-4 mt-1">
             <div className="flex flex-row gap-4">
               <div className="grid gap-2">
@@ -230,7 +228,6 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
                   onChange={(event) => setSets(Number.parseInt(event.target.value, 10) || 1)}
                 />
               </div>
-
               <div className="grid gap-2">
                 <Label htmlFor="add-exercice-reps">Reps per set</Label>
                 <Input
@@ -243,7 +240,6 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
                 />
               </div>
             </div>
-
             <div className="grid gap-2">
               <Label htmlFor="add-exercice-weight">Weight (kg)</Label>
               <Input
@@ -256,7 +252,6 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
               />
             </div>
           </div>
-
           <div className="grid gap-2">
             <Label htmlFor="add-exercice-description">Description</Label>
             <Textarea
@@ -267,7 +262,6 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
               onChange={(event) => setDescription(event.target.value)}
             />
           </div>
-
           <div className="grid gap-2">
             <div className="flex flex-wrap items-center gap-2">
               <Label>Focus Labels</Label>
