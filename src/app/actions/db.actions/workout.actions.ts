@@ -173,7 +173,7 @@ export async function deleteLabel(userId: UserId, labelId: string) {
     }
 }
 
-//------------------- Exercice Actions -------------------//
+//------------------- Exercise Actions -------------------//
 
 export async function getExerciceGroups(userId: UserId) {
     const data = await db.exerciceGroup.findMany({
@@ -604,3 +604,6 @@ export async function deleteExercice(userId: UserId, exerciceId: string) {
 
     revalidatePath("/app/exercises")
 }
+
+//------------------- Workout Actions -------------------//
+

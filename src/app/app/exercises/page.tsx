@@ -5,10 +5,10 @@ import { getExerciceGroups, getExerciceData, getLabels } from "@/app/actions/db.
 import { validateRequest } from "@/lib/auth";
 import { ExerciceGroup } from "@prisma/client";
 import { redirect } from "next/navigation";
-import FocusSkeleton from "../focus/FocusSkeleton";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 import { Labels } from "@prisma/client";
+import ExerciseSkeleton from "./ExerciseSkeleton";
 
 export default async function Page() { 
 
@@ -25,7 +25,7 @@ export default async function Page() {
   return (
     <div className="container sm:my-10 my-2 flex flex-col max-h-fit min-h-0 px-3 sm:px-10">
       <h1 className="scroll-m-20 border-b text-3xl font-semibold tracking-tight first:mt-0 mb-2">Exercises</h1>
-        <Suspense fallback={<FocusSkeleton />}>
+        <Suspense fallback={<ExerciseSkeleton />}>
             <ExerciceBoard groups={groups} exercicesData={exercicesData} labels={labels} userId={user.id} />
         </Suspense>
         <Toaster />
