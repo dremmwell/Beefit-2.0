@@ -96,6 +96,18 @@ export async function updateFocus(userId: UserId, focusId: string, focusName: st
     }
 }
 
+export async function createSplit(userId: UserId, startDate: Date, length: number) {
+    const { user } = await validateRequest()
+    if(user) {
+        if(user.id === userId){
+            await db.$executeRaw`
+                INSERT INTO "Split" ("userId", "startDate", "length")
+                VALUES (${userId}, ${startDate}, ${length})
+            `
+        }
+    }
+}
+
 //------------------- Labels Actions -------------------//
 
 export async function getLabels(userId: UserId) {

@@ -1,5 +1,3 @@
-
-import { getRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
 import ExerciceBoard from "./ExerciceBoard";
 import { getExerciceGroups, getExerciceData, getLabels } from "@/app/actions/db.actions/workout.actions";
 import { validateRequest } from "@/lib/auth";

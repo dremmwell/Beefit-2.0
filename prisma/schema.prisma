@@ -28,6 +28,7 @@ model User {
   foci           Focus[]
   exercices      Exercice[]
   exerciceGroups ExerciceGroup[]
+  splits         Split[]
 }
 
 model Session {
@@ -272,4 +273,15 @@ model ExerciceGroup {
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   exercices Exercice[]
+}
+
+model Split {
+  id        String   @id @default(uuid())
+  startDate DateTime @default(now())
+  length    Int      @default(7)
+
+  createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
