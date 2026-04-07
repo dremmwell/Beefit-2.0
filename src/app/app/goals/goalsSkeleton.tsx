@@ -2,7 +2,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import React from 'react'
 import LoadingHam from '@/components/loadingHam'
 
-export default function FocusSkeleton() {
+export default function GoalsSkeleton() {
   return (
     <>
         <LoadingHam />

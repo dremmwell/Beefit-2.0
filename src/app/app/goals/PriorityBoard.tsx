@@ -414,7 +414,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                     <div className="space-y-1">
                       <div className="flex">
                         <Label htmlFor={`title-${card.id}`} className="text-xs text-muted-foreground">
-                          Focus Group
+                          Goal Group
                         </Label>
                         <Button size="icon" variant="ghost" className="h-6 w-6 -mt-1 -mr-2 ml-auto" onClick={cancelEdit}>
                           <X className="h-4 w-4 text-muted-foreground" />

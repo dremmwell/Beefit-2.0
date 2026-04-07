@@ -95,9 +95,9 @@ export default function NavBar({isCollapsed} : NavBarProps) {
             isCollapsed={isCollapsed}
             links={[
               {
-                title: "Workouts",
+                title: "Progress",
                 label: "",
-                ref: "/app/workouts",
+                ref: "/app/progress",
                 // @ts-ignore
                 icon : BicepsFlexedIcon,
                 variant: "ghost",
@@ -110,9 +110,9 @@ export default function NavBar({isCollapsed} : NavBarProps) {
                 variant: "ghost",
               },
               {
-                title: "Focus",
+                title: "Goals",
                 label: "",
-                ref: "/app/focus",
+                ref: "/app/goals",
                 icon: ListOrdered,
                 variant: "ghost",
               },

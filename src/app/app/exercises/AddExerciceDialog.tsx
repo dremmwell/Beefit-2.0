@@ -193,7 +193,7 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
 
           <div className="grid gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <Label>Focus Labels</Label>
+              <Label>Labels</Label>
               {selectedLabels.map((selectedLabel) => {
                 const label = sortedLabels.find((item) => item.id === selectedLabel.labelId)
                 if (!label) {
