@@ -29,6 +29,7 @@ model User {
   exercices      Exercice[]
   exerciceGroups ExerciceGroup[]
   splits         Split[]
+  exercicePerfs  ExercicePerfs[]
 }
 
 model Session {
@@ -245,6 +246,9 @@ model ExercicePerfs {
   notes   String
 
   createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   exerciceId String
   Exercice   Exercice @relation(fields: [exerciceId], references: [id], onDelete: Cascade)

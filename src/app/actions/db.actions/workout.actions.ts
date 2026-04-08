@@ -1,7 +1,7 @@
 "use server"
 
 import db from "@/db/db";
-import { ExerciceGroup, Focus, Labels, Prisma } from "@prisma/client";
+import { ExerciceGroup, Focus, Labels, Prisma, Split } from "@prisma/client";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
@@ -337,6 +337,7 @@ export async function createExercice(userId: UserId, exercice: CreateExerciceInp
             groupOrder: normalizedGroupOrder,
             perfs: {
                 create: {
+                    userId: userId,
                     sets: normalizedSets,
                     reps: normalizedReps,
                     weights: normalizedWeight,
@@ -459,6 +460,7 @@ export async function updateExercice(userId: UserId, exerciceId: string, updates
         } else {
             await tx.exercicePerfs.create({
                 data: {
+                    userId: userId,
                     exerciceId: exerciceId,
                     sets: normalizedSets,
                     reps: normalizedReps,
@@ -550,7 +552,7 @@ export async function updateExercice(userId: UserId, exerciceId: string, updates
     }
 }
 
-export async function createExercicePerformance(perfData: ExercicePerfInput, exerciceId: string) {
+export async function createExercicePerformance(perfData: ExercicePerfInput, exerciceId: string, userId: UserId) {
 
     await db.exercicePerfs.create({
         data: {
@@ -559,6 +561,7 @@ export async function createExercicePerformance(perfData: ExercicePerfInput, exe
             sets: perfData.sets,
             notes: perfData.notes.trim(),
             exerciceId: exerciceId,
+            userId: userId,
             unit: "kg",
         },
     })
@@ -636,3 +639,38 @@ export async function createSplit(userId: UserId, startDate: Date, length: numbe
 }
 
 //------------------- Progress Actions -------------------//
+
+export async function getSplitWorkouts(userId: UserId, split: Split) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return []
+    }
+
+    if (!split) {
+        return []
+    }
+
+    const startDate = new Date(split.startDate)
+    startDate.setUTCHours(0, 0, 0, 0)
+
+    const endDate = new Date(split.startDate)
+    endDate.setUTCHours(0, 0, 0, 0)
+    endDate.setUTCDate(endDate.getUTCDate() + split.length)
+
+    const data = await db.exercicePerfs.findMany({
+        where: {
+            userId: userId,
+            createdAt: {
+                gte: startDate,
+                lt: endDate
+            },
+        },
+
+
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+    const workouts = JSON.parse(JSON.stringify(data));
+    return workouts
+} 

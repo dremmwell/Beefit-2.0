@@ -1,13 +1,24 @@
 import React from 'react'
-import { getFocus } from "@/app/actions/db.actions/workout.actions";
+import { getFocus, getLatestSplit } from "@/app/actions/db.actions/workout.actions";
 import PriorityBoard from "./PriorityBoard";
+import { Focus, Split } from '@prisma/client';
+import { DatePicker } from '@/components/DatePicker';
+import { FocusLabels } from '@/app/types/definitions';
 
 async function GoalsWrapper({userId} : {userId : string}) {
 
-    const focus = await getFocus(userId);
-
+    const focus : FocusLabels[] = await getFocus(userId);
+    const split : Split = await getLatestSplit(userId)
   return (
-        <PriorityBoard focus={focus} userId={userId} />
+    <>
+      <div className="flex items-center lg:gap-4 gap-2 mt-1 mb-2">
+        <h1 className="text-sm whitespace-nowrap">
+          Current Split :
+        </h1>
+        <DatePicker currentSplit={split} />
+      </div>
+      <PriorityBoard focus={focus} userId={userId} />
+    </>
   )
 }
 

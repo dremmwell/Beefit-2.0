@@ -4,7 +4,7 @@ import * as React from "react"
 import { useState } from "react"
 import { addDays, differenceInCalendarDays, format, isAfter, isBefore, isSameDay } from "date-fns"
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, Loader2 } from "lucide-react"
-
+import { Split } from "@prisma/client"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -15,9 +15,9 @@ import {
 import { useToast } from "./ui/use-toast"
 import { createSplit } from "@/app/actions/db.actions/workout.actions"
 
-export function DatePicker() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  const [spanDays, setSpanDays] = useState(7)
+export function DatePicker({currentSplit} : {currentSplit : Split }) {
+  const [date, setDate] = useState<Date>(currentSplit ? new Date(currentSplit.startDate) : new Date())
+  const [spanDays, setSpanDays] = useState(currentSplit ? currentSplit.length : 7)
   const [isSaving, setIsSaving] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
 
@@ -90,6 +90,7 @@ const { toast } = useToast()
                 </div>
             </div>
         </div>
+        {/* @ts-ignore */}
         <Calendar
           mode="single"
           selected={date}
