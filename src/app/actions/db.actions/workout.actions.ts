@@ -24,6 +24,16 @@ type ExerciceLabelAssignmentInput = {
     value: "primary" | "secondary"
 }
 
+type LabelInput = {
+    id: string
+    name: string
+    color: string
+    userId: string
+    focusId: string
+    createdAt: Date
+    sets?: number | null
+}
+
 type CreateExerciceInput = {
     name: string
     description: string
@@ -108,7 +118,7 @@ export async function getLabels(userId: UserId) {
     return labels
 }
 
-export async function createLabel(userId: UserId, label :Labels) {
+export async function createLabel(userId: UserId, label :LabelInput) {
     const { user } = await validateRequest()
     if(user) {
         await db.labels.create({
@@ -116,6 +126,7 @@ export async function createLabel(userId: UserId, label :Labels) {
                 id: label.id,
                 name: label.name,
                 color: label.color,
+                sets: label.sets,
                 userId: userId,
                 focusId: label.focusId,
                 createdAt: label.createdAt,
@@ -142,7 +153,7 @@ export async function updateLabel(userId: UserId, label : Labels, focusId: strin
     return
 }
 
-export async function editLabel(userId: UserId, labelId: string, name: string, color: string) {
+export async function editLabel(userId: UserId, labelId: string, name: string, color: string, sets: number | null) {
     const { user } = await validateRequest()
     if(user) {
         await db.labels.update({
@@ -152,6 +163,7 @@ export async function editLabel(userId: UserId, labelId: string, name: string, c
             data: {
                 name: name,
                 color: color,
+                sets: sets,
             },
         })
         revalidatePath("/app/exercises")
@@ -673,4 +685,4 @@ export async function getSplitWorkouts(userId: UserId, split: Split) {
     });
     const workouts = JSON.parse(JSON.stringify(data));
     return workouts
-} 
+}

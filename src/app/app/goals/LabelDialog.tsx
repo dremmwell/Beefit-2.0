@@ -3,8 +3,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Labels } from "@prisma/client"
+
+type LabelDialogSaveInput = {
+  name: string
+  color: string
+  sets: number | null
+}
 
 const COLORS = [
   { value: "#ef4444", name: "Red" },
@@ -30,23 +36,36 @@ const COLORS = [
 type LabelCreationDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSave: Function
+  onSave: (label: LabelDialogSaveInput) => void
 }
 
 export default function LabelCreationDialog({ open, onOpenChange, onSave }: LabelCreationDialogProps) {
   const [name, setName] = useState("")
   const [color, setColor] = useState(COLORS[0].value)
+  const [hasCustomSets, setHasCustomSets] = useState(false)
+  const [setsInput, setSetsInput] = useState("")
+
+  const parsedSets = Number.parseInt(setsInput, 10)
+  const isCustomSetsInvalid = hasCustomSets && (setsInput.trim() === "" || Number.isNaN(parsedSets) || parsedSets < 0)
 
   const handleSave = () => {
     if (name.trim()) {
+      if (hasCustomSets && (Number.isNaN(parsedSets) || parsedSets < 0)) {
+        return
+      }
 
-      const label : any = {
+      const setsValue = hasCustomSets ? parsedSets : null
+
+      const label = {
         name: name.trim(),
-        color
-    }
+        color,
+        sets: setsValue,
+      }
       onSave(label)
       setName("")
       setColor(COLORS[0].value)
+      setHasCustomSets(false)
+      setSetsInput("")
     }
   }
 
@@ -88,13 +107,45 @@ export default function LabelCreationDialog({ open, onOpenChange, onSave }: Labe
               ))}
             </RadioGroup>
           </div>
+
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="custom-sets"
+                checked={hasCustomSets}
+                onCheckedChange={(checked) => {
+                  const isChecked = checked === true
+                  setHasCustomSets(isChecked)
+                  if (!isChecked) {
+                    setSetsInput("")
+                  }
+                }}
+              />
+              <Label htmlFor="custom-sets" className="cursor-pointer">Custom sets</Label>
+            </div>
+
+            {hasCustomSets && (
+              <div className="grid gap-2">
+                <Label htmlFor="label-sets">Sets</Label>
+                <Input
+                  id="label-sets"
+                  type="number"
+                  min={0}
+                  step={1}
+                  placeholder="Enter sets"
+                  value={setsInput}
+                  onChange={(e) => setSetsInput(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         <DialogFooter className="flex gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={!name.trim()}>
+          <Button onClick={handleSave} disabled={!name.trim() || isCustomSetsInvalid}>
             Save Label
           </Button>
         </DialogFooter>

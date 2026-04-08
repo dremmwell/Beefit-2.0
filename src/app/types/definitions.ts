@@ -82,7 +82,7 @@ export type FocusLabels = {
   createdAt: Date,
   userId: string,
   priority: string
-  labels: Array<Labels>
+    labels: Array<Labels & { sets?: number | null }>
 }
 
 

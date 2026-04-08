@@ -32,6 +32,8 @@ const sortCardsByPriority = (cards: FocusLabels[]) => {
 
 export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels>, userId: string}, ) {
 
+  type LabelWithOptionalSets = Labels & { sets?: number | null }
+
   const [cards, setCards] = useState<FocusLabels[]>(() => sortCardsByPriority(focus))
   const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set(["card-1"]))
   const [draggedItem, setDraggedItem] = useState<{ itemId: string; fromCardId: string } | null>(null)
@@ -50,7 +52,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
   const cardRefs = useRef<Map<string, HTMLDivElement>>(new Map())
   const draggedLabelRef = useRef<string>("")
   const [activeCreationCardId, setActiveCreationCardId] = useState<string | null>(null)
-  const [activeEditLabel, setActiveEditLabel] = useState<Labels | null>(null)
+  const [activeEditLabel, setActiveEditLabel] = useState<LabelWithOptionalSets | null>(null)
 
   const LONG_PRESS_DURATION = 400
   const MOVE_THRESHOLD = 10
@@ -346,12 +348,13 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     setExpandedCards((prev) => new Set([...prev, newCard.id]))
   }
 
-  const createLabel = (label: { name: string; color: string }) => {
+  const createLabel = (label: { name: string; color: string; sets: number | null }) => {
     if (!activeCreationCardId) return
-    const newLabel: Labels = {
+    const newLabel: LabelWithOptionalSets = {
       id: uuidv4(),
       name: label.name,
       color: label.color,
+      sets: label.sets,
       userId: userId,
       focusId: activeCreationCardId,
       createdAt: new Date(),
@@ -367,7 +370,7 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
     setActiveCreationCardId(null)
   }
 
-  const saveEditedLabel = (updatedLabel: { name: string; color: string }) => {
+  const saveEditedLabel = (updatedLabel: { name: string; color: string; sets: number | null }) => {
     if (!activeEditLabel) return
 
     setCards((prev) =>
@@ -375,13 +378,13 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
         ...card,
         labels: card.labels.map((label) =>
           label.id === activeEditLabel.id
-            ? { ...label, name: updatedLabel.name, color: updatedLabel.color }
+            ? { ...label, name: updatedLabel.name, color: updatedLabel.color, sets: updatedLabel.sets }
             : label,
         ),
       })),
     )
 
-    editLabel(userId, activeEditLabel.id, updatedLabel.name, updatedLabel.color)
+    editLabel(userId, activeEditLabel.id, updatedLabel.name, updatedLabel.color, updatedLabel.sets)
     setActiveEditLabel(null)
   }
 
@@ -513,6 +516,11 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
                           <GripVertical className="h-4 w-4 text-muted-foreground shrink-0" />
                           <div className="h-5 w-5 rounded-full mr-2 flex-shrink-0" style={{ backgroundColor: label.color }} />
                           <span className="text-sm flex-1">{label.name}</span>
+                          {label.sets !== null && label.sets !== undefined && (
+                            <span className="text-xs font-normal text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                              {label.sets}
+                            </span>
+                          )}
                           <Button
                             size="icon"
                             variant="ghost"

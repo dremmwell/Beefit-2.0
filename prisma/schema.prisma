@@ -194,6 +194,7 @@ model Labels {
   id    String @id @default(uuid())
   name  String
   color String
+  sets  Int?
 
   createdAt DateTime @default(now())
 
