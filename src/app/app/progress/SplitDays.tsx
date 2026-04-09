@@ -3,6 +3,7 @@ import { Split } from '@prisma/client'
 import React from 'react'
 
 function SplitDays({split} : {split : Split}) {
+
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -10,13 +11,13 @@ function SplitDays({split} : {split : Split}) {
   startDate.setHours(0, 0, 0, 0)
 
   const splitDays = Array.from({ length: split.length }, (_, index) => {
-    const day = new Date(startDate)
-    day.setDate(startDate.getDate() + index)
-    return day
+  const day = new Date(startDate)
+  day.setDate(startDate.getDate() + index)
+  return day
   })
-    
+
   return (
-      <div className="mb-2 grid w-full grid-cols-7 auto-rows-max place-items-center gap-1">
+      <div className="mb-2 grid w-full grid-cols-7 auto-rows-max place-items-center gap-1 lg:flex lg:flex-row lg:gap-2 xl:w-2/5 lg:w-3/5">
         {splitDays.map((day) => (
           <CalendarDayCell
             key={day.toISOString()}

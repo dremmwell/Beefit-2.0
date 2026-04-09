@@ -5,7 +5,7 @@ import { ExerciceGroup, Focus, Labels, Prisma, Split } from "@prisma/client";
 import { UserId } from "lucia";
 import { validateRequest } from "@/lib/auth";
 import { revalidatePath } from 'next/cache'
-import { ExerciceData, ExercicePerfInput } from "@/app/types/definitions";
+import { ExerciceData, ExercicePerfInput, SplitWorkoutData } from "@/app/types/definitions";
 
 type ExercicePositionUpdate = {
     exerciceId: string
@@ -657,11 +657,11 @@ export async function createSplit(userId: UserId, startDate: Date, length: numbe
 export async function getSplitWorkouts(userId: UserId, split: Split) {
     const { user } = await validateRequest()
     if (!user || user.id !== userId) {
-        return []
+        return [] as SplitWorkoutData[]
     }
 
     if (!split) {
-        return []
+        return [] as SplitWorkoutData[]
     }
 
     const startDate = new Date(split.startDate)
@@ -679,12 +679,26 @@ export async function getSplitWorkouts(userId: UserId, split: Split) {
                 lt: endDate
             },
         },
-
+        include: {
+            Exercice: {
+                include: {
+                    execiceLabels: {
+                        include: {
+                            Labels: {
+                                include: {
+                                    Focus: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
 
         orderBy: {
             createdAt: "desc",
         },
     });
-    const workouts = JSON.parse(JSON.stringify(data));
+    const workouts: SplitWorkoutData[] = JSON.parse(JSON.stringify(data));
     return workouts
 }

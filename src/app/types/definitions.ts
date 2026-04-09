@@ -1,5 +1,6 @@
-import { Ingredient, Recipe, RecipeIngredient, Meal, Objective, ExerciceGroup, ExercicePerfs } from "@prisma/client";
+import { Ingredient, Recipe, RecipeIngredient, Meal, Objective, ExerciceGroup, ExercicePerfs, Prisma } from "@prisma/client";
 import { Labels } from "@prisma/client";
+
 
 export type RecipeValues = {
     recipeId: string;
@@ -115,3 +116,21 @@ export type LabelExercices = {
     Labels: Labels,
     labels?: Labels,
 }
+
+export type SplitWorkoutData = Prisma.ExercicePerfsGetPayload<{
+    include: {
+        Exercice: {
+            include: {
+                execiceLabels: {
+                    include: {
+                        Labels: {
+                            include: {
+                                Focus: true,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}>;
