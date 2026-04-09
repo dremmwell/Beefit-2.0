@@ -15,7 +15,7 @@ async function GoalsWrapper({userId} : {userId : string}) {
         <h1 className="text-sm whitespace-nowrap">
           Current Split :
         </h1>
-        <DatePicker currentSplit={split} />
+        <DatePicker currentSplit={split} userId={userId} />
       </div>
       <PriorityBoard focus={focus} userId={userId} />
     </>

@@ -10,6 +10,11 @@ import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  calendarDayButtonClassName,
+  calendarDayClassName,
+  calendarTodayClassName,
+} from "@/components/ui/calendar-day-cell"
 
 function Calendar({
   className,
@@ -100,7 +105,7 @@ function Calendar({
           defaultClassNames.week_number
         ),
         day: cn(
-          "group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md",
+          calendarDayClassName,
           defaultClassNames.day
         ),
         range_start: cn(
@@ -110,7 +115,7 @@ function Calendar({
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn("bg-accent rounded-r-md", defaultClassNames.range_end),
         today: cn(
-          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          calendarTodayClassName,
           defaultClassNames.today
         ),
         outside: cn(
@@ -209,7 +214,7 @@ function CalendarDayButton({
       data-repeat-span-middle={modifiers.repeatSpanMiddle}
       data-repeat-span-range={modifiers.repeatSpanRange}
       className={cn(
-        "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[span-range=true]:border data-[span-range=true]:border-primary/50 data-[span-range=true]:bg-primary/10 data-[span-middle=true]:rounded-none data-[span-start=true]:rounded-l-md data-[span-start=true]:rounded-r-none data-[span-end=true]:rounded-l-none data-[span-end=true]:rounded-r-md data-[span-start=true]:bg-primary data-[span-start=true]:text-primary-foreground data-[span-start=true]:border-primary data-[span-end=true]:border-primary data-[span-end=true]:bg-primary/20 data-[span-end=true]:border-r-[3px] data-[span-end=true]:border-r-primary/80 data-[span-end=true]:[border-right-style:solid] data-[repeat-span-range=true]:border data-[repeat-span-range=true]:border-dashed data-[repeat-span-range=true]:border-primary/35 data-[repeat-span-range=true]:bg-primary/5 data-[repeat-span-middle=true]:rounded-none data-[repeat-span-start=true]:rounded-l-md data-[repeat-span-start=true]:rounded-r-none data-[repeat-span-end=true]:rounded-l-none data-[repeat-span-end=true]:rounded-r-md data-[repeat-span-end=true]:border-r-[3px] data-[repeat-span-end=true]:border-r-primary/80 data-[repeat-span-end=true]:[border-right-style:solid] group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 flex aspect-square h-auto w-full min-w-[--cell-size] flex-col gap-1 font-normal leading-none data-[range-end=true]:rounded-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] [&>span]:text-xs [&>span]:opacity-70",
+        calendarDayButtonClassName,
         defaultClassNames.day,
         className
       )}

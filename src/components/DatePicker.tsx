@@ -15,7 +15,7 @@ import {
 import { useToast } from "./ui/use-toast"
 import { createSplit } from "@/app/actions/db.actions/workout.actions"
 
-export function DatePicker({currentSplit} : {currentSplit : Split }) {
+export function DatePicker({currentSplit, userId} : {currentSplit : Split, userId: string }) {
   const [date, setDate] = useState<Date>(currentSplit ? new Date(currentSplit.startDate) : new Date())
   const [spanDays, setSpanDays] = useState(currentSplit ? currentSplit.length : 7)
   const [isSaving, setIsSaving] = useState(false)
@@ -41,7 +41,7 @@ const { toast } = useToast()
       const startDateTime = new Date(date)
       startDateTime.setHours(0, 0, 0, 0)
 
-      await createSplit("userId", startDateTime, spanDays)
+      await createSplit(userId, startDateTime, spanDays)
       setIsOpen(false)
 
       toast({

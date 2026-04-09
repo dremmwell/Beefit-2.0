@@ -648,6 +648,8 @@ export async function createSplit(userId: UserId, startDate: Date, length: numbe
             },
         })  
     }
+
+    revalidatePath("/app/progress")
 }
 
 //------------------- Progress Actions -------------------//
