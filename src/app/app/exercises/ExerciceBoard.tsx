@@ -1060,7 +1060,7 @@ export default function ExerciceBoard({
             if (!open) setPendingTapExerciceId(null)
           }}
           exercice={activeExercice}
-          labels={labels}
+          userId={userId}
         />
       )}
 

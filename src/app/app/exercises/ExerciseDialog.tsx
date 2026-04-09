@@ -17,10 +17,10 @@ type ExerciceDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   exercice: ExerciceData,
-  labels: Labels[]
+  userId: string
 }
 
-export default function ExerciceDialog({ open, onOpenChange, exercice, labels }: ExerciceDialogProps) {
+export default function ExerciceDialog({ open, onOpenChange, exercice, userId }: ExerciceDialogProps) {
   const [sets, setSets] = useState<number>(exercice.exercicePerfs[0]?.sets || 4)
   const [reps, setReps] = useState<number>(exercice.exercicePerfs[0]?.reps || 8)
   const [weight, setWeight] = useState<number>(exercice.exercicePerfs[0]?.weights || 20)
@@ -69,7 +69,7 @@ export default function ExerciceDialog({ open, onOpenChange, exercice, labels }:
         reps,
         weight,
         notes,
-      }, exercice.id);
+      },exercice.id, userId);
 
       toast({
         title: `${exercice.name} sets added to your workout!`,
