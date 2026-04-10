@@ -75,7 +75,7 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
               )}
             />
           </CardHeader>
-          <div className={cn("grid transition-all duration-200 lg:grid-rows-[1fr]", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
+          <div className={cn("grid transition-all duration-200", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
             <div className="overflow-hidden">
               <CardContent>
                 <Separator  className='mb-2'/>

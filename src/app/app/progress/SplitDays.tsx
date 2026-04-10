@@ -1,8 +1,9 @@
-import { CalendarDayCell } from '@/components/ui/calendar-day-cell'
 import { Split } from '@prisma/client'
 import React from 'react'
+import { cn } from '@/lib/utils'
+import { Card } from '@/components/ui/card'
 
-function SplitDays({split} : {split : Split}) {
+function SplitDays({ split }: { split: Split }) {
 
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -11,29 +12,35 @@ function SplitDays({split} : {split : Split}) {
   startDate.setHours(0, 0, 0, 0)
 
   const splitDays = Array.from({ length: split.length }, (_, index) => {
-  const day = new Date(startDate)
-  day.setDate(startDate.getDate() + index)
-  return day
+    const day = new Date(startDate)
+    day.setDate(startDate.getDate() + index)
+    return day
   })
 
   return (
-      <div className="mb-2 grid w-full grid-cols-7 auto-rows-max place-items-center gap-1 lg:flex lg:flex-row lg:gap-2 xl:w-2/5 lg:w-3/5">
-        {splitDays.map((day) => (
-          <CalendarDayCell
-            key={day.toISOString()}
-            date={day}
-            isToday={day.getTime() === today.getTime()}
-            aria-label={day.toLocaleDateString('en-US', {
-              weekday: 'short',
-              month: 'short',
-              day: 'numeric',
-              year: 'numeric',
-            })}
-          >
-            {day.getDate()}
-          </CalendarDayCell>
-        ))}
-      </div>
+    <div className="mb-2 grid w-full grid-cols-7 gap-1 lg:w-1/2">
+      {splitDays.map((day) => (
+        <Card
+          key={day.toISOString()}
+          className={cn(
+            'min-w-0 px-2 py-2 shadow-sm bg-background',
+            'flex flex-col items-center justify-center gap-0.5',
+            day.getTime() === today.getTime() && 'bg-card border-primary',
+          )}
+          aria-label={day.toLocaleDateString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+        >
+          <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+            {day.toLocaleDateString('en-US', { weekday: 'short' })}
+          </span>
+          <span className="text-base font-semibold leading-none">{day.getDate()}</span>
+        </Card>
+      ))}
+    </div>
   )
 }
 
