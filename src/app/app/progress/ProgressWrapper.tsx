@@ -1,7 +1,7 @@
 import React from 'react'
 import { getFocus, getLatestSplit, getSplitWorkouts } from '@/app/actions/db.actions/workout.actions'
-import { Split, Focus } from '@prisma/client'
-import { SplitWorkoutData } from '@/app/types/definitions'
+import { Split } from '@prisma/client'
+import { FocusLabels, SplitWorkoutData } from '@/app/types/definitions'
 import ProgressBlock from './ProgressBlock'
 import SplitDays from './SplitDays'
 
@@ -10,7 +10,7 @@ async function ProgressWrapper({userId} : {userId : string}) {
 
   const split : Split =  await getLatestSplit(userId)
   const workouts : SplitWorkoutData[] = await getSplitWorkouts(userId, split)
-  const foci : Focus[] = await getFocus(userId)
+  const foci : FocusLabels[] = await getFocus(userId)
 
     return (
         <>
