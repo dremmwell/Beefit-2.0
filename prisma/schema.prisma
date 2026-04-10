@@ -289,4 +289,6 @@ model Split {
 
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, startDate])
 }
