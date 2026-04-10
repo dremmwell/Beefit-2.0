@@ -21,6 +21,7 @@ import Link from "next/link"
 import { cn } from '@/lib/utils'
 import { buttonVariants } from "@/components/ui/button"
 import { usePathname } from 'next/navigation';
+import Nav from './ui/nav'
 
 interface NavBarProps {
   isCollapsed: boolean
@@ -86,121 +87,200 @@ function HamIcon({ className }: { className?: string }) {
   )
 }
 
-
-
 export default function NavBar({isCollapsed} : NavBarProps) {
     const pathname = usePathname();
 
     return (
+      <>
+      {isCollapsed ? 
+      <div className='flex'>
+        <Nav 
+          isCollapsed={isCollapsed}
+          links={[
+          {
+            title: "Today",
+            label: "",
+            ref: "/app/today",
+            icon: Utensils,
+            variant: "ghost",
+          },
+          {
+            title: "Overview",
+            label: "",
+            ref: "/app/overview",
+            icon: CalendarDays,
+            variant: "ghost",
+          },
+        ]}/>
+        <Nav
+          isCollapsed={isCollapsed}
+          links={[
+          {
+            title: "Objectives",
+            label: "",
+            ref: "/app/objectives",
+            icon: Target,
+            variant: "ghost",
+          },
+          {
+            title: "Recipes",
+            label: "",
+            ref: "/app/recipes",
+            icon: CookingPot,
+            variant: "ghost",
+          },
+          {
+            title: "Ingredients",
+            label: "",
+            ref: "/app/ingredients",
+            icon: Beef,
+            variant: "ghost",
+          },
+        ]}/>
+        <Nav
+          isCollapsed={isCollapsed}
+          links={[
+            {
+              title: "Progress",
+              label: "",
+              ref: "/app/progress",
+              // @ts-ignore
+              icon : ArrowUpWideNarrow,
+              variant: "ghost",
+            },
+            {
+                title: "Exercises",
+                label: "",
+                ref: "/app/exercises",
+                icon: Dumbbell,
+                variant: "ghost",
+              },
+            ]} />
+            <Nav
+            isCollapsed={isCollapsed}
+            links={[
+              {
+                title: "Goals",
+                label: "",
+                ref: "/app/goals",
+                // @ts-ignore
+                icon: BicepsFlexedIcon,
+                variant: "ghost",
+              },
+            ]} />
+      </div>
+    :
       <div className='flex sm:flex-col flex-1 justify-evenly sm:flex-none'>
         <div>
-                <div className='flex items-center justify-center m-2'>
-                  <Link href="/app/nutrition" className={cn(
-                    buttonVariants({variant: pathname === "/app/nutrition"  ? 'default' : 'ghost', size: "icon" }),
-                    "h-9 w-9",
-                    "flex items-center gap-2 justify-center w-full"
-                  )}>
-                    <HamIcon className='h-8 w-8'/>
-                    <h1 className='m-2 text-center'>Nutrition</h1>
-                  </Link>
-                </div>
-                <NavGroup 
-                title="Diary"
-                icon={NotebookPen} 
-                isCollapsed={isCollapsed}
-                links={[
-                {
-                  title: "Today",
-                  label: "",
-                  ref: "/app/today",
-                  icon: Utensils,
-                  variant: "ghost",
-                },
-                {
-                  title: "Overview",
-                  label: "",
-                  ref: "/app/overview",
-                  icon: CalendarDays,
-                  variant: "ghost",
-                },
-              ]}/>
-              <NavGroup 
-                title="Planning"
+          <div className='flex items-center justify-center m-2'>
+            <Link href="/app/nutrition" className={cn(
+              buttonVariants({variant: pathname === "/app/nutrition"  ? 'default' : 'ghost', size: "icon" }),
+              "h-9 w-9",
+              "flex items-center gap-2 justify-center w-full"
+            )}>
+              <HamIcon className='h-8 w-8'/>
+              <h1 className='m-2 text-center'>Nutrition</h1>
+            </Link>
+          </div>
+          <NavGroup 
+          title="Diary"
+          icon={NotebookPen} 
+          isCollapsed={isCollapsed}
+          links={[
+          {
+            title: "Today",
+            label: "",
+            ref: "/app/today",
+            icon: Utensils,
+            variant: "ghost",
+          },
+          {
+            title: "Overview",
+            label: "",
+            ref: "/app/overview",
+            icon: CalendarDays,
+            variant: "ghost",
+          },
+        ]}/>
+        <NavGroup 
+          title="Planning"
+          // @ts-ignore
+          icon={ListChevronsUpDown}
+          isCollapsed={isCollapsed}
+          links={[
+          {
+            title: "Objectives",
+            label: "",
+            ref: "/app/objectives",
+            icon: Target,
+            variant: "ghost",
+          },
+          {
+            title: "Recipes",
+            label: "",
+            ref: "/app/recipes",
+            icon: CookingPot,
+            variant: "ghost",
+          },
+          {
+            title: "Ingredients",
+            label: "",
+            ref: "/app/ingredients",
+            icon: Beef,
+            variant: "ghost",
+          },
+        ]}/>
+    </div>
+    <Separator className='hidden sm:block'/>
+        <div>
+          <div className='flex items-center justify-center m-2'>
+            <Link href="/app/workout" className={cn(
+              buttonVariants({variant: pathname === "/app/workout"  ? 'default' : 'ghost', size: "icon" }),
+              "h-9 w-9",
+              "flex items-center gap-2 justify-center w-full"
+            )}>
+              <Zap className='h-5 w-5'/>
+              <h1 className='m-2 text-center'>Workout</h1>
+            </Link>
+          </div>
+          <NavGroup 
+            title="Tracking" 
+            icon={ListPlus}
+            isCollapsed={isCollapsed}
+            links={[
+              {
+                title: "Progress",
+                label: "",
+                ref: "/app/progress",
                 // @ts-ignore
-                icon={ListChevronsUpDown}
-                isCollapsed={isCollapsed}
-                links={[
-                {
-                  title: "Objectives",
+                icon : ArrowUpWideNarrow,
+                variant: "ghost",
+              },
+              {
+                  title: "Exercises",
                   label: "",
-                  ref: "/app/objectives",
-                  icon: Target,
+                  ref: "/app/exercises",
+                  icon: Dumbbell,
                   variant: "ghost",
                 },
+            ]} />
+              <NavGroup 
+              title="Planning"
+              icon={ListOrdered}
+              isCollapsed={isCollapsed}
+              links={[
                 {
-                  title: "Recipes",
+                  title: "Goals",
                   label: "",
-                  ref: "/app/recipes",
-                  icon: CookingPot,
+                  ref: "/app/goals",
+                  // @ts-ignore
+                  icon: BicepsFlexedIcon,
                   variant: "ghost",
                 },
-                {
-                  title: "Ingredients",
-                  label: "",
-                  ref: "/app/ingredients",
-                  icon: Beef,
-                  variant: "ghost",
-                },
-              ]}/>
+              ]} />
+              </div>
           </div>
-          <Separator className='hidden sm:block'/>
-              <div>
-                <div className='flex items-center justify-center m-2'>
-                  <Link href="/app/workout" className={cn(
-                    buttonVariants({variant: pathname === "/app/workout"  ? 'default' : 'ghost', size: "icon" }),
-                    "h-9 w-9",
-                    "flex items-center gap-2 justify-center w-full"
-                  )}>
-                    <Zap className='h-5 w-5'/>
-                    <h1 className='m-2 text-center'>Workout</h1>
-                  </Link>
-                </div>
-                <NavGroup 
-                  title="Tracking" 
-                  icon={ListPlus}
-                  isCollapsed={isCollapsed}
-                  links={[
-                    {
-                      title: "Progress",
-                      label: "",
-                      ref: "/app/progress",
-                      // @ts-ignore
-                      icon : ArrowUpWideNarrow,
-                      variant: "ghost",
-                    },
-                    {
-                        title: "Exercises",
-                        label: "",
-                        ref: "/app/exercises",
-                        icon: Dumbbell,
-                        variant: "ghost",
-                      },
-                  ]} />
-                    <NavGroup 
-                    title="Planning"
-                    icon={ListOrdered}
-                    isCollapsed={isCollapsed}
-                    links={[
-                      {
-                        title: "Goals",
-                        label: "",
-                        ref: "/app/goals",
-                        // @ts-ignore
-                        icon: BicepsFlexedIcon,
-                        variant: "ghost",
-                      },
-                    ]} />
-                    </div>
-          </div>
+          }
+      </>
     )
 }

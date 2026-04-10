@@ -37,7 +37,7 @@ function SideBar({user} : {user : User}) {
         <div className="col-start-2 col-span-6 flex">
           <Logo/>     
         </div>
-        <div className="row-start-2 col-span-full">
+        <div className="row-start-2 col-span-full overflow-y-auto no-scrollbar">
             <Separator className="hidden sm:block"/>
             <NavBar isCollapsed={isCollapsed}/>
             <Separator className="hidden sm:block"/>
