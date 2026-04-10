@@ -23,7 +23,7 @@ function SplitDays({ split }: { split: Split }) {
         <Card
           key={day.toISOString()}
           className={cn(
-            'min-w-0 px-2 py-2 shadow-sm bg-background',
+            'min-w-0 px-2 py-2 shadow-sm bg-background lg:p-1.5 p-1 rounded-md',
             'flex flex-col items-center justify-center gap-0.5',
             day.getTime() === today.getTime() && 'bg-card border-primary',
           )}
@@ -34,10 +34,10 @@ function SplitDays({ split }: { split: Split }) {
             year: 'numeric',
           })}
         >
-          <span className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+          <span className="text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
             {day.toLocaleDateString('en-US', { weekday: 'short' })}
           </span>
-          <span className="text-base font-semibold leading-none">{day.getDate()}</span>
+          <span className="text-sm font-semibold leading-none">{day.getDate()}</span>
         </Card>
       ))}
     </div>
