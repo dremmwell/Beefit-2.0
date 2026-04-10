@@ -49,7 +49,7 @@ const homeCardsData = [
   title: "Workouts",
   text: "Plan and track your workouts to complement your nutrition and optimise your fitness goals.",
   image: recipeImage,
-  link: "/app/ongoing",
+  link: "/app/workout",
   footer: "Track workouts"
   },
 ];

@@ -19,7 +19,6 @@ export default function DetailsDialog({
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) {
-  console.log(meal)
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
