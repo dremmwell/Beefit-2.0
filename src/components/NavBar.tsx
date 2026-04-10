@@ -172,14 +172,14 @@ export default function NavBar({isCollapsed} : NavBarProps) {
     :
       <div className='flex sm:flex-col flex-1 justify-evenly sm:flex-none'>
         <div>
-          <div className='flex items-center justify-center m-2'>
+          <div className='flex items-center justify-center m-2 '>
             <Link href="/app/nutrition" className={cn(
               buttonVariants({variant: pathname === "/app/nutrition"  ? 'default' : 'ghost', size: "icon" }),
               "h-9 w-9",
               "flex items-center gap-2 justify-center w-full"
             )}>
               <HamIcon className='h-8 w-8'/>
-              <h1 className='m-2 text-center'>Nutrition</h1>
+              <h1 className='m-2 text-center border-b'>Nutrition</h1>
             </Link>
           </div>
           <NavGroup 
@@ -240,7 +240,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
               "flex items-center gap-2 justify-center w-full"
             )}>
               <Zap className='h-5 w-5'/>
-              <h1 className='m-2 text-center'>Workout</h1>
+              <h1 className='m-2 text-center border-b'>Workout</h1>
             </Link>
           </div>
           <NavGroup 
