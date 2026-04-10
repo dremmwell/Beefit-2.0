@@ -13,7 +13,7 @@ type ProgressDetailsRow = {
 
 function ProgressDetails({ rows }: { rows: ProgressDetailsRow[] }) {
   if (rows.length === 0) {
-    return <p className="text-sm text-muted-foreground">No labels configured for this focus yet.</p>
+    return <p className="text-sm text-muted-foreground">No labels for this group yet.</p>
   }
 
   return (

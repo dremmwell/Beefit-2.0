@@ -33,7 +33,7 @@ function SideBar({user} : {user : User}) {
 
   return (
     <>
-      <nav className="lg:rounded-l-lg sm:border-r sm:border-b-0 border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col">
+      <nav className="lg:rounded-l-lg sm:border-r sm:border-b-0 border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col min-w-[140px]">
         <div className="col-start-2 col-span-6 flex">
           <Logo/>     
         </div>

@@ -29,7 +29,7 @@ export default function Nav({ links, isCollapsed }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className="flex flex-col gap-4 py-2 data-[collapsed=true]:py-2"
+      className="flex flex-col gap-4 pb-2 data-[collapsed=true]:py-2"
     >
       <nav className="flex flex-1 sm:grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) => {
