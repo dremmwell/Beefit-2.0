@@ -20,9 +20,9 @@ export default async  function Signup() {
           <ModeToggle />
         </div>
           <div className="flex flex-col sm:rounded-[0.5rem] sm:border bg-background sm:shadow-md p-4 sm:m-auto gap-4">
-            <h3  className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
+            <div  className="scroll-m-20 text-2xl font-semibold tracking-tight text-center">
               Create your account
-            </h3>
+            </div>
             <Link  className={`m-auto ${buttonVariants({ variant: "link" })}`} href="/login">Already have an account? Log in here.</Link>
             <SignupForm />
           </div>

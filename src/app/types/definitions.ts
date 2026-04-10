@@ -1,4 +1,6 @@
-import { Ingredient, Recipe, RecipeIngredient, Meal, Objective } from "@prisma/client";
+import { Ingredient, Recipe, RecipeIngredient, Meal, Objective, ExerciceGroup, ExercicePerfs, Prisma } from "@prisma/client";
+import { Labels } from "@prisma/client";
+
 
 export type RecipeValues = {
     recipeId: string;
@@ -83,3 +85,61 @@ export type StreakData = {
     value : number,
     footer : string
 }
+
+export type FocusLabels = {
+  id: string
+  name: string
+  createdAt: Date,
+  userId: string,
+  priority: string
+    labels: Array<Labels & { sets?: number | null }>
+}
+
+
+export type ExerciceData = {
+    id: string,
+    name: string,
+    groupOrder: number,
+    userId: string,
+    description: string,
+    createdAt: Date,
+    exerciceGroupId: string,
+    execiceLabels: LabelExercices[],
+    LabelsExercice?: LabelExercices[],
+    exercicePerfs: ExercicePerfs[],
+}
+
+export type ExercicePerfInput = {
+    sets: number,
+    reps: number,
+    weight: number,
+    notes: string,
+}
+
+export type LabelExercices = {
+    id : string,
+    createdAt: Date,
+    value: string,
+    labelId: string,
+    exerciceId: string,
+    Labels: Labels,
+    labels?: Labels,
+}
+
+export type SplitWorkoutData = Prisma.ExercicePerfsGetPayload<{
+    include: {
+        Exercice: {
+            include: {
+                execiceLabels: {
+                    include: {
+                        Labels: {
+                            include: {
+                                Focus: true,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}>;

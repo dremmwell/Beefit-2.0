@@ -28,6 +28,8 @@ model User {
   foci           Focus[]
   exercices      Exercice[]
   exerciceGroups ExerciceGroup[]
+  splits         Split[]
+  exercicePerfs  ExercicePerfs[]
 }
 
 model Session {
@@ -192,6 +194,7 @@ model Labels {
   id    String @id @default(uuid())
   name  String
   color String
+  sets  Int?
 
   createdAt DateTime @default(now())
 
@@ -224,6 +227,8 @@ model Exercice {
 
   createdAt DateTime @default(now())
 
+  groupOrder Int @default(0)
+
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -237,10 +242,14 @@ model ExercicePerfs {
   id      String @id @default(uuid())
   weights Float
   unit    String
+  sets    Int    @default(1)
   reps    Int
   notes   String
 
   createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   exerciceId String
   Exercice   Exercice @relation(fields: [exerciceId], references: [id], onDelete: Cascade)
@@ -269,4 +278,17 @@ model ExerciceGroup {
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   exercices Exercice[]
+}
+
+model Split {
+  id        String   @id @default(uuid())
+  startDate DateTime @default(now())
+  length    Int      @default(7)
+
+  createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, startDate])
 }

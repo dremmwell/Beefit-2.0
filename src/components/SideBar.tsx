@@ -33,19 +33,25 @@ function SideBar({user} : {user : User}) {
 
   return (
     <>
-      <nav className="lg:rounded-l-lg sm:border-r sm:border-b-0 border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col">
+      <nav className="lg:rounded-l-lg sm:border-r sm:border-b-0 border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col min-w-[140px]">
         <div className="col-start-2 col-span-6 flex">
           <Logo/>     
         </div>
-        <div className="row-start-2 col-span-full">
+        <div className="row-start-2 col-span-full overflow-y-auto no-scrollbar">
             <Separator className="hidden sm:block"/>
             <NavBar isCollapsed={isCollapsed}/>
             <Separator className="hidden sm:block"/>
         </div>
-        <div className="col-start-1 row-start-1 mr-auto ml-2 sm:mt-auto sm:ml-auto mt-2 sm:mb-4 flex flex-col gap-4">
+        <div className="col-start-1 row-start-1 mr-auto ml-2 sm:mt-auto sm:ml-auto mt-2 flex flex-col gap-4">
+{/*          <div className="m-auto">
+          <Profile user={user}/>
+         </div>
+         <div className="display hidden sm:block">
+          <LogOut />
+         </div> */}
          <LogOut />
         </div>
-        <div className="sm:mr-auto ml-auto sm:mb-3 mr-2 col-span-1 col-start-8">
+        <div className="sm:mt-5 sm:mr-auto ml-auto sm:mb-2 mr-2 col-span-1 col-start-8">
           <ModeToggle />
         </div>
       </nav>

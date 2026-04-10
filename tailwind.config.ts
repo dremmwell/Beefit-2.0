@@ -64,6 +64,16 @@ const config = {
   			cyan: {
   				DEFAULT: 'hsl(var(--cyan))',
   				foreground: 'hsl(var(--cyan))'
+  			},
+  			sidebar: {
+  				DEFAULT: 'hsl(var(--sidebar-background))',
+  				foreground: 'hsl(var(--sidebar-foreground))',
+  				primary: 'hsl(var(--sidebar-primary))',
+  				'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+  				accent: 'hsl(var(--sidebar-accent))',
+  				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+  				border: 'hsl(var(--sidebar-border))',
+  				ring: 'hsl(var(--sidebar-ring))'
   			}
   		},
   		borderRadius: {
@@ -87,12 +97,12 @@ const config = {
   				to: {
   					height: '0'
   				}
-  			},
+  			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-  			'spin-loader': 'spin 1s cubic-bezier(.8,.05,.22,.88) infinite',
+  			'spin-loader': 'spin 1s cubic-bezier(.8,.05,.22,.88) infinite'
   		},
   		fontFamily: {
   			sans: [

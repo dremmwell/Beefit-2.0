@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "Split_userId_startDate_key" ON "Split"("userId", "startDate");

@@ -1,18 +1,11 @@
 "use server"
 
 import React from 'react'
-import { validateRequest } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import db from "@/db/db";
 import RecipeCard from "./RecipeCard";
 import { RecipeAndIngredients } from "@/app/types/definitions";
 import { User } from "lucia";
-import { AddRecipeDialog } from "./AddRecipeDialog";
-import SearchBar from "./SearchBar";
 import { getIngredients } from "@/app/actions/db.actions/ingredient.actions";
-import { createArchivedRecipe, getRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
-import { Toaster } from "@/components/ui/toaster";
+import { getRecipesAndIngredients } from "@/app/actions/db.actions/recipe.actions";
 import { Ingredient } from "@prisma/client";
 
 async function RecipeGrid(
