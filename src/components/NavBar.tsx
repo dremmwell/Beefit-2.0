@@ -72,7 +72,7 @@ function HamIcon({ className }: { className?: string }) {
     <svg 
       xmlns="http://www.w3.org/2000/svg" 
       width="100" height="100" viewBox="0 0 24 24" 
-      fill="hsl(var(--background))" 
+      fill="none" 
       stroke='currentColor'
         strokeWidth="1.7" 
         strokeLinecap="round" 
@@ -95,8 +95,8 @@ export default function NavBar({isCollapsed} : NavBarProps) {
       <div className='flex sm:flex-col flex-1 justify-evenly sm:flex-none'>
         <div>
                 <div className='flex items-center justify-center m-2'>
-                  <Link href="/app/home" className={cn(
-                    buttonVariants({variant: pathname === "/app/home"  ? 'default' : 'ghost', size: "icon" }),
+                  <Link href="/app/nutrition" className={cn(
+                    buttonVariants({variant: pathname === "/app/nutrition"  ? 'default' : 'ghost', size: "icon" }),
                     "h-9 w-9",
                     "flex items-center gap-2 justify-center w-full"
                   )}>
@@ -104,7 +104,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
                     <h1 className='m-2 text-center'>Nutrition</h1>
                   </Link>
                 </div>
-          <NavGroup 
+                <NavGroup 
                 title="Diary"
                 icon={NotebookPen} 
                 isCollapsed={isCollapsed}
