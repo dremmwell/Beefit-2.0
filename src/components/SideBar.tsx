@@ -7,9 +7,6 @@ import { ModeToggle } from "@/components/ModeToggle";
 import { useEffect, useState } from "react";
 import React from 'react'
 import useWindowDimensions from "@/lib/hooks/useWindowDimensions";
-import { Button } from "./ui/button";
-
-import Profile from "./Profile";
 import { User } from "@prisma/client";
 import { LogOut } from "./auth/LogOut";
 
@@ -33,26 +30,20 @@ function SideBar({user} : {user : User}) {
 
   return (
     <>
-      <nav className="lg:rounded-l-lg sm:border-r sm:border-b-0 border-b bg-background grid grid-cols-8 grid-rows-2 place-items-center sm:flex sm:flex-col min-w-[140px]">
-        <div className="col-start-2 col-span-6 flex">
+      <nav className="grid min-w-[150px] grid-cols-8 grid-rows-2 place-items-center border-b border-border/70 bg-muted/20 backdrop-blur-sm sm:flex sm:flex-col sm:border-b-0 sm:border-r lg:rounded-l-xl">
+        <div className="col-span-6 col-start-2 flex w-full items-center justify-center border-b border-border/60 py-2 sm:col-span-full sm:border-b sm:px-2 sm:py-3">
           <Logo/>     
         </div>
-        <div className="row-start-2 col-span-full overflow-y-auto no-scrollbar">
-            <Separator className="hidden sm:block"/>
+        <div className="row-start-2 col-span-full w-full overflow-y-auto no-scrollbar sm:px-1">
             <NavBar isCollapsed={isCollapsed}/>
-            <Separator className="hidden sm:block"/>
         </div>
-        <div className="col-start-1 row-start-1 mr-auto ml-2 sm:mt-auto sm:ml-auto mt-2 flex flex-col gap-4">
-{/*          <div className="m-auto">
-          <Profile user={user}/>
-         </div>
-         <div className="display hidden sm:block">
-          <LogOut />
-         </div> */}
+        <div className="flex flex-col mt-2">
+        <div className="col-start-1 row-start-1 ml-2 mr-auto mt-2 flex flex-col gap-4 sm:ml-auto sm:mt-auto sm:mb-2">
          <LogOut />
         </div>
-        <div className="sm:mt-5 sm:mr-auto ml-auto sm:mb-2 mr-2 col-span-1 col-start-8">
+        <div className="col-span-1 col-start-8 ml-auto mr-2 sm:mr-auto sm:mb-2 sm:mt-0">
           <ModeToggle />
+        </div>
         </div>
       </nav>
     </>

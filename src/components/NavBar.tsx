@@ -55,9 +55,9 @@ function ListChevronsUpDown({ className }: { className?: string }) {
     viewBox="0 0 24 24" 
     fill="none" 
     stroke="currentColor" 
-    stroke-width="2" 
-    stroke-linecap="round"
-    stroke-linejoin="round" 
+    strokeWidth="2" 
+    strokeLinecap="round"
+    strokeLinejoin="round" 
     className={className}>
       <path d="M3 5h8"/>
       <path d="M3 12h8"/>
@@ -90,10 +90,18 @@ function HamIcon({ className }: { className?: string }) {
 export default function NavBar({isCollapsed} : NavBarProps) {
     const pathname = usePathname();
 
+    const sectionLinkClass = (isActive: boolean) =>
+      cn(
+        "flex w-full items-center justify-center gap-2 rounded-lg border px-2 py-2 text-sm transition-colors",
+        isActive
+          ? "border-primary/20 bg-primary text-primary-foreground shadow"
+          : "hover:bg-accent hover:text-accent-foreground"
+      )
+
     return (
       <>
       {isCollapsed ? 
-      <div className='flex'>
+      <div className='flex items-center justify-center gap-1 rounded-xl border border-border/50 bg-muted/20 p-1'>
         <Nav 
           isCollapsed={isCollapsed}
           links={[
@@ -170,16 +178,12 @@ export default function NavBar({isCollapsed} : NavBarProps) {
             ]} />
       </div>
     :
-      <div className='flex sm:flex-col flex-1 justify-evenly sm:flex-none'>
-        <div>
-          <div className='flex items-center justify-center m-2 '>
-            <Link href="/app/nutrition" className={cn(
-              buttonVariants({variant: pathname === "/app/nutrition"  ? 'default' : 'ghost', size: "icon" }),
-              "h-9 w-9",
-              "flex items-center gap-2 justify-center w-full"
-            )}>
-              <HamIcon className='h-8 w-8'/>
-              <h1 className='m-2 text-center border-b'>Nutrition</h1>
+      <div className='flex flex-1 flex-col gap-2 py-1 sm:flex-none'>
+        <div className='space-y-1'>
+          <div className='px-2 pt-2'>
+            <Link href="/app/nutrition" className={sectionLinkClass(pathname === "/app/nutrition") }>
+              <HamIcon className='h-5 w-5'/>
+              <h1 className='font-medium'>Nutrition</h1>
             </Link>
           </div>
           <NavGroup 
@@ -231,16 +235,12 @@ export default function NavBar({isCollapsed} : NavBarProps) {
           },
         ]}/>
     </div>
-    <Separator className='hidden sm:block'/>
-        <div>
-          <div className='flex items-center justify-center m-2'>
-            <Link href="/app/workout" className={cn(
-              buttonVariants({variant: pathname === "/app/workout"  ? 'default' : 'ghost', size: "icon" }),
-              "h-9 w-9",
-              "flex items-center gap-2 justify-center w-full"
-            )}>
+    <Separator className='my-0.5 hidden sm:block'/>
+      <div className='space-y-1'>
+          <div className='px-2'>
+            <Link href="/app/workout" className={sectionLinkClass(pathname === "/app/workout") }>
               <Zap className='h-5 w-5'/>
-              <h1 className='m-2 text-center border-b'>Workout</h1>
+              <h1 className='font-medium'>Workout</h1>
             </Link>
           </div>
           <NavGroup 

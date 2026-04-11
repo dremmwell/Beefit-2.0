@@ -29,7 +29,7 @@ export default function Nav({ links, isCollapsed }: NavProps) {
   return (
     <div
       data-collapsed={isCollapsed}
-      className="flex flex-col gap-4 pb-2 data-[collapsed=true]:py-2"
+      className="flex flex-col gap-1 pb-2 data-[collapsed=true]:py-1"
     >
       <nav className="flex flex-1 sm:grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) => {
@@ -41,7 +41,8 @@ export default function Nav({ links, isCollapsed }: NavProps) {
                     href={link.ref}
                     className={cn(
                       buttonVariants({variant: pathname === link.ref || (link.ref !== '/' && pathname.startsWith(`${link.ref}/`)) ? 'default' : 'ghost', size: "icon" }),
-                      "h-9 w-9",
+                      "h-9 w-9 rounded-lg border border-transparent",
+                      (pathname === link.ref || (link.ref !== '/' && pathname.startsWith(`${link.ref}/`))) && "border-primary/20 shadow-sm",
                       link.variant === "default" &&
                         "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                     )}
@@ -68,7 +69,8 @@ export default function Nav({ links, isCollapsed }: NavProps) {
                 buttonVariants({ variant: link.ref === pathname ? 'default' : 'ghost', size: "sm" }),
                 link.variant === "default" &&
                   "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                "justify-start"
+                "h-9 justify-start rounded-lg border border-transparent px-3",
+                link.ref === pathname && "border-primary/20 shadow-sm"
               )}
             >
               <link.icon className="mr-2 h-4 w-4" />
