@@ -18,7 +18,7 @@ function SplitDays({ split }: { split: Split }) {
   })
 
   return (
-    <div className="mb-2 grid w-full grid-cols-7 gap-1 lg:w-1/2">
+    <div className="mb-2 grid w-full grid-cols-7 gap-1">
       {splitDays.map((day) => (
         <Card
           key={day.toISOString()}

@@ -874,7 +874,7 @@ export default function ExerciceBoard({
 
             <div className={cn("grid transition-all duration-200 lg:grid-rows-[1fr]", isExpanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
               <div className="overflow-hidden">
-                <CardContent className="pb-1">
+                <CardContent className="pb-1 px-2 lg:px-4">
                   {groupExercices.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4 border-2 border-dashed rounded-lg">
                       No exercices in this group

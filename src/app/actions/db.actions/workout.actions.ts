@@ -798,3 +798,68 @@ export async function getSplitWorkouts(userId: UserId, split: Split) {
     const workouts: SplitWorkoutData[] = JSON.parse(JSON.stringify(data));
     return workouts
 }
+
+export async function deleteSplitWorkoutExercise(userId: UserId, exercicePerfId: string) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return false
+    }
+
+    await db.exercicePerfs.deleteMany({
+        where: {
+            id: exercicePerfId,
+            userId: userId,
+        },
+    })
+
+    revalidatePath("/app/progress")
+    return true
+}
+
+export async function updateSplitWorkoutExercise(
+    userId: UserId,
+    exercicePerfId: string,
+    updates: { sets: number; reps: number; weight: number; notes: string },
+) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return null
+    }
+
+    const normalizedSets = Number.isFinite(updates.sets) ? Math.max(1, Math.floor(updates.sets)) : 1
+    const normalizedReps = Number.isFinite(updates.reps) ? Math.max(1, Math.floor(updates.reps)) : 1
+    const normalizedWeight = Number.isFinite(updates.weight) ? Math.max(0, updates.weight) : 0
+    const normalizedNotes = updates.notes.trim()
+
+    const updateResult = await db.exercicePerfs.updateMany({
+        where: {
+            id: exercicePerfId,
+            userId: userId,
+        },
+        data: {
+            sets: normalizedSets,
+            reps: normalizedReps,
+            weights: normalizedWeight,
+            unit: "kg",
+            notes: normalizedNotes,
+        },
+    })
+
+    if (updateResult.count === 0) {
+        return null
+    }
+
+    const updatedEntry = await db.exercicePerfs.findUnique({
+        where: {
+            id: exercicePerfId,
+        },
+    })
+
+    revalidatePath("/app/progress")
+
+    if (!updatedEntry) {
+        return null
+    }
+
+    return JSON.parse(JSON.stringify(updatedEntry))
+}
