@@ -158,8 +158,8 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
 
   return (
     <>
-      <Card className="bg-background flex min-h-0 flex-col overflow-hidden lg:h-full lg:max-h-full lg:w-1/2">
-      <CardHeader className="pb-2 pt-2 flex flex-row items-center justify-between gap-2 px-2 lg:px-4">
+      <Card className="bg-background flex min-h-96 flex-col overflow-hidden lg:h-full lg:max-h-full lg:w-1/2 no-scrollbar">
+      <CardHeader className="pb-2 pt-2 flex flex-row items-center justify-between gap-2 px-2 lg:px-4 pl-4">
         <CardTitle className="text-lg">Exercise Diary</CardTitle>
         <Link className={buttonVariants({ variant: "default"})} href="/app/exercises">Add Exercise</Link>
       </CardHeader>
