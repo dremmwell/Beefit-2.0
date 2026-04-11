@@ -2,7 +2,7 @@ import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
-import GoalsSkeleton from "./GoalsSkeleton";
+import GoalsSkeleton from "./goalsSkeleton";
 import GoalsWrapper from "./GoalsWrapper";
 import { DatePicker } from "@/components/DatePicker";
 
