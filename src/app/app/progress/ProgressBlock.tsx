@@ -16,6 +16,7 @@ import {
 
 function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: SplitWorkoutData[] }) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [allTargetsReachedInDetails, setAllTargetsReachedInDetails] = useState(false)
 
   const focusTargetSets = Number.isFinite(Number(focus.priority))
     ? Math.max(0, Number.parseInt(String(focus.priority), 10))
@@ -31,6 +32,7 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
       const targetSets = (label.sets ?? focusTargetSets) || 0
       const safeTargetSets = targetSets > 0 ? targetSets : completedSets || 1
       const progressPercentage = Math.min(100, Math.round((completedSets / safeTargetSets) * 100))
+      const hasReachedTargetSets = targetSets > 0 && completedSets >= targetSets
 
       return {
         id: label.id,
@@ -39,6 +41,7 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
         completedSets,
         targetSets,
         progressPercentage,
+        hasReachedTargetSets,
       }
     })
     .sort((a, b) => b.completedSets - a.completedSets)
@@ -47,7 +50,7 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
   const totalTargetSets = labelProgressRows.reduce((total, row) => total + row.targetSets, 0)
   const safeTotalTargetSets = totalTargetSets > 0 ? totalTargetSets : totalCompletedSets || 1
   const totalProgressPercentage = Math.min(100, Math.round((totalCompletedSets / safeTotalTargetSets) * 100))
-  const hasReachedFocusGoal = totalTargetSets > 0 && totalCompletedSets >= totalTargetSets
+  const hasReachedFocusGoal = allTargetsReachedInDetails
 
   return (
     <>
@@ -79,7 +82,10 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
             <div className="overflow-hidden">
               <CardContent>
                 <Separator  className='mb-2'/>
-                <ProgressDetail rows={labelProgressRows} />
+                <ProgressDetail
+                  rows={labelProgressRows}
+                  onAllTargetsReachedChange={setAllTargetsReachedInDetails}
+                />
               </CardContent>
             </div>
           </div>
