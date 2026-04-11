@@ -70,73 +70,6 @@ function getSplitEndDate(split: Pick<Split, "startDate" | "length">) {
     return addDaysToSplitBoundary(new Date(split.startDate), normalizeSplitLength(split.length))
 }
 
-async function ensureCurrentSplitRecord(userId: UserId) {
-    return db.$transaction(async (tx) => {
-        let activeSplit = await tx.split.findFirst({
-            where: {
-                userId: userId,
-            },
-            orderBy: [
-                {
-                    startDate: "desc",
-                },
-                {
-                    createdAt: "desc",
-                },
-            ],
-        })
-
-        if (!activeSplit) {
-            const initialStartDate = new Date()
-            initialStartDate.setHours(0, 0, 0, 0)
-
-            activeSplit = await tx.split.create({
-                data: {
-                    userId: userId,
-                    startDate: initialStartDate,
-                    length: DEFAULT_SPLIT_LENGTH,
-                },
-            })
-
-            return activeSplit
-        }
-
-        const now = new Date()
-
-        while (now >= getSplitEndDate(activeSplit)) {
-            const nextStartDate = getSplitEndDate(activeSplit)
-            const nextLength = normalizeSplitLength(activeSplit.length)
-
-            await tx.split.createMany({
-                data: {
-                    userId: userId,
-                    startDate: nextStartDate,
-                    length: nextLength,
-                },
-                skipDuplicates: true,
-            })
-
-            const nextSplit = await tx.split.findFirst({
-                where: {
-                    userId: userId,
-                    startDate: nextStartDate,
-                },
-                orderBy: {
-                    createdAt: "desc",
-                },
-            })
-
-            if (!nextSplit) {
-                break
-            }
-
-            activeSplit = nextSplit
-        }
-
-        return activeSplit
-    })
-}
-
 //------------------- Focus Actions -------------------//
 
 export async function getFocus(userId: UserId) {
@@ -707,45 +640,31 @@ export async function deleteExercice(userId: UserId, exerciceId: string) {
 
 export async function getLatestSplit(userId: UserId) {
     const { user } = await validateRequest()
-    if (!user || user.id !== userId) {
-        return null
+    if (user && user.id === userId) {
+        const data = await db.split.findFirst({
+            where: {
+                userId: userId,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        })
+        const split = JSON.parse(JSON.stringify(data))
+        return split
     }
-
-    const splitRecord = await ensureCurrentSplitRecord(userId)
-    const split = JSON.parse(JSON.stringify(splitRecord));
-    return split
 }
 
 
 export async function createSplit(userId: UserId, startDate: Date, length: number) {
     const { user } = await validateRequest()
     if (user && user.id === userId) {
-        const normalizedStartDate = new Date(startDate)
-        const normalizedLength = normalizeSplitLength(length)
-
-        try {
-            await db.split.create({
-                data: {
-                    userId: userId,
-                    startDate: normalizedStartDate,
-                    length: normalizedLength,
-                },
-            })
-        } catch (error) {
-            if (!(error instanceof Prisma.PrismaClientKnownRequestError) || error.code !== "P2002") {
-                throw error
-            }
-
-            await db.split.updateMany({
-                where: {
-                    userId: userId,
-                    startDate: normalizedStartDate,
-                },
-                data: {
-                    length: normalizedLength,
-                },
-            })
-        }
+        await db.split.create({
+            data: {
+                userId: userId, 
+                startDate: startDate,
+                length: length 
+            },
+        })
     }
 
     revalidatePath("/app/progress")
