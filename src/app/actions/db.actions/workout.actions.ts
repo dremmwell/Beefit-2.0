@@ -649,6 +649,25 @@ export async function getLatestSplit(userId: UserId) {
                 createdAt: "desc",
             },
         })
+        if (!data) {
+            return
+        }
+
+        const endDate = getSplitEndDate(data)
+        const today = new Date()
+        today.setUTCHours(0, 0, 0, 0)
+
+        if (today >= endDate) {
+            const newSplit = await db.split.create({
+                data: {
+                    userId: userId,
+                    startDate: today,
+                    length: normalizeSplitLength(data.length),
+                },
+            })
+            return JSON.parse(JSON.stringify(newSplit))
+        }
+
         const split = JSON.parse(JSON.stringify(data))
         return split
     }
