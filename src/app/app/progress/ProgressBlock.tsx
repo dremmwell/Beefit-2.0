@@ -44,6 +44,7 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
         hasReachedTargetSets,
       }
     })
+    .filter((row) => row.targetSets > 0)
     .sort((a, b) => b.completedSets - a.completedSets)
 
   const totalCompletedSets = labelProgressRows.reduce((total, row) => total + row.completedSets, 0)

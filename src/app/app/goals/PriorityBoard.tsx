@@ -83,11 +83,14 @@ export default function PriorityBoard({focus, userId}: {focus: Array<FocusLabels
 
     setCards((prev : any) =>
       sortCardsByPriority(
-        prev.map((card : FocusLabels) =>
-          card.id === editingCardId
-            ? { ...card, name: editTitle || card.name, priority: Number.parseInt(editPriority) || card.priority }
-            : card,
-        ),
+        prev.map((card : FocusLabels) => {
+          if (card.id === editingCardId) {
+            const parsedPriority = Number.parseInt(editPriority, 10)
+            const finalPriority = Number.isNaN(parsedPriority) ? card.priority : parsedPriority
+            return { ...card, name: editTitle || card.name, priority: finalPriority }
+          }
+          return card
+        }),
       ),
     )
     updateFocus(userId, editingCardId, editTitle, editPriority)
