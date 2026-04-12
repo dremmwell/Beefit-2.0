@@ -37,13 +37,11 @@ function SideBar({user} : {user : User}) {
         <div className="row-start-2 col-span-full w-full overflow-y-auto no-scrollbar sm:px-1">
             <NavBar isCollapsed={isCollapsed}/>
         </div>
-        <div className="flex flex-col mt-2">
-        <div className="col-start-1 row-start-1 ml-2 mr-auto mt-2 flex flex-col gap-4 sm:ml-auto sm:mt-auto sm:mb-2">
+        <div className="flex flex-col mt-2 col-start-1 row-start-1 ml-2 mr-auto gap-4 sm:ml-auto sm:mt-auto sm:mb-2 sm:pt-2">
          <LogOut />
         </div>
         <div className="col-span-1 col-start-8 ml-auto mr-2 sm:mr-auto sm:mb-2 sm:mt-0">
           <ModeToggle />
-        </div>
         </div>
       </nav>
     </>
