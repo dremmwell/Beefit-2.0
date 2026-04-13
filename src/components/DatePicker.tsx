@@ -15,8 +15,13 @@ import {
 import { useToast } from "./ui/use-toast"
 import { createSplit } from "@/app/actions/db.actions/workout.actions"
 
+const getLocalDateFromUtcDate = (value: Date) =>
+  new Date(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate())
+
 export function DatePicker({currentSplit, userId} : {currentSplit : Split, userId: string }) {
-  const [date, setDate] = useState<Date>(currentSplit ? new Date(currentSplit.startDate) : new Date())
+  const [date, setDate] = useState<Date>(
+    currentSplit ? getLocalDateFromUtcDate(new Date(currentSplit.startDate)) : new Date(),
+  )
   const [spanDays, setSpanDays] = useState(currentSplit ? currentSplit.length : 7)
   const [isSaving, setIsSaving] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
@@ -38,8 +43,7 @@ const { toast } = useToast()
 
     try{
       setIsSaving(true)
-      const startDateTime = new Date(date)
-      startDateTime.setHours(0, 0, 0, 0)
+      const startDateTime = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
 
       await createSplit(userId, startDateTime, spanDays)
       setIsOpen(false)

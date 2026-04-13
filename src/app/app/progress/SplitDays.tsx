@@ -6,14 +6,14 @@ import { Card } from '@/components/ui/card'
 function SplitDays({ split }: { split: Split }) {
 
   const today = new Date()
-  today.setHours(0, 0, 0, 0)
+  today.setUTCHours(0, 0, 0, 0)
 
   const startDate = new Date(split.startDate)
-  startDate.setHours(0, 0, 0, 0)
+  startDate.setUTCHours(0, 0, 0, 0)
 
   const splitDays = Array.from({ length: split.length }, (_, index) => {
     const day = new Date(startDate)
-    day.setDate(startDate.getDate() + index)
+    day.setUTCDate(startDate.getUTCDate() + index)
     return day
   })
 
@@ -28,6 +28,7 @@ function SplitDays({ split }: { split: Split }) {
             day.getTime() === today.getTime() && 'bg-card border-primary',
           )}
           aria-label={day.toLocaleDateString('en-US', {
+            timeZone: 'UTC',
             weekday: 'short',
             month: 'short',
             day: 'numeric',
@@ -35,9 +36,9 @@ function SplitDays({ split }: { split: Split }) {
           })}
         >
           <span className="text-[9px] font-medium uppercase tracking-wide text-muted-foreground">
-            {day.toLocaleDateString('en-US', { weekday: 'short' })}
+            {day.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' })}
           </span>
-          <span className="text-sm font-semibold leading-none">{day.getDate()}</span>
+          <span className="text-sm font-semibold leading-none">{day.getUTCDate()}</span>
         </Card>
       ))}
     </div>

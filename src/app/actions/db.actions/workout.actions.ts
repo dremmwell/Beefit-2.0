@@ -677,10 +677,14 @@ export async function getLatestSplit(userId: UserId) {
 export async function createSplit(userId: UserId, startDate: Date, length: number) {
     const { user } = await validateRequest()
     if (user && user.id === userId) {
+        const normalizedStartDate = new Date(
+            Date.UTC(startDate.getUTCFullYear(), startDate.getUTCMonth(), startDate.getUTCDate()),
+        )
+
         await db.split.create({
             data: {
                 userId: userId, 
-                startDate: startDate,
+                startDate: normalizedStartDate,
                 length: length 
             },
         })

@@ -9,7 +9,7 @@ async function GoalsWrapper({userId} : {userId : string}) {
 
     const focus : FocusLabels[] = await getFocus(userId);
     const split : Split = await getLatestSplit(userId)
-
+    
   return (
     <>
       <div className="flex items-center lg:gap-4 gap-2 mt-1 mb-2">
