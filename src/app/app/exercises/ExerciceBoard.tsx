@@ -668,6 +668,7 @@ export default function ExerciceBoard({
   const saveNewExercice = async (payload: {
     name: string
     description: string
+    notes: string
     sets: number
     reps: number
     weight: number
@@ -682,6 +683,7 @@ export default function ExerciceBoard({
     const createdExercice = await createExercice(userId, {
       name: payload.name,
       description: payload.description,
+      notes: payload.notes,
       groupId: activeCreationCardId,
       groupOrder: targetGroupExercices.length + 1,
       sets: payload.sets,
@@ -700,6 +702,7 @@ export default function ExerciceBoard({
   const saveEditedExercice = async (payload: {
     name: string
     description: string
+    notes: string
     sets: number
     reps: number
     weight: number

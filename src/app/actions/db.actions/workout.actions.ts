@@ -37,6 +37,7 @@ type LabelInput = {
 type CreateExerciceInput = {
     name: string
     description: string
+    notes: string
     groupId: string
     groupOrder: number
     sets: number
@@ -48,6 +49,7 @@ type CreateExerciceInput = {
 type UpdateExerciceInput = {
     name: string
     description: string
+    notes: string
     sets: number
     reps: number
     weight: number
@@ -332,6 +334,7 @@ export async function createExercice(userId: UserId, exercice: CreateExerciceInp
     const normalizedReps = Number.isFinite(exercice.reps) ? Math.max(1, Math.floor(exercice.reps)) : 1
     const normalizedWeight = Number.isFinite(exercice.weight) ? Math.max(0, exercice.weight) : 0
     const normalizedGroupOrder = Number.isFinite(exercice.groupOrder) ? Math.max(1, Math.floor(exercice.groupOrder)) : 1
+    const normalizedNotes = exercice.notes.trim()
 
     const requestedLabels = Array.from(
         new Map(
@@ -370,7 +373,7 @@ export async function createExercice(userId: UserId, exercice: CreateExerciceInp
                     reps: normalizedReps,
                     weights: normalizedWeight,
                     unit: "kg",
-                    notes: "",
+                    notes: normalizedNotes,
                 },
             },
             execiceLabels: validLabelAssignments.length
@@ -438,6 +441,7 @@ export async function updateExercice(userId: UserId, exerciceId: string, updates
     const normalizedSets = Number.isFinite(updates.sets) ? Math.max(1, Math.floor(updates.sets)) : 1
     const normalizedReps = Number.isFinite(updates.reps) ? Math.max(1, Math.floor(updates.reps)) : 1
     const normalizedWeight = Number.isFinite(updates.weight) ? Math.max(0, updates.weight) : 0
+    const normalizedNotes = updates.notes.trim()
 
     const requestedLabels = Array.from(
         new Map(
@@ -483,6 +487,7 @@ export async function updateExercice(userId: UserId, exerciceId: string, updates
                     reps: normalizedReps,
                     weights: normalizedWeight,
                     unit: "kg",
+                    notes: normalizedNotes,
                 },
             })
         } else {
@@ -494,7 +499,7 @@ export async function updateExercice(userId: UserId, exerciceId: string, updates
                     reps: normalizedReps,
                     weights: normalizedWeight,
                     unit: "kg",
-                    notes: "",
+                    notes: normalizedNotes,
                 },
             })
         }

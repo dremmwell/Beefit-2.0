@@ -224,6 +224,7 @@ model Exercice {
   id          String @id @default(uuid())
   name        String
   description String
+  notes       String @default("")
 
   createdAt DateTime @default(now())
 

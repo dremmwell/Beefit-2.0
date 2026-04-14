@@ -20,6 +20,7 @@ type AddExerciceDialogProps = {
   onSave: (payload: {
     name: string
     description: string
+    notes: string
     sets: number
     reps: number
     weight: number
@@ -32,6 +33,7 @@ type AddExerciceDialogProps = {
 export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, groupName }: AddExerciceDialogProps) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
+  const [notes, setNotes] = useState("")
   const [sets, setSets] = useState<number | "">(4)
   const [reps, setReps] = useState<number | "">(8)
   const [weight, setWeight] = useState<number | "">(20)
@@ -66,6 +68,7 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
 
     setName("")
     setDescription("")
+    setNotes("")
     setSets(4)
     setReps(8)
     setWeight(20)
@@ -132,6 +135,7 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
       await onSave({
         name: name.trim(),
         description: description.trim(),
+        notes: notes.trim(),
         sets: normalizedSets,
         reps: normalizedReps,
         weight: normalizedWeight,
@@ -210,6 +214,17 @@ export default function AddExerciceDialog({ open, onOpenChange, onSave, labels, 
               rows={3}
               value={description}
               onChange={(event) => setDescription(event.target.value)}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="add-exercice-notes">Notes</Label>
+            <Textarea
+              id="add-exercice-notes"
+              placeholder="How did it feel? Effort, form cues, or anything to remember..."
+              rows={3}
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
             />
           </div>
 

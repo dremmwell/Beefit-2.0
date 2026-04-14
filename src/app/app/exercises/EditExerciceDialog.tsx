@@ -21,6 +21,7 @@ type EditExerciceDialogProps = {
   onSave: (payload: {
     name: string
     description: string
+    notes: string
     sets: number
     reps: number
     weight: number
@@ -35,6 +36,7 @@ type EditExerciceDialogProps = {
 export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelete, labels, exercice, groupName }: EditExerciceDialogProps) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
+  const [notes, setNotes] = useState("")
   const [sets, setSets] = useState<number | "">(4)
   const [reps, setReps] = useState<number | "">(8)
   const [weight, setWeight] = useState<number | "">(20)
@@ -74,6 +76,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
     setDescription(exercice.description ?? "")
 
     const currentPerf = exercice.exercicePerfs?.[0]
+  setNotes(currentPerf?.notes ?? "")
     setSets(currentPerf?.sets ?? 4)
     setReps(currentPerf?.reps ?? 8)
     setWeight(currentPerf?.weights ?? 20)
@@ -157,6 +160,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
       await onSave({
         name: name.trim(),
         description: description.trim(),
+        notes: notes.trim(),
         sets: normalizedSets,
         reps: normalizedReps,
         weight: normalizedWeight,
@@ -281,6 +285,16 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
               rows={3}
               value={description}
               onChange={(event) => setDescription(event.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="add-exercice-notes">Notes</Label>
+            <Textarea
+              id="add-exercice-notes"
+              placeholder="How did it feel? Effort, form cues, or anything to remember..."
+              rows={3}
+              value={notes}
+              onChange={(event) => setNotes(event.target.value)}
             />
           </div>
           <div className="grid gap-2">
