@@ -21,11 +21,28 @@ type ExerciceDialogProps = {
 }
 
 export default function ExerciceDialog({ open, onOpenChange, exercice, userId }: ExerciceDialogProps) {
-  const [sets, setSets] = useState<number>(exercice.exercicePerfs[0]?.sets || 4)
-  const [reps, setReps] = useState<number>(exercice.exercicePerfs[0]?.reps || 8)
-  const [weight, setWeight] = useState<number>(exercice.exercicePerfs[0]?.weights || 20)
+  const [sets, setSets] = useState<number | "">(exercice.exercicePerfs[0]?.sets ?? 4)
+  const [reps, setReps] = useState<number | "">(exercice.exercicePerfs[0]?.reps ?? 8)
+  const [weight, setWeight] = useState<number | "">(exercice.exercicePerfs[0]?.weights ?? 20)
   const [notes, setNotes] = useState<string>(exercice.exercicePerfs[0]?.notes || "")
   const [isSaving, setIsSaving] = useState(false)
+
+  const handleNumberInputChange = (
+    value: string,
+    setValue: React.Dispatch<React.SetStateAction<number | "">>,
+    parser: (nextValue: string) => number
+  ) => {
+    if (value === "") {
+      setValue("")
+      return
+    }
+
+    const parsedValue = parser(value)
+
+    if (!Number.isNaN(parsedValue)) {
+      setValue(parsedValue)
+    }
+  }
 
   const getNormalizedHexColor = (value: string) => {
   const trimmedValue = value.trim().replace("#", "")
@@ -62,12 +79,16 @@ export default function ExerciceDialog({ open, onOpenChange, exercice, userId }:
   const { toast } = useToast()
 
   async function handleSave () {
+    const normalizedSets = sets === "" ? 4 : sets
+    const normalizedReps = reps === "" ? 8 : reps
+    const normalizedWeight = weight === "" ? 20 : weight
+
     try{
       setIsSaving(true)
       await createExercicePerformance({
-        sets,
-        reps,
-        weight,
+        sets: normalizedSets,
+        reps: normalizedReps,
+        weight: normalizedWeight,
         notes,
       },exercice.id, userId);
 
@@ -145,10 +166,9 @@ export default function ExerciceDialog({ open, onOpenChange, exercice, userId }:
               <Input
                 id="exercice-sets"
                 type="number"
-                min={1}
                 step={1}
                 value={sets}
-                onChange={(event) => setSets(Number.parseInt(event.target.value, 10) || 1)}
+                onChange={(event) => handleNumberInputChange(event.target.value, setSets, (value) => Number.parseInt(value, 10))}
               />
             </div>
 
@@ -157,23 +177,23 @@ export default function ExerciceDialog({ open, onOpenChange, exercice, userId }:
               <Input
                 id="exercice-reps"
                 type="number"
-                min={1}
+                required
                 step={1}
                 value={reps}
-                onChange={(event) => setReps(Number.parseInt(event.target.value, 10) || 1)}
+                onChange={(event) => handleNumberInputChange(event.target.value, setReps, (value) => Number.parseInt(value, 10))}
               />
             </div>
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="exercice-weight">Weight (kg)</Label>
+            <Label htmlFor="exercice-weight">Weight</Label>
             <Input
               id="exercice-weight"
               type="number"
-              min={0}
+              required
               step={0.5}
               value={weight}
-              onChange={(event) => setWeight(Number.parseFloat(event.target.value) || 0)}
+              onChange={(event) => handleNumberInputChange(event.target.value, setWeight, Number.parseFloat)}
             />
           </div>
 

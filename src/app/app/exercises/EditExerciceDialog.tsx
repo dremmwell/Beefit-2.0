@@ -35,13 +35,30 @@ type EditExerciceDialogProps = {
 export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelete, labels, exercice, groupName }: EditExerciceDialogProps) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
-  const [sets, setSets] = useState<number>(4)
-  const [reps, setReps] = useState<number>(8)
-  const [weight, setWeight] = useState<number>(20)
+  const [sets, setSets] = useState<number | "">(4)
+  const [reps, setReps] = useState<number | "">(8)
+  const [weight, setWeight] = useState<number | "">(20)
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [labelSelections, setLabelSelections] = useState<Record<string, LabelSelection>>({})
+
+  const handleNumberInputChange = (
+    value: string,
+    setValue: React.Dispatch<React.SetStateAction<number | "">>,
+    parser: (nextValue: string) => number
+  ) => {
+    if (value === "") {
+      setValue("")
+      return
+    }
+
+    const parsedValue = parser(value)
+
+    if (!Number.isNaN(parsedValue)) {
+      setValue(parsedValue)
+    }
+  }
 
   const sortedLabels = useMemo(() => {
     return [...labels].sort((leftLabel, rightLabel) => leftLabel.name.localeCompare(rightLabel.name))
@@ -131,14 +148,18 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
       return
     }
 
+    const normalizedSets = sets === "" ? 4 : sets
+    const normalizedReps = reps === "" ? 8 : reps
+    const normalizedWeight = weight === "" ? 20 : weight
+
     setIsSaving(true)
     try {
       await onSave({
         name: name.trim(),
         description: description.trim(),
-        sets,
-        reps,
-        weight,
+        sets: normalizedSets,
+        reps: normalizedReps,
+        weight: normalizedWeight,
         labels: selectedLabels,
       })
       onOpenChange(false)
@@ -225,7 +246,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
                   min={1}
                   step={1}
                   value={sets}
-                  onChange={(event) => setSets(Number.parseInt(event.target.value, 10) || 1)}
+                  onChange={(event) => handleNumberInputChange(event.target.value, setSets, (value) => Number.parseInt(value, 10))}
                 />
               </div>
               <div className="grid gap-2">
@@ -236,19 +257,19 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
                   min={1}
                   step={1}
                   value={reps}
-                  onChange={(event) => setReps(Number.parseInt(event.target.value, 10) || 1)}
+                  onChange={(event) => handleNumberInputChange(event.target.value, setReps, (value) => Number.parseInt(value, 10))}
                 />
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="add-exercice-weight">Weight (kg)</Label>
+              <Label htmlFor="add-exercice-weight">Weight</Label>
               <Input
                 id="add-exercice-weight"
                 type="number"
                 min={0}
                 step={0.5}
                 value={weight}
-                onChange={(event) => setWeight(Number.parseFloat(event.target.value) || 0)}
+                onChange={(event) => handleNumberInputChange(event.target.value, setWeight, Number.parseFloat)}
               />
             </div>
           </div>
@@ -346,7 +367,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving || isDeleting}>
             Cancel
           </Button>
-          <Button onClick={handleSave} disabled={!name.trim() || isSaving || isDeleting}>
+          <Button onClick={handleSave} disabled={!name.trim() || !sets || isSaving || isDeleting}>
             {isSaving && (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
             )}
