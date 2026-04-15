@@ -5,7 +5,7 @@ import { SplitWorkoutData } from '@/app/types/definitions'
 import { Split } from '@prisma/client'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, MessageSquareText, Pencil, Trash2 } from 'lucide-react'
+import { CalendarDays, Loader2, MessageSquareText, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -21,6 +21,8 @@ import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Calendar } from '@/components/ui/calendarVanilla'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 const getNormalizedHexColor = (value: string) => {
   const trimmedValue = value.trim().replace('#', '')
@@ -69,6 +71,8 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
   const [reps, setReps] = useState(8)
   const [weight, setWeight] = useState(20)
   const [notes, setNotes] = useState('')
+  const [workoutDate, setWorkoutDate] = useState<Date | undefined>(undefined)
+  const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
@@ -80,6 +84,10 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
     dayDate.setDate(normalizedStartDate.getDate() + index)
     return dayDate
   })
+
+  const splitDayKeys = React.useMemo(() => {
+    return new Set(splitDays.map((day) => getLocalDayKey(day)))
+  }, [splitDays])
 
   const workoutsByDay = workoutEntries.reduce<Map<string, SplitWorkoutData[]>>((accumulator, workout) => {
     const workoutDate = new Date(workout.createdAt)
@@ -100,6 +108,7 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
     setReps(activeEntry.reps ?? 1)
     setWeight(activeEntry.weights ?? 0)
     setNotes(activeEntry.notes ?? '')
+    setWorkoutDate(new Date(activeEntry.createdAt))
   }, [activeEntry])
 
   const handleSaveWorkout = async () => {
@@ -114,6 +123,7 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
         reps,
         weight,
         notes,
+        performedAtIso: workoutDate?.toISOString(),
       })
 
       if (updatedEntry) {
@@ -127,12 +137,14 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
                   weights: updatedEntry.weights,
                   unit: updatedEntry.unit,
                   notes: updatedEntry.notes,
+                  createdAt: updatedEntry.createdAt,
                 }
               : workout,
           ),
         )
       }
 
+      setIsDatePopoverOpen(false)
       setActiveEntry(null)
     } finally {
       setIsSaving(false)
@@ -335,6 +347,47 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
             </div>
 
             <div className="grid gap-2">
+              <Label htmlFor="progress-exercice-date">Date</Label>
+              <Popover modal open={isDatePopoverOpen} onOpenChange={setIsDatePopoverOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="progress-exercice-date"
+                    type="button"
+                    variant="outline"
+                    className="w-full justify-start text-left font-normal"
+                  >
+                    <CalendarDays className="mr-2 h-4 w-4 text-muted-foreground" />
+                    {workoutDate ? workoutDate.toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    }) : 'Pick a date'}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="z-[70] w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={workoutDate}
+                    onSelect={(selectedDay) => {
+                      setWorkoutDate(selectedDay)
+                      if (selectedDay) {
+                        setIsDatePopoverOpen(false)
+                      }
+                    }}
+                    defaultMonth={workoutDate}
+                    modifiers={{
+                      splitDay: (day) => splitDayKeys.has(getLocalDayKey(day)),
+                    }}
+                    modifiersClassNames={{
+                      splitDay: 'bg-primary/10 text-foreground rounded-md',
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div className="grid gap-2">
               <Label htmlFor="progress-exercice-notes">Notes</Label>
               <Textarea
                 id="progress-exercice-notes"
@@ -357,7 +410,7 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
                 </Button>
                 <Button onClick={handleSaveWorkout} disabled={isSaving || isDeleting}>
                 {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                Save
+                Edit
                 </Button>            
             </div>
           </DialogFooter>

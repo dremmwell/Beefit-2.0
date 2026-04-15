@@ -766,7 +766,7 @@ export async function deleteSplitWorkoutExercise(userId: UserId, exercicePerfId:
 export async function updateSplitWorkoutExercise(
     userId: UserId,
     exercicePerfId: string,
-    updates: { sets: number; reps: number; weight: number; notes: string },
+    updates: { sets: number; reps: number; weight: number; notes: string; performedAtIso?: string },
 ) {
     const { user } = await validateRequest()
     if (!user || user.id !== userId) {
@@ -777,6 +777,8 @@ export async function updateSplitWorkoutExercise(
     const normalizedReps = Number.isFinite(updates.reps) ? Math.max(1, Math.floor(updates.reps)) : 1
     const normalizedWeight = Number.isFinite(updates.weight) ? Math.max(0, updates.weight) : 0
     const normalizedNotes = updates.notes.trim()
+    const parsedDate = updates.performedAtIso ? new Date(updates.performedAtIso) : null
+    const normalizedCreatedAt = parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate : undefined
 
     const updateResult = await db.exercicePerfs.updateMany({
         where: {
@@ -789,6 +791,7 @@ export async function updateSplitWorkoutExercise(
             weights: normalizedWeight,
             unit: "kg",
             notes: normalizedNotes,
+            createdAt: normalizedCreatedAt,
         },
     })
 
