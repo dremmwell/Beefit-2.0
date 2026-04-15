@@ -184,7 +184,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto no-scrollbar">
         <DialogHeader className="gap-3">
           <div className="flex items-start justify-between gap-3">
             <DialogTitle>Edit {exercice.name} exercise</DialogTitle>
@@ -277,25 +277,27 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
               />
             </div>
           </div>
-          <div className="grid gap-2">
-            <Label htmlFor="add-exercice-description">Description</Label>
-            <Textarea
-              id="add-exercice-description"
-              placeholder="Optional cues, setup or tempo"
-              rows={3}
-              value={description}
-              onChange={(event) => setDescription(event.target.value)}
-            />
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="add-exercice-notes">Notes</Label>
-            <Textarea
-              id="add-exercice-notes"
-              placeholder="How did it feel? Effort, form cues, or anything to remember..."
-              rows={3}
-              value={notes}
-              onChange={(event) => setNotes(event.target.value)}
-            />
+          <div className="flex flew-row gap-4">
+            <div className="grid gap-2 flew-grow">
+              <Label htmlFor="add-exercice-description">Description</Label>
+              <Textarea
+                id="add-exercice-description"
+                placeholder="Optional cues, setup or tempo"
+                rows={3}
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+            </div>
+            <div className="grid gap-2 flex-grow">
+              <Label htmlFor="add-exercice-notes">Notes</Label>
+              <Textarea
+                id="add-exercice-notes"
+                placeholder="How did it feel? Effort, form cues, or anything to remember..."
+                rows={3}
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+              />
+            </div>
           </div>
           <div className="grid gap-2">
             <div className="flex flex-wrap items-center gap-2">
@@ -339,7 +341,7 @@ export default function EditExerciceDialog({ open, onOpenChange, onSave, onDelet
             {sortedLabels.length === 0 ? (
               <p className="text-sm text-muted-foreground">No labels available. Create labels in the focus board first.</p>
             ) : (
-              <div className="max-h-56 space-y-2 overflow-y-auto rounded-md border p-2">
+              <div className="max-h-56 space-y-2 overflow-y-auto rounded-md border p-2 no-scrollbar">
                 {sortedLabels.map((label) => {
                   return (
                   <div key={label.id} className="grid grid-cols-[1fr_auto] items-center gap-3">
