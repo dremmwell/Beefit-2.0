@@ -181,7 +181,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
       <div className='flex flex-1 flex-col gap-2 py-1 sm:flex-none'>
         <div className='space-y-1'>
           <div className='px-2 pt-2'>
-            <Link href="/app/nutrition" className={sectionLinkClass(pathname === "/app/nutrition") }>
+            <Link href="/app/nutrition" className={cn(sectionLinkClass(pathname === "/app/nutrition"), "!border-0 justify-start")}>
               <HamIcon className='h-5 w-5'/>
               <h1 className='font-medium'>Nutrition</h1>
             </Link>
@@ -238,7 +238,7 @@ export default function NavBar({isCollapsed} : NavBarProps) {
     <Separator className='my-0.5 hidden sm:block'/>
       <div className='space-y-1'>
           <div className='px-2'>
-            <Link href="/app/workout" className={sectionLinkClass(pathname === "/app/workout") }>
+            <Link href="/app/workout" className={cn(sectionLinkClass(pathname === "/app/workout"), "!border-0 justify-start")}>
               <Zap className='h-5 w-5'/>
               <h1 className='font-medium'>Workout</h1>
             </Link>
