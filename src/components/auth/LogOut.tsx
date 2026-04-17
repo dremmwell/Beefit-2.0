@@ -1,7 +1,8 @@
+"use client"
+
 import { signOut } from "@/app/actions/auth.actions"
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -11,10 +12,17 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { buttonVariants } from "@/components/ui/button"
-import Link from "next/link"
+import { Loader2 } from "lucide-react"
+import { useState } from "react"
 
 export function LogOut() {
+  const [isPending, setIsPending] = useState(false)
+
+  async function handleSignOut() {
+    setIsPending(true)
+    await signOut()
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -31,10 +39,12 @@ export function LogOut() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <form action={signOut}>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <form action={handleSignOut}>
             <div className="flex">
-              <Button type="submit" variant="default" className="flex-grow">Log out</Button>
+              <Button type="submit" variant="default" className="flex-grow" disabled={isPending}>
+                {isPending ? <Loader2 className="animate-spin" /> : "Log out"}
+              </Button>
             </div>
           </form>
         </AlertDialogFooter>
