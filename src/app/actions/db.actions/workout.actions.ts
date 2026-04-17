@@ -57,6 +57,7 @@ type UpdateExerciceInput = {
 }
 
 const DEFAULT_SPLIT_LENGTH = 7
+const EXERCISE_TEMPLATE_PERF_DATE = new Date("1970-01-01T00:00:00.000Z")
 
 function addDaysToSplitBoundary(date: Date, days: number) {
     const nextDate = new Date(date)
@@ -374,6 +375,7 @@ export async function createExercice(userId: UserId, exercice: CreateExerciceInp
                     weights: normalizedWeight,
                     unit: "kg",
                     notes: normalizedNotes,
+                    createdAt: EXERCISE_TEMPLATE_PERF_DATE,
                 },
             },
             execiceLabels: validLabelAssignments.length
@@ -500,6 +502,7 @@ export async function updateExercice(userId: UserId, exerciceId: string, updates
                     weights: normalizedWeight,
                     unit: "kg",
                     notes: normalizedNotes,
+                    createdAt: EXERCISE_TEMPLATE_PERF_DATE,
                 },
             })
         }
