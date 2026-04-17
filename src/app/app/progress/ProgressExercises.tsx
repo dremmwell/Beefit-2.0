@@ -67,8 +67,8 @@ const getLocalDayKey = (date: Date) => {
 function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkoutData[]; split: Split; userId: string }) {
   const [workoutEntries, setWorkoutEntries] = useState<SplitWorkoutData[]>(workouts)
   const [activeEntry, setActiveEntry] = useState<SplitWorkoutData | null>(null)
-  const [sets, setSets] = useState(4)
-  const [reps, setReps] = useState(8)
+  const [sets, setSets] = useState<number | ''>(4)
+  const [reps, setReps] = useState<number | ''>(8)
   const [weight, setWeight] = useState(20)
   const [notes, setNotes] = useState('')
   const [workoutDate, setWorkoutDate] = useState<Date | undefined>(undefined)
@@ -111,8 +111,31 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
     setWorkoutDate(new Date(activeEntry.createdAt))
   }, [activeEntry])
 
+  const handleNumberInputChange = (
+    value: string,
+    setValue: React.Dispatch<React.SetStateAction<number | ''>>,
+    parser: (nextValue: string) => number,
+  ) => {
+    if (value === '') {
+      setValue('')
+      return
+    }
+
+    const parsedValue = parser(value)
+
+    if (!Number.isNaN(parsedValue)) {
+      setValue(parsedValue)
+    }
+  }
+
+  const isEditDisabled = isSaving || isDeleting || sets === '' || reps === ''
+
   const handleSaveWorkout = async () => {
     if (!activeEntry) {
+      return
+    }
+
+    if (sets === '' || reps === '') {
       return
     }
 
@@ -315,10 +338,9 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
                 <Input
                   id="progress-exercice-sets"
                   type="number"
-                  min={1}
                   step={1}
                   value={sets}
-                  onChange={(event) => setSets(Number.parseInt(event.target.value, 10) || 1)}
+                  onChange={(event) => handleNumberInputChange(event.target.value, setSets, (value) => Number.parseInt(value, 10))}
                 />
               </div>
               <div className="grid gap-2">
@@ -326,10 +348,9 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
                 <Input
                   id="progress-exercice-reps"
                   type="number"
-                  min={1}
                   step={1}
                   value={reps}
-                  onChange={(event) => setReps(Number.parseInt(event.target.value, 10) || 1)}
+                  onChange={(event) => handleNumberInputChange(event.target.value, setReps, (value) => Number.parseInt(value, 10))}
                 />
               </div>
             </div>
@@ -408,7 +429,7 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
                 <Button variant="outline" onClick={() => setActiveEntry(null)} disabled={isSaving || isDeleting}>
                 Cancel
                 </Button>
-                <Button onClick={handleSaveWorkout} disabled={isSaving || isDeleting}>
+                <Button onClick={handleSaveWorkout} disabled={isEditDisabled}>
                 {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
                 Edit
                 </Button>            
