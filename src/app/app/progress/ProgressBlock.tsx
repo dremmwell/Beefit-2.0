@@ -47,10 +47,10 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
     .filter((row) => row.targetSets > 0)
     .sort((a, b) => b.completedSets - a.completedSets)
 
-  const totalCompletedSets = labelProgressRows.reduce((total, row) => total + row.completedSets, 0)
-  const totalTargetSets = labelProgressRows.reduce((total, row) => total + row.targetSets, 0)
-  const safeTotalTargetSets = totalTargetSets > 0 ? totalTargetSets : totalCompletedSets || 1
-  const totalProgressPercentage = Math.min(100, Math.round((totalCompletedSets / safeTotalTargetSets) * 100))
+  const completedLabelsCount = labelProgressRows.filter((row) => row.hasReachedTargetSets).length
+  const totalLabelsCount = labelProgressRows.length
+  const safeTotalLabelsCount = totalLabelsCount > 0 ? totalLabelsCount : 1
+  const totalProgressPercentage = Math.min(100, Math.round((completedLabelsCount / safeTotalLabelsCount) * 100))
   const hasReachedFocusGoal = allTargetsReachedInDetails
 
   return (
@@ -67,7 +67,7 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
                   {hasReachedFocusGoal && <Check className="h-4 w-4 text-success" />}
                 </CardTitle>
                 <span className="text-sm text-muted-foreground">
-                  {totalCompletedSets} / {totalTargetSets} sets
+                  {completedLabelsCount} / {totalLabelsCount}
                 </span>
               </div>
               <Progress value={totalProgressPercentage} className="h-2" />
