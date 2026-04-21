@@ -49,8 +49,12 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
 
   const completedLabelsCount = labelProgressRows.filter((row) => row.hasReachedTargetSets).length
   const totalLabelsCount = labelProgressRows.length
-  const safeTotalLabelsCount = totalLabelsCount > 0 ? totalLabelsCount : 1
-  const totalProgressPercentage = Math.min(100, Math.round((completedLabelsCount / safeTotalLabelsCount) * 100))
+  const totalCompletedSets = labelProgressRows.reduce((total, row) => total + row.completedSets, 0)
+  const cappedCompletedSets = labelProgressRows.reduce((total, row) => total + Math.min(row.completedSets, row.targetSets), 0)
+  
+  const totalTargetSets = labelProgressRows.reduce((total, row) => total + row.targetSets, 0)
+  const safeTotalTargetSets = totalTargetSets > 0 ? totalTargetSets : totalCompletedSets || 1
+  const totalProgressPercentage = Math.min(100, Math.round((cappedCompletedSets / safeTotalTargetSets) * 100))
   const hasReachedFocusGoal = allTargetsReachedInDetails
 
   return (
