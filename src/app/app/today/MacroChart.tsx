@@ -145,7 +145,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
             <div className="flex flex-col">
               <div className="flex">
                 <p className="text-sm font-semibold text-foreground mb-1">Fats</p>
-                <p className="text-muted-foreground ml-auto text-sm">(Saturated Fats: {values.saturatedFats}g)</p>
+                <p className="text-muted-foreground ml-auto text-sm">(Saturated Fats: {values.saturatedFats.toFixed(0)}g)</p>
               </div>
               <div className="flex flex-col h-3" >
                 <svg>
@@ -293,7 +293,7 @@ export default function MacroChart({ values, objective } : { values : MealValues
                   />
                 </svg>
               </div>
-              <div className="text-muted-foreground text-sm">(Saturated Fats: {values.saturatedFats}g)</div>
+              <div className="text-muted-foreground text-sm">(Saturated Fats: {values.saturatedFats.toFixed(0)}g)</div>
             </div>
           </div>
         </>
