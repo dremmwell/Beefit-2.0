@@ -816,3 +816,44 @@ export async function updateSplitWorkoutExercise(
 
     return JSON.parse(JSON.stringify(updatedEntry))
 }
+
+
+
+//---------------------- Steps Acions ------------------------//
+
+export async function getStepGoal(userId : UserId){
+    const stepGoal = await db.stepGoal.findFirst({
+        where: {
+            userId: userId,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        select: {
+            goal: true,
+        },
+    })
+
+    return stepGoal?.goal ?? 10000
+}
+
+export async function saveStepGoal(userId: UserId, goal: number) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return null
+    }
+
+    const normalizedGoal = Number.isFinite(goal) ? Math.max(0, Math.floor(goal)) : 10000
+    const savedStepGoal = await db.stepGoal.create({
+        data: {
+            userId: userId,
+            goal: normalizedGoal,
+        },
+        select: {
+            goal: true,
+        },
+    })
+
+    revalidatePath("/app/goals")
+    return savedStepGoal.goal
+}

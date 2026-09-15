@@ -69,14 +69,17 @@ const { toast } = useToast()
         <Button
           variant="outline"
           data-empty={!date}
-          className="w-[280px] justify-between text-left font-normal data-[empty=true]:text-muted-foreground"
+          className="justify-between gap-2 text-left font-normal sm:text-xs lg:text-sm data-[empty=true]:text-muted-foreground"
         >
           {date && spanEndDate ? (
-            <span>{format(date, "PPP")} - {format(spanEndDate, "PPP")}</span>
+            <>
+              <span className="block lg:hidden">{format(date, "MMM d")} - {format(spanEndDate, "MMM d")}</span>
+              <span className="hidden lg:block">{format(date, "PPP")} - {format(spanEndDate, "PPP")}</span>
+            </>
           ) : (
             <span>Pick a date</span>
           )}
-          <ChevronDownIcon />
+          <ChevronDownIcon className="shrink-0" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
