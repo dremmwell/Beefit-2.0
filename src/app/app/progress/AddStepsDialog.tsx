@@ -25,6 +25,13 @@ export default function AddStepsDialog({ open, onOpenChange, userId, onStepSaved
   const [isSaving, setIsSaving] = useState(false)
   const { toast } = useToast()
 
+  const getPersistedDate = (date: Date) => new Date(Date.UTC(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+    12,
+  ))
+
   const handleSave = async () => {
     if (count === "") {
       return
@@ -32,7 +39,7 @@ export default function AddStepsDialog({ open, onOpenChange, userId, onStepSaved
 
     setIsSaving(true)
     try {
-      const savedEntry = await saveStepCount(userId, count, selectedDate)
+      const savedEntry = await saveStepCount(userId, count, getPersistedDate(selectedDate))
       if (savedEntry === null) {
         throw new Error("Unable to save step count")
       }
