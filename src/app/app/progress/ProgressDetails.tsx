@@ -43,7 +43,7 @@ function ProgressDetails({
               {row.labelName}
               {row.hasReachedTargetSets && <Check className="h-4 w-4 text-success" />}
             </span>
-            <span className="text-muted-foreground">
+            <span className={row.hasReachedTargetSets ? "text-success" : "text-muted-foreground"}>
               {row.completedSets} / {row.targetSets} sets
             </span>
           </div>

@@ -31,6 +31,7 @@ model User {
   splits         Split[]
   exercicePerfs  ExercicePerfs[]
   stepGoals      StepGoal[]
+  stepCounts     StepCount[]
 }
 
 model Session {
@@ -298,6 +299,16 @@ model StepGoal {
   goal Int    @default(10000)
 
   createdAt DateTime @default(now())
+
+  userId String
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model StepCount {
+  id        String   @id @default(uuid())
+  count     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

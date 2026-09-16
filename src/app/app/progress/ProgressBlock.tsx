@@ -70,11 +70,15 @@ function ProgressBlock({ focus, workouts }: { focus: FocusLabels, workouts: Spli
                   {focus.name}
                   {hasReachedFocusGoal && <Check className="h-4 w-4 text-success" />}
                 </CardTitle>
-                <span className="text-sm text-muted-foreground">
+                <span className={cn("text-sm text-muted-foreground", hasReachedFocusGoal && "text-success")}>
                   {completedLabelsCount} / {totalLabelsCount}
                 </span>
               </div>
-              <Progress value={totalProgressPercentage} className="h-2" />
+              <Progress
+                value={totalProgressPercentage}
+                className="h-2"
+                indicatorStyle={hasReachedFocusGoal ? { backgroundColor: 'hsl(var(--success))' } : undefined}
+              />
             </div>
             <ChevronDown
               className={cn(

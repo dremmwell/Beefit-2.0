@@ -34,6 +34,21 @@ type LabelInput = {
     sets?: number | null
 }
 
+export type SplitStepCountMap = Record<string, number>
+
+export type StepCountEntry = {
+    id: string
+    userId: string
+    count: number
+    createdAt: Date
+    updatedAt: Date
+}
+
+export type SplitStepData = {
+    entries: StepCountEntry[]
+    counts: SplitStepCountMap
+}
+
 type CreateExerciceInput = {
     name: string
     description: string
@@ -71,6 +86,14 @@ function normalizeSplitLength(length: number | null | undefined) {
 
 function getSplitEndDate(split: Pick<Split, "startDate" | "length">) {
     return addDaysToSplitBoundary(new Date(split.startDate), normalizeSplitLength(split.length))
+}
+
+function getLocalDayKey(date: Date) {
+    const year = date.getUTCFullYear()
+    const month = `${date.getUTCMonth() + 1}`.padStart(2, '0')
+    const day = `${date.getUTCDate()}`.padStart(2, '0')
+
+    return `${year}-${month}-${day}`
 }
 
 //------------------- Focus Actions -------------------//
@@ -749,6 +772,45 @@ export async function getSplitWorkouts(userId: UserId, split: Split) {
     return workouts
 }
 
+export async function getSplitSteps(userId: UserId, split: Split | null): Promise<SplitStepData> {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId || !split) {
+        return {
+            entries: [],
+            counts: {},
+        }
+    }
+
+    const startDate = new Date(split.startDate)
+    const endDate = getSplitEndDate(split)
+
+    const data = await db.stepCount.findMany({
+        where: {
+            userId: userId,
+            createdAt: {
+                gte: startDate,
+                lt: endDate,
+            },
+        },
+        orderBy: {
+            createdAt: 'desc',
+        },
+    })
+
+    const entries = JSON.parse(JSON.stringify(data)) as StepCountEntry[]
+
+    const counts = entries.reduce<SplitStepCountMap>((accumulator, entry) => {
+        const dayKey = getLocalDayKey(new Date(entry.createdAt))
+        accumulator[dayKey] = (accumulator[dayKey] ?? 0) + entry.count
+        return accumulator
+    }, {})
+
+    return {
+        entries,
+        counts,
+    }
+}
+
 export async function deleteSplitWorkoutExercise(userId: UserId, exercicePerfId: string) {
     const { user } = await validateRequest()
     if (!user || user.id !== userId) {
@@ -856,4 +918,64 @@ export async function saveStepGoal(userId: UserId, goal: number) {
 
     revalidatePath("/app/goals")
     return savedStepGoal.goal
+}
+
+export async function updateStepCount(userId: UserId, stepCountId: string, count: number) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return null
+    }
+
+    const normalizedCount = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0
+
+    const updatedEntry = await db.stepCount.update({
+        where: {
+            id: stepCountId,
+            userId: userId,
+        },
+        data: {
+            count: normalizedCount,
+        },
+    })
+
+    revalidatePath("/app/progress")
+    return JSON.parse(JSON.stringify(updatedEntry)) as StepCountEntry | null
+}
+
+export async function deleteStepCount(userId: UserId, stepCountId: string) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return false
+    }
+
+    await db.stepCount.delete({
+        where: {
+            id: stepCountId,
+            userId: userId,
+        },
+    })
+
+    revalidatePath("/app/progress")
+    return true
+}
+
+export async function saveStepCount(userId: UserId, count: number, createdAt?: Date) {
+    const { user } = await validateRequest()
+    if (!user || user.id !== userId) {
+        return null
+    }
+
+    const normalizedCount = Number.isFinite(count) ? Math.max(0, Math.floor(count)) : 0
+    const normalizedCreatedAt = createdAt && !Number.isNaN(new Date(createdAt).getTime()) ? new Date(createdAt) : new Date()
+
+    const savedStepCount = await db.stepCount.create({
+        data: {
+            userId,
+            count: normalizedCount,
+            createdAt: normalizedCreatedAt,
+        },
+    })
+
+    revalidatePath("/app/progress")
+    return JSON.parse(JSON.stringify(savedStepCount)) as StepCountEntry
 }

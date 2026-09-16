@@ -5,7 +5,7 @@ import { SplitWorkoutData } from '@/app/types/definitions'
 import { Split } from '@prisma/client'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { CalendarDays, Loader2, MessageSquareText, Pencil, Trash2 } from 'lucide-react'
+import { CalendarDays, Footprints, Loader2, MessageSquareText, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { deleteSplitWorkoutExercise, updateSplitWorkoutExercise } from '@/app/actions/db.actions/workout.actions'
+import { deleteSplitWorkoutExercise, deleteStepCount, updateSplitWorkoutExercise, updateStepCount } from '@/app/actions/db.actions/workout.actions'
 import Link from "next/link"
 import { buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,6 +23,9 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Calendar } from '@/components/ui/calendarVanilla'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { useToast } from '@/components/ui/use-toast'
+import AddStepsDialog from './AddStepsDialog'
+import { SplitStepData, StepCountEntry } from '@/app/actions/db.actions/workout.actions'
 
 const getNormalizedHexColor = (value: string) => {
   const trimmedValue = value.trim().replace('#', '')
@@ -64,9 +67,12 @@ const getLocalDayKey = (date: Date) => {
   return `${year}-${month}-${day}`
 }
 
-function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkoutData[]; split: Split; userId: string }) {
+function ProgressExercises({ workouts, split, userId, stepData }: { workouts: SplitWorkoutData[]; split: Split; userId: string; stepData: SplitStepData }) {
   const [workoutEntries, setWorkoutEntries] = useState<SplitWorkoutData[]>(workouts)
+  const [stepEntriesByDay, setStepEntriesByDay] = useState<StepCountEntry[]>(stepData.entries)
+  const [stepCountsByDay, setStepCountsByDay] = useState<Record<string, number>>(stepData.counts)
   const [activeEntry, setActiveEntry] = useState<SplitWorkoutData | null>(null)
+  const [editingStepDay, setEditingStepDay] = useState<{ key: string; label: string; entries: StepCountEntry[] } | null>(null)
   const [sets, setSets] = useState<number | ''>(4)
   const [reps, setReps] = useState<number | ''>(8)
   const [weight, setWeight] = useState(20)
@@ -75,6 +81,10 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
   const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [isStepsDialogOpen, setIsStepsDialogOpen] = useState(false)
+  const [pendingStepSaveIds, setPendingStepSaveIds] = useState<Record<string, boolean>>({})
+  const [pendingStepDeleteIds, setPendingStepDeleteIds] = useState<Record<string, boolean>>({})
+  const { toast } = useToast()
 
   const normalizedStartDate = new Date(split.startDate)
   normalizedStartDate.setHours(0, 0, 0, 0)
@@ -191,17 +201,98 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
     }
   }
 
+  const recalculateStepTotals = (entries: StepCountEntry[]) => {
+    const nextStepCounts: Record<string, number> = {}
+
+    entries.forEach((entry) => {
+      const entryDayKey = getLocalDayKey(new Date(entry.createdAt))
+      nextStepCounts[entryDayKey] = (nextStepCounts[entryDayKey] ?? 0) + entry.count
+    })
+
+    return nextStepCounts
+  }
+
+  const handleStepSaved = (entry: StepCountEntry) => {
+    setStepEntriesByDay((previous) => {
+      const nextEntries = [entry, ...previous]
+      setStepCountsByDay(recalculateStepTotals(nextEntries))
+      return nextEntries
+    })
+  }
+
+  const handleStepUpdate = async (stepId: string, nextCount: number) => {
+    setPendingStepSaveIds((previous) => ({ ...previous, [stepId]: true }))
+
+    try {
+      const updatedEntry = await updateStepCount(userId, stepId, nextCount)
+
+      if (!updatedEntry) {
+        return
+      }
+
+      setStepEntriesByDay((previous) => {
+        const nextEntries = previous.map((entry) => entry.id === stepId ? { ...entry, ...updatedEntry, count: updatedEntry.count } : entry)
+        const nextTotal = recalculateStepTotals(nextEntries)
+        setStepCountsByDay(nextTotal)
+        setEditingStepDay((current) => current ? { ...current, entries: current.entries.map((currentEntry) => currentEntry.id === stepId ? { ...currentEntry, ...updatedEntry, count: updatedEntry.count } : currentEntry) } : current)
+        return nextEntries
+      })
+
+      toast({
+        title: 'Step count updated',
+        description: `${updatedEntry.count.toLocaleString('en-US')} steps saved for this day.`,
+      })
+    } finally {
+      setPendingStepSaveIds((previous) => ({ ...previous, [stepId]: false }))
+    }
+  }
+
+  const handleStepDelete = async (stepId: string) => {
+    setPendingStepDeleteIds((previous) => ({ ...previous, [stepId]: true }))
+
+    try {
+      const didDelete = await deleteStepCount(userId, stepId)
+
+      if (!didDelete) {
+        return
+      }
+
+      setStepEntriesByDay((previous) => {
+        const nextEntries = previous.filter((entry) => entry.id !== stepId)
+        setStepCountsByDay(recalculateStepTotals(nextEntries))
+        setEditingStepDay((current) => current ? { ...current, entries: current.entries.filter((entry) => entry.id !== stepId) } : current)
+        return nextEntries
+      })
+
+      toast({
+        title: 'Step entry deleted',
+        description: 'The selected step session was removed from this day.',
+      })
+    } finally {
+      setPendingStepDeleteIds((previous) => ({ ...previous, [stepId]: false }))
+    }
+  }
+
   return (
     <>
       <Card className="bg-background flex min-h-96 flex-col overflow-hidden lg:h-full lg:max-h-full lg:w-1/2 no-scrollbar">
-      <CardHeader className="pb-2 pt-2 flex flex-row items-center justify-between gap-2 px-2 lg:px-4 pl-4">
-        <CardTitle className="text-lg">Exercise Diary</CardTitle>
-        <Link className={buttonVariants({ variant: "default"})} href="/app/exercises">Add Exercise</Link>
+      <CardHeader className="pb-2 pt-2 flex flex-row items-center justify-between gap-1.5 px-2 lg:gap-2 lg:px-4 pl-4">
+        <CardTitle className="flex justify-between items-center gap-2 w-full">
+          <div className="text-base lg:text-lg">Exercise Diary</div>
+          <div className="flex items-center gap-1.5 lg:gap-2">
+            <Button variant="outline" onClick={() => setIsStepsDialogOpen(true)} className="px-2.5 py-1.5 lg:px-4">
+              <Footprints className="display hidden lg:block mr-2 h-4 w-4" />
+              Add Steps
+            </Button>
+            <Link className={`${buttonVariants({ variant: "default"})} px-2.5 py-1.5 lg:px-4`} href="/app/exercises">Add Exercise</Link>
+          </div>
+        </CardTitle>
       </CardHeader>
       <CardContent className="min-h-0 flex-1 space-y-3 overflow-y-auto no-scrollbar px-2 lg:px-4">
         {splitDays.map((day) => {
           const dayKey = getLocalDayKey(day)
           const dayWorkouts = workoutsByDay.get(dayKey) ?? []
+          const dayStepTotal = stepCountsByDay[dayKey] ?? 0
 
           return (
             <section key={dayKey} className="rounded-lg border bg-card/40 p-3">
@@ -218,7 +309,36 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
                 </span>
               </div>
 
-              {dayWorkouts.length === 0 ? (
+              {dayStepTotal > 0 ? (
+                <div className="mb-2 rounded-lg border bg-card/60 p-2">
+                  <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1.5 font-medium text-foreground">
+                      <Footprints className="h-3.5 w-3.5" />
+                      <span>Steps</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-foreground">
+                        {dayStepTotal.toLocaleString('en-US')}
+                      </span>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6"
+                        onClick={() => {
+                          const entries = stepEntriesByDay.filter((entry) => getLocalDayKey(new Date(entry.createdAt)) === dayKey)
+                          setEditingStepDay({ key: dayKey, label: day.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }), entries })
+                        }}
+                        aria-label={`Edit steps for ${day.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}`}
+                      >
+                        <Pencil className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+
+              {dayWorkouts.length === 0 && dayStepTotal === 0 ? (
                 <p className="rounded-md border border-dashed py-3 text-center text-xs text-muted-foreground">
                   No exercises logged on this day.
                 </p>
@@ -292,6 +412,71 @@ function ProgressExercises({ workouts, split, userId }: { workouts: SplitWorkout
         })}
       </CardContent>
       </Card>
+      <AddStepsDialog
+        open={isStepsDialogOpen}
+        onOpenChange={setIsStepsDialogOpen}
+        userId={userId}
+        onStepSaved={handleStepSaved}
+      />
+      <Dialog open={!!editingStepDay} onOpenChange={(open) => !open && setEditingStepDay(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Steps for {editingStepDay?.label}</DialogTitle>
+          </DialogHeader>
+          <div className="flex max-h-[60vh] flex-col gap-3 overflow-y-auto pr-1">
+            {editingStepDay?.entries.length ? (
+              editingStepDay.entries.map((entry) => (
+                <div key={entry.id} className="rounded-lg border p-3">
+                  <div className="mb-2 text-xs text-muted-foreground">
+                    {new Date(entry.createdAt).toLocaleTimeString('en-US', {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                    })}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="number"
+                      min={0}
+                      step={1}
+                      value={entry.count}
+                      onChange={(event) => {
+                        const nextValue = Number.parseInt(event.target.value, 10) || 0
+                        setEditingStepDay((current) => current ? {
+                          ...current,
+                          entries: current.entries.map((currentEntry) => currentEntry.id === entry.id ? { ...currentEntry, count: Math.max(0, nextValue) } : currentEntry),
+                        } : current)
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleStepUpdate(entry.id, entry.count)}
+                      disabled={pendingStepSaveIds[entry.id] || pendingStepDeleteIds[entry.id]}
+                    >
+                      {pendingStepSaveIds[entry.id] ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Save'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleStepDelete(entry.id)}
+                      disabled={pendingStepSaveIds[entry.id] || pendingStepDeleteIds[entry.id]}
+                    >
+                      {pendingStepDeleteIds[entry.id] ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Delete'}
+                    </Button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No step entries for this day.</p>
+            )}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingStepDay(null)}>Close</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <Dialog open={!!activeEntry} onOpenChange={(open) => !open && setActiveEntry(null)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
