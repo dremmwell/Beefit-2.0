@@ -86,6 +86,8 @@ function StepProgress({ split, stepData, stepGoal }: { split: Split; stepData: S
                 const isPastDay = day < today
                 const isCompletedDay = isPastDay || isCurrentDay
                 const dayStepsRemaining = Math.max(0, dailyGoal - daySteps)
+                const currentDayStepsRemaining = Math.max(0, stepsPerRemainingDay - daySteps)
+                const displayedStepsRemaining = isCurrentDay ? currentDayStepsRemaining : dayStepsRemaining
                 const displayedSteps = isCompletedDay ? daySteps : stepsPerRemainingDay
 
                 return (
@@ -102,7 +104,7 @@ function StepProgress({ split, stepData, stepGoal }: { split: Split; stepData: S
                       month: 'long',
                       day: 'numeric',
                     })}: ${isCompletedDay
-                      ? `${daySteps.toLocaleString('en-US')} done, ${dayStepsRemaining.toLocaleString('en-US')} remaining`
+                      ? `${daySteps.toLocaleString('en-US')} done, ${displayedStepsRemaining.toLocaleString('en-US')} remaining`
                       : `${stepsPerRemainingDay.toLocaleString('en-US')} steps needed`}`}
                   >
                     <span className={cn(
@@ -116,14 +118,14 @@ function StepProgress({ split, stepData, stepGoal }: { split: Split; stepData: S
                     </span>
                     {isCompletedDay ? (
                       <>
-                        <span className="text-[10px] text-muted-foreground">
-                          {displayedSteps.toLocaleString('en-US')} done
-                        </span>
                         <span className={cn(
                           'text-[10px] font-semibold',
-                          dayStepsRemaining === 0 ? 'text-success' : 'text-foreground',
+                          displayedStepsRemaining === 0 ? 'text-success' : 'text-foreground',
                         )}>
-                          {dayStepsRemaining.toLocaleString('en-US')} left
+                          {displayedSteps.toLocaleString('en-US')} done
+                        </span>
+                        <span className='text-[10px] text-muted-foreground'>
+                          {displayedStepsRemaining.toLocaleString('en-US')} left
                         </span>
                       </>
                     ) : (
