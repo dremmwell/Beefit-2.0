@@ -42,7 +42,7 @@ function StepProgress({ split, stepData, stepGoal }: { split: Split; stepData: S
   })
   const today = new Date()
   today.setUTCHours(0, 0, 0, 0)
-  const remainingDays = splitDays.filter((day) => day >= today).length
+  const remainingDays = splitDays.filter((day) => day > today).length
   const remainingSteps = Math.max(0, splitTarget - totalSteps)
   const stepsPerRemainingDay = remainingDays > 0
     ? Math.ceil(remainingSteps / remainingDays)
